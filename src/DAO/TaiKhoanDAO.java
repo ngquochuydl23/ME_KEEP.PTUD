@@ -1,9 +1,7 @@
 package DAO;
 
-import DTO.NhanVienDTO;
 import config.JDBCUtil;
 import DTO.TaiKhoanDTO;
-import entity.TaiKhoan;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

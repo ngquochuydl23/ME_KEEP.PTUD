@@ -1,6 +1,5 @@
 package GUI;
 
-import DAO.TaiKhoanDAO;
 import DTO.TaiKhoanDTO;
 import GUI.Component.InputForm;
 import GUI.Dialog.QuenMatKhau;
@@ -11,7 +10,7 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import config.DatabaseUtil;
 import dao1.TaiKhoanDao;
-import entity.TaiKhoan;
+import entity.NhanVien;
 import helper.BCrypt;
 
 import java.awt.*;
@@ -21,7 +20,6 @@ import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.border.EmptyBorder;
@@ -136,7 +134,7 @@ public class Log_In extends JFrame implements KeyListener {
         }
         TaiKhoanDao taiKhoanDao = new TaiKhoanDao();
 
-        TaiKhoan taiKhoan = taiKhoanDao.layTheoSdt(soDienThoai);
+        NhanVien taiKhoan = taiKhoanDao.layTheoSdt(soDienThoai);
         if (taiKhoan == null) {
             JOptionPane.showMessageDialog(this, "Tài khoản của bạn không tồn tại trên hệ thống", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
             return;

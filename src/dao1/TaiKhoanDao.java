@@ -1,24 +1,24 @@
 package dao1;
 
-import entity.TaiKhoan;
+import entity.NhanVien;
 
 import java.util.List;
 
-public class TaiKhoanDao implements IDao<TaiKhoan, Integer>{
+public class TaiKhoanDao implements IDao<NhanVien, Integer>{
 
 
     @Override
-    public TaiKhoan layTheoMa(Integer id) {
+    public NhanVien layTheoMa(Integer id) {
         return null;
     }
 
     @Override
-    public List<TaiKhoan> layHet() {
+    public List<NhanVien> layHet() {
         return null;
     }
 
     @Override
-    public TaiKhoan them(TaiKhoan entity) {
+    public NhanVien them(NhanVien entity) {
         return null;
     }
 
@@ -28,11 +28,11 @@ public class TaiKhoanDao implements IDao<TaiKhoan, Integer>{
     }
 
     @Override
-    public TaiKhoan sua(TaiKhoan entity) {
+    public NhanVien sua(NhanVien entity) {
         return null;
     }
 
-    public TaiKhoan layTheoSdt(String sdt) {
+    public NhanVien layTheoSdt(String sdt) {
         return null;
     }
 
