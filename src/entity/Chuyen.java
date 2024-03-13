@@ -7,7 +7,7 @@ public class Chuyen {
     private String maChuyen;
     private LocalDateTime thoiGianKhoiHanh;
     private LocalDateTime thoiGianDen;
-    private  Tuyen tuyen;
+    private Tuyen tuyen;
 
     private Tau tau;
 

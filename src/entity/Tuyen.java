@@ -1,13 +1,14 @@
 package entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Tuyen {
     private String maTuyen;
     private String diemDi;
     private String diemDen;
-    private LocalDate ngayTaoTuyen;
+    private LocalDateTime thoiGianTaoTuyen;
 
     public Tuyen() {
 
@@ -17,11 +18,11 @@ public class Tuyen {
         this.maTuyen = maTuyen;
     }
 
-    public Tuyen(String maTuyen, String diemDi, String diemDen, LocalDate ngayTaoTuyen) {
+    public Tuyen(String maTuyen, String diemDi, String diemDen, LocalDateTime thoiGianTaoTuyen) {
         this.maTuyen = maTuyen;
         this.diemDi = diemDi;
         this.diemDen = diemDen;
-        this.ngayTaoTuyen = ngayTaoTuyen;
+        this.thoiGianTaoTuyen = thoiGianTaoTuyen;
     }
 
     public String getMaTuyen() {
@@ -48,12 +49,13 @@ public class Tuyen {
         this.diemDen = diemDen;
     }
 
-    public LocalDate getNgayTaoTuyen() {
-        return ngayTaoTuyen;
+
+    public LocalDateTime getThoiGianTaoTuyen() {
+        return thoiGianTaoTuyen;
     }
 
-    public void setNgayTaoTuyen(LocalDate ngayTaoTuyen) {
-        this.ngayTaoTuyen = ngayTaoTuyen;
+    public void setThoiGianTaoTuyen(LocalDateTime thoiGianTaoTuyen) {
+        this.thoiGianTaoTuyen = thoiGianTaoTuyen;
     }
 
     @Override
@@ -62,7 +64,7 @@ public class Tuyen {
                 "maTuyen='" + maTuyen + '\'' +
                 ", diemDi='" + diemDi + '\'' +
                 ", diemDen='" + diemDen + '\'' +
-                ", ngayTaoTuyen=" + ngayTaoTuyen +
+                ", thoiGianTaoTuyen=" + thoiGianTaoTuyen +
                 '}';
     }
 

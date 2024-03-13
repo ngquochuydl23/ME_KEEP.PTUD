@@ -77,7 +77,7 @@ public class QuyenDao implements IDao<Quyen, String>{
     @Override
     public boolean xoa(String id) {
         try {
-            String sql = "DELETE FROM `Quyen` WHERE `c` = ?";
+            String sql = "DELETE FROM `Quyen` WHERE `maQuyen` = ?";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, id);
             return pst.executeUpdate() > 0;
