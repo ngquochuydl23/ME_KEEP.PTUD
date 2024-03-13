@@ -12,6 +12,7 @@ import config.DatabaseUtil;
 import dao1.TaiKhoanDao;
 import entity.NhanVien;
 import helper.BCrypt;
+import singleton.NhanVienSuDungSingleton;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -34,8 +35,8 @@ public class Log_In extends JFrame implements KeyListener {
 
     public Log_In() {
         initComponent();
-        txtUsername.setText("hgbaodev");
-        txtPassword.setPass("123456");
+        txtUsername.setText("0868684962");
+        txtPassword.setPass("123!@#");
     }
 
     private void initComponent() {
@@ -151,6 +152,9 @@ public class Log_In extends JFrame implements KeyListener {
 
     private void pnlLogInMousePressed(java.awt.event.MouseEvent evt) throws UnsupportedLookAndFeelException {
         //checkLogin();
+
+
+        NhanVienSuDungSingleton.setThongTinNhanVienHienTai(new NhanVien());
 
         new Main(new TaiKhoanDTO(1, "admin","$2a$12$6GSkiQ05XjTRvCW9MB6MNuf7hOJEbbeQx11Eb8oELil1OrCq6uBXm", 1,1 )).setVisible(true);
         this.dispose();
