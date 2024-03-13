@@ -7,9 +7,9 @@ public interface IDao<T, TKey> {
 
     List<T> layHet();
 
-    T them(T entity);
+    boolean them(T entity);
 
-    void xoa(TKey id);
+    boolean xoa(TKey id);
 
-    T sua(T entity);
+    boolean sua(T entity);
 }

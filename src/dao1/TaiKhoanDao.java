@@ -4,7 +4,7 @@ import entity.NhanVien;
 
 import java.util.List;
 
-public class TaiKhoanDao implements IDao<NhanVien, Integer>{
+public class TaiKhoanDao implements IDao<NhanVien, Integer> {
 
 
     @Override
@@ -18,18 +18,18 @@ public class TaiKhoanDao implements IDao<NhanVien, Integer>{
     }
 
     @Override
-    public NhanVien them(NhanVien entity) {
-        return null;
+    public boolean them(NhanVien entity) {
+        return true;
     }
 
     @Override
-    public void xoa(Integer id) {
-
+    public boolean xoa(Integer id) {
+        return true;
     }
 
     @Override
-    public NhanVien sua(NhanVien entity) {
-        return null;
+    public boolean sua(NhanVien entity) {
+        return true;
     }
 
     public NhanVien layTheoSdt(String sdt) {

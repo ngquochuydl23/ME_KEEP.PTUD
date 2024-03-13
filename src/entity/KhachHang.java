@@ -1,5 +1,6 @@
 package entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -7,7 +8,7 @@ public class KhachHang {
     private int maKhachHang;
     private String hoTen;
     private String soDienThoai;
-    private Date ngayDangKy;
+    private LocalDateTime thoiGianDangKy;
     private boolean laKhachHangThanThiet;
 
     public KhachHang() {
@@ -18,11 +19,11 @@ public class KhachHang {
         this.maKhachHang = maKhachHang;
     }
 
-    public KhachHang(int maKhachHang, String hoTen, String soDienThoai, Date ngayDangKy, boolean laKhachHangThanThiet) {
+    public KhachHang(int maKhachHang, String hoTen, String soDienThoai, LocalDateTime thoiGianDangKy, boolean laKhachHangThanThiet) {
         this.maKhachHang = maKhachHang;
         this.hoTen = hoTen;
         this.soDienThoai = soDienThoai;
-        this.ngayDangKy = ngayDangKy;
+        this.thoiGianDangKy = thoiGianDangKy;
         this.laKhachHangThanThiet = laKhachHangThanThiet;
     }
 
@@ -50,15 +51,15 @@ public class KhachHang {
         this.soDienThoai = soDienThoai;
     }
 
-    public Date getNgayDangKy() {
-        return ngayDangKy;
+    public LocalDateTime getThoiGianDangKy() {
+        return thoiGianDangKy;
     }
 
-    public void setNgayDangKy(Date ngayDangKy) {
-        this.ngayDangKy = ngayDangKy;
+    public void setThoiGianDangKy(LocalDateTime ngayDangKy) {
+        this.thoiGianDangKy = ngayDangKy;
     }
 
-    public boolean isLaKhachHangThanThiet() {
+    public boolean laKhachHangThanThiet() {
         return laKhachHangThanThiet;
     }
 
@@ -72,7 +73,7 @@ public class KhachHang {
                 "maKhachHang=" + maKhachHang +
                 ", hoTen='" + hoTen + '\'' +
                 ", soDienThoai='" + soDienThoai + '\'' +
-                ", ngayDangKy=" + ngayDangKy +
+                ", thoiGianDangKy=" + thoiGianDangKy +
                 ", laKhachHangThanThiet=" + laKhachHangThanThiet +
                 '}';
     }
