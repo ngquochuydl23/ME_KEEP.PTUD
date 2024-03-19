@@ -9,6 +9,7 @@ import DTO.NhomQuyenDTO;
 import DTO.TaiKhoanDTO;
 import GUI.Log_In;
 import GUI.Main;
+import GUI.Panel.BanVe;
 import GUI.Panel.ChuyenKho;
 import GUI.Panel.KhachHang;
 import GUI.Panel.KhuVucKho;
@@ -31,6 +32,7 @@ import javax.swing.border.EmptyBorder;
 import GUI.Dialog.MyAccount;
 import GUI.Panel.PhieuKiemKe;
 import GUI.Panel.ThongKe.ThongKe;
+
 //import GUI.Component.itemTaskbar;
 public class MenuTaskbar extends JPanel {
 
@@ -40,6 +42,7 @@ public class MenuTaskbar extends JPanel {
     KhuVucKho quanLyKho;
     PhieuNhap phieuNhap;
     PhieuXuat phieuXuat;
+    BanVe banVe;
     KhachHang khachHang;
     NhaCungCap nhacungcap;
     NhanVien nhanVien;
@@ -47,19 +50,20 @@ public class MenuTaskbar extends JPanel {
     PhanQuyen phanQuyen;
     ThongKe thongKe;
     String[][] getSt = {
-        {"Trang chủ", "home.svg", "trangchu"},
-        {"Sản phẩm", "product.svg", "sanpham"},
-        {"Thuộc tính", "brand.svg", "thuoctinh"},
-        {"Khu vực kho", "area.svg", "khuvuckho"},
-        {"Phiếu nhập", "import.svg", "nhaphang"},
-        {"Phiếu xuất", "export.svg", "xuathang"},
-        {"Khách hàng", "customer.svg", "khachhang"},
-        {"Nhà cung cấp", "supplier.svg", "nhacungcap"},
-        {"Nhân viên", "staff.svg", "nhanvien"},
-        {"Tài khoản", "account.svg", "taikhoan"},
-        {"Thống kê", "statistical.svg", "thongke"},
-        {"Phân quyền", "permission.svg", "nhomquyen"},
-        {"Đăng xuất", "log_out.svg", "dangxuat"},
+            { "Trang chủ", "home.svg", "trangchu" },
+            { "Vé", "product.svg", "sanpham" },
+            { "Loại vé", "brand.svg", "thuoctinh" },
+            { "Chuyến tàu", "area.svg", "khuvuckho" },
+            { "Phiếu nhập", "import.svg", "nhaphang" },
+            { "Phiếu xuất", "export.svg", "xuathang" },
+            { "Khách hàng", "customer.svg", "khachhang" },
+            { "Nhà cung cấp", "supplier.svg", "nhacungcap" },
+            { "Nhân viên", "staff.svg", "nhanvien" },
+            { "Tài khoản", "account.svg", "taikhoan" },
+            { "Thống kê", "statistical.svg", "thongke" },
+            { "Phân quyền", "permission.svg", "nhomquyen" },
+            { "Đăng xuất", "log_out.svg", "dangxuat" },
+            { "Bán vé", "import.svg", "banve" },
     };
 
     Main main;
@@ -69,7 +73,7 @@ public class MenuTaskbar extends JPanel {
     JLabel lblTenNhomQuyen, lblUsername;
     JScrollPane scrollPane;
 
-    //tasbarMenu chia thành 3 phần chính là pnlCenter, pnlTop, pnlBottom
+    // tasbarMenu chia thành 3 phần chính là pnlCenter, pnlTop, pnlBottom
     JPanel pnlCenter, pnlTop, pnlBottom, bar1, bar2, bar3, bar4;
 
     Color FontColor = new Color(255, 255, 255);
@@ -78,7 +82,7 @@ public class MenuTaskbar extends JPanel {
     Color HowerBackgroundColor = new Color(199, 18, 190);
     private ArrayList<ChiTietQuyenDTO> listQuyen;
     NhomQuyenDTO nhomQuyenDTO;
-    public NhanVienDTO nhanVienDTO;
+    public entity.NhanVien nhanVienDTO;
     JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
 
     public MenuTaskbar(Main main) {
@@ -113,7 +117,8 @@ public class MenuTaskbar extends JPanel {
         info.setLayout(new BorderLayout(0, 0));
         pnlTop.add(info, BorderLayout.CENTER);
 
-        // Cái info này bỏ vô cho đẹp tí, mai mốt có gì xóa đi đê hiển thị thông tin tài khoản và quyền
+        // Cái info này bỏ vô cho đẹp tí, mai mốt có gì xóa đi đê hiển thị thông tin tài
+        // khoản và quyền
         in4(info);
 
         bar1 = new JPanel();
@@ -129,7 +134,7 @@ public class MenuTaskbar extends JPanel {
         pnlCenter = new JPanel();
         pnlCenter.setPreferredSize(new Dimension(230, 600));
         pnlCenter.setBackground(DefaultColor);
-//        pnlCenter.setBorder(new EmptyBorder(0,15,0,35));
+        // pnlCenter.setBorder(new EmptyBorder(0,15,0,35));
         pnlCenter.setLayout(new FlowLayout(0, 0, 5));
 
         bar3 = new JPanel();
@@ -137,7 +142,8 @@ public class MenuTaskbar extends JPanel {
         bar3.setPreferredSize(new Dimension(1, 1));
         this.add(bar3, BorderLayout.EAST);
 
-        scrollPane = new JScrollPane(pnlCenter, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane = new JScrollPane(pnlCenter, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBorder(new EmptyBorder(5, 10, 0, 10));
         this.add(scrollPane, BorderLayout.CENTER);
 
@@ -160,11 +166,11 @@ public class MenuTaskbar extends JPanel {
             } else {
                 listitem[i] = new itemTaskbar(getSt[i][1], getSt[i][0]);
                 pnlCenter.add(listitem[i]);
-//                if (i != 0) {
-//                    if (!checkRole(getSt[i][2])) {
-//                        listitem[i].setVisible(false);
-//                    }
-//                }
+                // if (i != 0) {
+                // if (!checkRole(getSt[i][2])) {
+                // listitem[i].setVisible(false);
+                // }
+                // }
             }
         }
 
@@ -211,19 +217,18 @@ public class MenuTaskbar extends JPanel {
                 main.setPanel(quanLyKho);
             }
         });
-//        listitem[4].addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mousePressed(MouseEvent evt) {
-//                PhieuKiemKe kiemKe = new PhieuKiemKe(main, nhanVienDTO);
-//                main.setPanel(kiemKe);
-//            }
-//        });
+        // listitem[4].addMouseListener(new MouseAdapter() {
+        // @Override
+        // public void mousePressed(MouseEvent evt) {
+        // PhieuKiemKe kiemKe = new PhieuKiemKe(main, nhanVienDTO);
+        // main.setPanel(kiemKe);
+        // }
+        // });
 
         listitem[4].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                phieuNhap = new PhieuNhap(main, nhanVienDTO);
-                main.setPanel(phieuNhap);
+                // main.setPanel(new PhieuNhap(main, nhanVienDTO));
             }
         });
         listitem[5].addMouseListener(new MouseAdapter() {
@@ -273,7 +278,7 @@ public class MenuTaskbar extends JPanel {
         listitem[11].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-           
+
                 phanQuyen = new PhanQuyen(main);
                 main.setPanel(phanQuyen);
             }
@@ -291,6 +296,15 @@ public class MenuTaskbar extends JPanel {
                     main.dispose();
                     login.setVisible(true);
                 }
+            }
+        });
+
+        listitem[13].addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent evt) {
+
+                banVe = new BanVe(main);
+                main.setPanel(banVe);
             }
         });
     }
@@ -322,9 +336,11 @@ public class MenuTaskbar extends JPanel {
             }
         }
     }
-    public void resetChange(){
-        this.nhanVienDTO = new NhanVienDAO().selectById(String.valueOf(nhanVienDTO.getManv()));
+
+    public void resetChange() {
+        this.nhanVienDTO = new NhanVienDAO().selectById(String.valueOf(nhanVienDTO.getMaNhanVien()));
     }
+
     public void in4(JPanel info) {
         JPanel pnlIcon = new JPanel(new FlowLayout());
         pnlIcon.setPreferredSize(new Dimension(60, 0));
@@ -332,11 +348,11 @@ public class MenuTaskbar extends JPanel {
         info.add(pnlIcon, BorderLayout.WEST);
         JLabel lblIcon = new JLabel();
         lblIcon.setPreferredSize(new Dimension(50, 70));
-        if (nhanVienDTO.getGioitinh() == 1) {
-            lblIcon.setIcon(new FlatSVGIcon("./icon/man_50px.svg"));
-        } else {
-            lblIcon.setIcon(new FlatSVGIcon("./icon/women_50px.svg"));
-        }
+        // if (nhanVienDTO.getGioitinh() == 1) {
+        //     lblIcon.setIcon(new FlatSVGIcon("./icon/man_50px.svg"));
+        // } else {
+        //     lblIcon.setIcon(new FlatSVGIcon("./icon/women_50px.svg"));
+        // }
         pnlIcon.add(lblIcon);
 
         JPanel pnlInfo = new JPanel();
@@ -345,14 +361,14 @@ public class MenuTaskbar extends JPanel {
         pnlInfo.setBorder(new EmptyBorder(15, 0, 0, 0));
         info.add(pnlInfo, BorderLayout.CENTER);
 
-        lblUsername = new JLabel(nhanVienDTO.getHoten());
-        lblUsername.putClientProperty("FlatLaf.style", "font: 150% $semibold.font");
-        pnlInfo.add(lblUsername);
+        // lblUsername = new JLabel(nhanVienDTO.getHoTen());
+        // lblUsername.putClientProperty("FlatLaf.style", "font: 150% $semibold.font");
+        // pnlInfo.add(lblUsername);
 
-        lblTenNhomQuyen = new JLabel(nhomQuyenDTO.getTennhomquyen());
-        lblTenNhomQuyen.putClientProperty("FlatLaf.style", "font: 120% $light.font");
-        lblTenNhomQuyen.setForeground(Color.GRAY);
-        pnlInfo.add(lblTenNhomQuyen);
+        // lblTenNhomQuyen = new JLabel(nhomQuyenDTO.getTennhomquyen());
+        // lblTenNhomQuyen.putClientProperty("FlatLaf.style", "font: 120% $light.font");
+        // lblTenNhomQuyen.setForeground(Color.GRAY);
+        // pnlInfo.add(lblTenNhomQuyen);
 
         lblIcon.addMouseListener(new MouseAdapter() {
             @Override
