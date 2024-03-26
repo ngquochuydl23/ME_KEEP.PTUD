@@ -48,7 +48,8 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
 
     public GUI.Panel.NhanVien nv;
     private JTextField textField;
-    public ArrayList<DTO.NhanVienDTO> listNv = NhanVienDAO.getInstance().selectAll();
+
+    public ArrayList<entity.NhanVien> listNv = NhanVienDAO.getInstance().selectAll();
     public NhanVienDAO nhanVienDAO = NhanVienDAO.getInstance();
 
     public NhanVienBUS() {
@@ -64,11 +65,11 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
     }
 
     public ArrayList<DTO.NhanVienDTO> getAll() {
-        return this.listNv;
+        return null;
     }
 
     public NhanVienDTO getByIndex(int index) {
-        return this.listNv.get(index);
+        return null;
     }
 
     public int getIndexById(int manv) {
@@ -76,7 +77,7 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
         int vitri = -1;
         int size = this.listNv.size();
         while (i < size && vitri == -1) {
-            if (this.listNv.get(i).getManv() == manv) {
+            if (this.listNv.get(i).getMaNhanVien() == manv) {
                 vitri = i;
             } else {
                 i++;
@@ -88,78 +89,32 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
     
     
     public String getNameById(int manv) {
-        return nhanVienDAO.selectById(manv+"").getHoten();
+        return nhanVienDAO.selectById(manv+"").getSoDienThoai();
+
     }
 
     public String[] getArrTenNhanVien() {
         int size = listNv.size();
         String[] result = new String[size];
         for (int i = 0; i < size; i++) {
-            result[i] = listNv.get(i).getHoten();
+          // result[i] = listNv.get(i).getHoten();
         }
         return result;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String btn = e.getActionCommand();
-        switch (btn) {
-            case "THÊM" -> {
-                NhanVienDialog nvthem = new NhanVienDialog(this, nv.owner, true, "Thêm nhân viên", "create");
-            }
-            case "SỬA" -> {
-                int index = nv.getRow();
-                if (index < 0) {
-                    JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cần sửa");
-                } else {
-                    NhanVienDialog nvsua = new NhanVienDialog(this, nv.owner, true, "Sửa nhân viên", "update", nv.getNhanVien());
-                }
-            }
-            case "XÓA" -> {
-                if (nv.getRow() < 0) {
-                    JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cần xóa");
-                } else {
-                    deleteNv(nv.getNhanVien());
-                }
-            }
-            case "CHI TIẾT" -> {
-                if (nv.getRow() < 0) {
-                    JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cần xóa");
-                } else {
-                    NhanVienDialog nvsua = new NhanVienDialog(this, nv.owner, true, "Xem nhân viên", "detail", nv.getNhanVien());
-                }
-            }
-            case "NHẬP EXCEL" -> {
-                importExcel();
-            }
-            case "XUẤT EXCEL" -> {
-                String[] header = new String[]{"MãNV", "Tên nhân viên", "Email nhân viên", "Số điên thoại", "Giới tính", "Ngày sinh"};
-                exportExcel(listNv, header);
-            }
-        }
-        nv.loadDataTalbe(listNv);
+
     }
 
     @Override
     public void insertUpdate(DocumentEvent e) {
-        String text = textField.getText();
-        if (text.length() == 0) {
-            nv.loadDataTalbe(listNv);
-        } else {
-            ArrayList<NhanVienDTO> listSearch = search(text);
-            searchLoadTable(listSearch);
-        }
+
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        String text = textField.getText();
-        if (text.length() == 0) {
-            nv.loadDataTalbe(listNv);
-        } else {
-            ArrayList<NhanVienDTO> listSearch = search(text);
-            searchLoadTable(listSearch);
-        }
+
     }
 
     @Override
@@ -168,11 +123,13 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
     }
 
     public void insertNv(NhanVienDTO nv) {
-        listNv.add(nv);
+
+        //listNv.add(nv);
     }
 
     public void updateNv(int index, NhanVienDTO nv) {
-        listNv.set(index, nv);
+
+        //listNv.set(index, nv);
     }
 
     public int getIndex() {
@@ -180,14 +137,11 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
     }
 
     public void deleteNv(NhanVienDTO nv) {
-        NhanVienDAO.getInstance().delete(nv.getManv() + "");
-        TaiKhoanDAO.getInstance().delete(nv.getManv() + "");
-        listNv.removeIf(n -> (n.getManv() == nv.getManv()));
-        loadTable();
+
     }
 
     public void loadTable() {
-        nv.loadDataTalbe(listNv);
+
     }
 
     public void searchLoadTable(ArrayList<NhanVienDTO> list) {
@@ -238,27 +192,27 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
         ArrayList<NhanVienDTO> result = new ArrayList<>();
         switch (luachon) {
             case "Tất cả" -> {
-                for (NhanVienDTO i : this.listNv) {
-                    if (i.getHoten().toLowerCase().contains(text) || i.getEmail().toLowerCase().contains(text)
-                            || i.getSdt().toLowerCase().contains(text)) {
-                        result.add(i);
-                    }
-                }
+//                for (NhanVienDTO i : this.listNv) {
+//                    if (i.getHoten().toLowerCase().contains(text) || i.getEmail().toLowerCase().contains(text)
+//                            || i.getSdt().toLowerCase().contains(text)) {
+//                        result.add(i);
+//                    }
+//                }
             }
             case "Họ tên" -> {
-                for (NhanVienDTO i : this.listNv) {
-                    if (i.getHoten().toLowerCase().contains(text)) {
-                        result.add(i);
-                    }
-                }
+//                for (NhanVienDTO i : this.listNv) {
+//                    if (i.getHoten().toLowerCase().contains(text)) {
+//                        result.add(i);
+//                    }
+//                }
             }
             case "Email" -> {
-                for (NhanVienDTO i : this.listNv) {
-                    if (i.getEmail().toLowerCase().contains(text)
-                           ) {
-                        result.add(i);
-                    }
-                }
+//                for (NhanVienDTO i : this.listNv) {
+//                    if (i.getEmail().toLowerCase().contains(text)
+//                           ) {
+//                        result.add(i);
+//                    }
+//                }
             }
             default ->
                 throw new AssertionError();
@@ -372,7 +326,7 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
                         k += 1;
                     } else {
                         NhanVienDTO nvdto = new NhanVienDTO(id, tennv, gt, birth, sdt, 1, email);
-                        NhanVienDAO.getInstance().insert(nvdto);
+                       // NhanVienDAO.getInstance().insert(nvdto);
                     }
                     JOptionPane.showMessageDialog(null, "Nhập thành công");
                 }

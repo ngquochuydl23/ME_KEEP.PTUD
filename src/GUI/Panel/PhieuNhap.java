@@ -283,7 +283,7 @@ public final class PhieuNhap extends JPanel implements ActionListener, KeyListen
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source == mainFunction.btn.get("create")) {
-            nhapKho = new TaoPhieuNhap(nv, "create", m);
+            //nhapKho = new TaoPhieuNhap(nv, "create", m);
             m.setPanel(nhapKho);
         } else if (source == mainFunction.btn.get("detail")) {
             int index = getRowSelected();

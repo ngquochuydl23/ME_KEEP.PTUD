@@ -95,7 +95,7 @@ public final class ChiTietPhieuDialog extends JDialog implements ActionListener 
     public void initPhieuNhap() {
         txtMaPhieu.setText("PN" + Integer.toString(this.phieunhap.getMaphieu()));
         txtNhaCungCap.setText(NhaCungCapDAO.getInstance().selectById(phieunhap.getManhacungcap() + "").getTenncc());
-        txtNhanVien.setText(NhanVienDAO.getInstance().selectById(phieunhap.getManguoitao() + "").getHoten());
+        txtNhanVien.setText(NhanVienDAO.getInstance().selectById(phieunhap.getManguoitao() + "").getHoTen());
         txtThoiGian.setText(Formater.FormatTime(phieunhap.getThoigiantao()));
     }
 
@@ -103,7 +103,7 @@ public final class ChiTietPhieuDialog extends JDialog implements ActionListener 
         txtMaPhieu.setText("PX" + Integer.toString(this.phieuxuat.getMaphieu()));
         txtNhaCungCap.setTitle("Khách hàng");
         txtNhaCungCap.setText(KhachHangDAO.getInstance().selectById(phieuxuat.getMakh() + "").getHoten());
-        txtNhanVien.setText(NhanVienDAO.getInstance().selectById(phieuxuat.getManguoitao() + "").getHoten());
+       // txtNhanVien.setText(NhanVienDAO.getInstance().selectById(phieuxuat.getManguoitao() + "").getHoten());
         txtThoiGian.setText(Formater.FormatTime(phieuxuat.getThoigiantao()));
     }
 

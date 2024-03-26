@@ -62,7 +62,7 @@ public class MyAccount extends JDialog implements ActionListener {
         this.setLayout(new BorderLayout(0, 0));
         this.setBackground(Color.WHITE);
         this.setResizable(false);
-        nv = menuTaskbar.nhanVienDTO;
+       // nv = menuTaskbar.nhanVienDTO;
         top = new JPanel();
         top.setBackground(Color.WHITE);
         top.setLayout(new FlowLayout(0, 0, 0));
@@ -162,7 +162,7 @@ public class MyAccount extends JDialog implements ActionListener {
                 } else {
                     String sdt = phone.getText();
                     NhanVienDTO nvdto = new NhanVienDTO(nv.getManv(), nv.getHoten(), nv.getGioitinh(), nv.getNgaysinh(), sdt, nv.getTrangthai(), nv.getEmail());
-                    NhanVienDAO.getInstance().update(nvdto);
+                //    NhanVienDAO.getInstance().update(nvdto);
                     JOptionPane.showMessageDialog(this, "Cập nhật thành công");
                 }
             }
@@ -175,7 +175,7 @@ public class MyAccount extends JDialog implements ActionListener {
                 } else {
                     String emailString = email.getText();
                     NhanVienDTO nvdto = new NhanVienDTO(nv.getManv(), nv.getHoten(), nv.getGioitinh(), nv.getNgaysinh(), nv.getSdt(), nv.getTrangthai(), emailString);
-                    NhanVienDAO.getInstance().update(nvdto);
+                //    NhanVienDAO.getInstance().update(nvdto);
                     JOptionPane.showMessageDialog(this, "Cập nhật thành công");
 
                 }

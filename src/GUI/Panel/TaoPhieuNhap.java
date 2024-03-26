@@ -10,7 +10,7 @@ import BUS.SanPhamBUS;
 import DTO.PhienBanSanPhamDTO;
 import DTO.ChiTietPhieuNhapDTO;
 import DTO.ChiTietSanPhamDTO;
-import DTO.entity.NhanVien;
+import entity.NhanVien;
 import DTO.PhieuNhapDTO;
 import DTO.SanPhamDTO;
 import GUI.Component.ButtonCustom;
@@ -358,7 +358,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         txtMaphieu.setText("PN" + maphieunhap);
         txtMaphieu.setEditable(false);
         txtNhanVien = new InputForm("Nhân viên nhập");
-        txtNhanVien.setText(nvDto.getHoten());
+        //txtNhanVien.setText(nvDto.getHoten());
         txtNhanVien.setEditable(false);
         cbxNhaCungCap = new SelectForm("Nhà cung cấp", nccBus.getArrTenNhaCungCap());
         right_top.add(txtMaphieu);
@@ -675,15 +675,15 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
                 int mancc = nccBus.getByIndex(cbxNhaCungCap.getSelectedIndex()).getMancc();
                 long now = System.currentTimeMillis();
                 Timestamp currenTime = new Timestamp(now);
-                PhieuNhapDTO pn = new PhieuNhapDTO(mancc, maphieunhap, nvDto.getManv(), currenTime, phieunhapBus.getTongTien(chitietphieu), 1);
-                boolean result = phieunhapBus.add(pn, chitietphieu, chitietsanpham);
-                if (result) {
-                    JOptionPane.showMessageDialog(this, "Nhập hàng thành công !");
-                    PhieuNhap pnlPhieu = new PhieuNhap(m, nvDto);
-                    m.setPanel(pnlPhieu);
-                } else {
-                    JOptionPane.showMessageDialog(this, "Nhập hàng không thành công !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
-                }
+              //  PhieuNhapDTO pn = new PhieuNhapDTO(mancc, maphieunhap, nvDto.getManv(), currenTime, phieunhapBus.getTongTien(chitietphieu), 1);
+              //  boolean result = phieunhapBus.add(pn, chitietphieu, chitietsanpham);
+//                if (result) {
+//                    JOptionPane.showMessageDialog(this, "Nhập hàng thành công !");
+//                    PhieuNhap pnlPhieu = new PhieuNhap(m, nvDto);
+//                    m.setPanel(pnlPhieu);
+//                } else {
+//                    JOptionPane.showMessageDialog(this, "Nhập hàng không thành công !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
+//                }
             }
         }
     }

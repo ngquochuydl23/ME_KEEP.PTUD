@@ -176,8 +176,8 @@ public class writePDF {
             String diachincc = NhaCungCapDAO.getInstance().selectById(pn.getManhacungcap() + "").getDiachi();
             paragraph2.add(new Chunk(diachincc, fontNormal10));
 
-            String ngtao = NhanVienDAO.getInstance().selectById(pn.getManguoitao() + "").getHoten();
-            Paragraph paragraph3 = new Paragraph("Người thực hiện: " + ngtao, fontNormal10);
+        //    String ngtao = NhanVienDAO.getInstance().selectById(pn.getManguoitao() + "").getHoten();
+            Paragraph paragraph3 = new Paragraph("Người thực hiện: " + "", fontNormal10);
             paragraph3.add(new Chunk(createWhiteSpace(5)));
             paragraph3.add(new Chunk("-"));
             paragraph3.add(new Chunk(createWhiteSpace(5)));
@@ -292,7 +292,7 @@ public class writePDF {
             String diachikh = KhachHangDAO.getInstance().selectById(px.getMakh() + "").getDiachi();
             paragraph2.add(new Chunk(diachikh, fontNormal10));
 
-            String ngtao = NhanVienDAO.getInstance().selectById(px.getManguoitao() + "").getHoten();
+            String ngtao = "";
             Paragraph paragraph3 = new Paragraph("Người thực hiện: " + ngtao, fontNormal10);
             paragraph3.add(new Chunk(createWhiteSpace(5)));
             paragraph3.add(new Chunk("-"));

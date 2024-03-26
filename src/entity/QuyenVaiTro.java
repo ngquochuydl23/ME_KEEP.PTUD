@@ -9,7 +9,7 @@ public class QuyenVaiTro {
 
 
     public QuyenVaiTro() {
-
+ 
     }
 
     public QuyenVaiTro(VaiTro vaiTro, Quyen quyen) {

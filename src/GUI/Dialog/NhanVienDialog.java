@@ -166,7 +166,7 @@ public class NhanVienDialog extends JDialog {
                             Date birthDay = jcBd.getDate();
                             java.sql.Date sqlDate = new java.sql.Date(birthDay.getTime());
                             NhanVienDTO nV = new NhanVienDTO(manv, txtName, txt_gender, sqlDate, txtSdt, 1, txtEmail);
-                            NhanVienDAO.getInstance().insert(nV);
+                         //   NhanVienDAO.getInstance().insert(nV);
                             nv.insertNv(nV);
                             nv.loadTable();
                             dispose();
@@ -202,9 +202,9 @@ public class NhanVienDialog extends JDialog {
                             Date birthDay = jcBd.getDate();
                             java.sql.Date sqlDate = new java.sql.Date(birthDay.getTime());
                             NhanVienDTO nV = new NhanVienDTO(nhanVien.getManv(), txtName, txt_gender, sqlDate, txtSdt, 1, txtEmail);
-                            NhanVienDAO.getInstance().update(nV);
+                       //     NhanVienDAO.getInstance().update(nV);
                             System.out.println("Index:" + nv.getIndex());
-                            nv.listNv.set(nv.getIndex(), nV);
+                          //  nv.listNv.set(nv.getIndex(), nV);
                             nv.loadTable();
                             dispose();
                         } catch (ParseException ex) {

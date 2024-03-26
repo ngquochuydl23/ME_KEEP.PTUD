@@ -43,7 +43,7 @@ public class ListNhanVien extends JDialog implements MouseListener {
     private JTable tableNhanVien;
     private JScrollPane scrollTableSanPham;
     private DefaultTableModel tblModel;
-    private ArrayList<NhanVienDTO> listnv = NhanVienDAO.getInstance().selectAllNV();
+   // private ArrayList<NhanVienDTO> listnv = NhanVienDAO.getInstance().selectAllNV();
     DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
     
     public ListNhanVien(TaiKhoan taiKhoan, JFrame owner, String title, boolean modal){
@@ -67,8 +67,8 @@ public class ListNhanVien extends JDialog implements MouseListener {
         jTextFieldSearch.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent e) {
                 String txt = jTextFieldSearch.getText();
-                listnv = search(txt);
-                loadDataTalbe(listnv);
+              //  listnv = search(txt);
+              //  loadDataTalbe(listnv);
             }
         });
         ButtonCustom buttonAdd = new ButtonCustom("Chọn nhân viên", "success", 14);
@@ -80,7 +80,7 @@ public class ListNhanVien extends JDialog implements MouseListener {
                 "Vui lòng chọn nhân viên!:)", "Thông báo", JOptionPane.DEFAULT_OPTION);
                 } else{
                     dispose();
-                    TaiKhoanDialog tkd = new TaiKhoanDialog(guiTaiKhoan, guiTaiKhoan.owner, "Thêm nhân viên", true, "create", listnv.get(getRow()).getManv());
+                 //   TaiKhoanDialog tkd = new TaiKhoanDialog(guiTaiKhoan, guiTaiKhoan.owner, "Thêm nhân viên", true, "create", listnv.get(getRow()).getManv());
                 }
             }
             
@@ -111,7 +111,7 @@ public class ListNhanVien extends JDialog implements MouseListener {
         scrollTableSanPham.setViewportView(tableNhanVien);
         jPanelTable.add(scrollTableSanPham);
         this.add(jPanelTable,BorderLayout.CENTER);
-        loadDataTalbe(listnv);
+     //   loadDataTalbe(listnv);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
@@ -121,13 +121,13 @@ public class ListNhanVien extends JDialog implements MouseListener {
     }
     
     public void loadDataTalbe(ArrayList<DTO.NhanVienDTO> list) {
-        listnv = list;
-        tblModel.setRowCount(0);
-        for (DTO.NhanVienDTO nhanVien : listnv) {
-            tblModel.addRow(new Object[]{
-                nhanVien.getManv(),nhanVien.getHoten(),nhanVien.getGioitinh()==1?"Nam":"Nữ",nhanVien.getNgaysinh(),nhanVien.getSdt(),nhanVien.getEmail()
-            });
-        }
+//        listnv = list;
+//        tblModel.setRowCount(0);
+//        for (DTO.NhanVienDTO nhanVien : listnv) {
+//            tblModel.addRow(new Object[]{
+//                nhanVien.getManv(),nhanVien.getHoten(),nhanVien.getGioitinh()==1?"Nam":"Nữ",nhanVien.getNgaysinh(),nhanVien.getSdt(),nhanVien.getEmail()
+//            });
+//        }
     }
     
     public ArrayList<NhanVienDTO> search(String text) {
@@ -135,17 +135,18 @@ public class ListNhanVien extends JDialog implements MouseListener {
             text = text.toLowerCase();
         ArrayList<NhanVienDTO> result = new ArrayList<>();
         System.out.println(text);
-        for(NhanVienDTO i : listnv) {
-           if(i.getHoten().toLowerCase().contains(text) || i.getEmail().toLowerCase().contains(text)
-                   || i.getSdt().toLowerCase().contains(text)){
-               result.add(i);
-           }
-        }
+//        for(NhanVienDTO i : listnv) {
+//           if(i.getHoten().toLowerCase().contains(text) || i.getEmail().toLowerCase().contains(text)
+//                   || i.getSdt().toLowerCase().contains(text)){
+//               result.add(i);
+//           }
+//        }
         return result;
         } else {
-            return NhanVienDAO.getInstance().selectAll();
+          // return NhanVienDAO.getInstance().selectAll();
+            return null;
         }
-        
+
     }
     
     @Override
