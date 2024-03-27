@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import GUI.Component.PanelBorderRadius;
+import GUI.Dialog.nhanVienDialog.NhanVienDialog;
 import GUI.Main;
 import dao1.NhanVienDao;
 import entity.NhanVien;
@@ -85,6 +86,15 @@ public final class NhanVienPanel extends JPanel {
         functionBar.add(chucNangChinh);
         search = new IntegratedSearch(new String[]{"Tất cả", "Họ tên", "Số điện thoại"});
         functionBar.add(search);
+
+        chucNangChinh
+                .getToolbar("them")
+                .addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new NhanVienDialog();
+            }
+        });
 
         search.setActionReset(new ActionListener() {
             @Override

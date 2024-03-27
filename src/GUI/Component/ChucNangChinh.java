@@ -40,4 +40,8 @@ public final class ChucNangChinh extends JToolBar {
         btn.put("xuat-excel", new ButtonToolBar("XUẤT EXCEL", "export_excel.svg", "view"));
         btn.put("xem-danh-sach", new ButtonToolBar("XEM DS", "phone.svg", "view"));
     }
+
+    public ButtonToolBar getToolbar(String title) {
+        return btn.get(title);
+    }
 }

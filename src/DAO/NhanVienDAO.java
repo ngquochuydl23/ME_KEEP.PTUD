@@ -31,7 +31,7 @@ public class NhanVienDAO implements DAOinterface<NhanVien> {
             pst.setString(1, t.getHoTen());
             pst.setInt(2, t.getGioitinh());
             pst.setString(3, t.getSoDienThoai());
-            pst.setDate(4, (Date) (t.getNgaysinh()));
+            pst.setDate(4, Date.valueOf(t.getNgaysinh()));
             pst.setInt(5, t.getTrangthai());
             pst.setString(6, t.getEmail());
             result = pst.executeUpdate();
@@ -51,7 +51,7 @@ public class NhanVienDAO implements DAOinterface<NhanVien> {
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             pst.setString(1, t.getHoTen());
             pst.setInt(2, t.getGioitinh());
-            pst.setDate(3, (Date) t.getNgaysinh());
+            pst.setDate(3, Date.valueOf(t.getNgaysinh()));
             pst.setString(4, t.getSoDienThoai());
             pst.setInt(5, t.getTrangthai());
             pst.setString(6, t.getEmail());

@@ -1,5 +1,6 @@
 package entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -8,8 +9,8 @@ public class NhanVien {
     private String hoTen;
     private int gioitinh;
     private String soDienThoai;
-    private Date ngayDangKy;
-    private Date ngaySinh;
+    private LocalDate ngayDangKy;
+    private LocalDate ngaySinh;
     private int trangthai;
     private String matKhau;
     private String email;
@@ -23,7 +24,7 @@ public class NhanVien {
         this.maNhanVien = maNhanVien;
     }
 
-    public NhanVien(int maNhanVien, String hoTen, int gioitinh, String soDienThoai, Date ngayDangky,Date ngaySinh, int trangthai, String email) {
+    public NhanVien(int maNhanVien, String hoTen, int gioitinh, String soDienThoai, LocalDate ngayDangky, LocalDate ngaySinh, int trangthai, String email) {
         this.maNhanVien = maNhanVien;
         this.hoTen = hoTen;
         this.gioitinh = gioitinh;
@@ -34,13 +35,25 @@ public class NhanVien {
         this.email = email;
     }
 
-    public NhanVien(int maNhanVien, String hoTen, int gioitinh, String soDienThoai, Date ngayDangky,Date ngaySinh, int trangthai,
+    public NhanVien(int maNhanVien, String hoTen, int gioitinh, String soDienThoai, LocalDate ngayDangky,LocalDate ngaySinh, int trangthai,
             String matKhau, String email, String vaiTro) {
         this.maNhanVien = maNhanVien;
         this.hoTen = hoTen;
         this.gioitinh = gioitinh;
         this.soDienThoai = soDienThoai;
         this.ngayDangKy = ngayDangky;
+        this.ngaySinh = ngaySinh;
+        this.trangthai = trangthai;
+        this.matKhau = matKhau;
+        this.email = email;
+        this.vaiTro = vaiTro;
+    }
+
+    public NhanVien(String hoTen, int gioitinh, String soDienThoai, LocalDate ngaySinh, int trangthai,
+                    String matKhau, String email, String vaiTro) {
+        this.hoTen = hoTen;
+        this.gioitinh = gioitinh;
+        this.soDienThoai = soDienThoai;
         this.ngaySinh = ngaySinh;
         this.trangthai = trangthai;
         this.matKhau = matKhau;
@@ -80,11 +93,11 @@ public class NhanVien {
         this.soDienThoai = soDienThoai;
     }
 
-    public Date getNgayDangKy() {
+    public LocalDate getNgayDangKy() {
         return ngayDangKy;
     }
 
-    public void setNgayDangKy(Date ngayDangKy) {
+    public void setNgayDangKy(LocalDate ngayDangKy) {
         this.ngayDangKy = ngayDangKy;
     }
 
@@ -130,11 +143,11 @@ public class NhanVien {
         this.gioitinh = gioitinh;
     }
 
-    public Date getNgaysinh() {
+    public LocalDate getNgaysinh() {
         return ngaySinh;
     }
 
-    public void setNgaysinh(Date ngaysinh) {
+    public void setNgaysinh(LocalDate ngaysinh) {
         this.ngaySinh = ngaysinh;
     }
 
