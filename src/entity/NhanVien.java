@@ -9,12 +9,12 @@ public class NhanVien {
     private int gioitinh;
     private String soDienThoai;
     private Date ngayDangKy;
-    private Date ngaysinh;
+    private Date ngaySinh;
     private int trangthai;
     private String matKhau;
     private String email;
 
-    private VaiTro vaiTro;
+    private String vaiTro;
 
     public NhanVien() {
     }
@@ -23,45 +23,36 @@ public class NhanVien {
         this.maNhanVien = maNhanVien;
     }
 
-    public NhanVien(int maNhanVien, String hoTen, int gioitinh, String soDienThoai, Date ngayDangKy, Date ngaysinh,
-            int trangthai, String matKhau, String email, VaiTro vaiTro) {
+    public NhanVien(int maNhanVien, String hoTen, int gioitinh, String soDienThoai, Date ngayDangky,Date ngaySinh, int trangthai, String email) {
         this.maNhanVien = maNhanVien;
         this.hoTen = hoTen;
         this.gioitinh = gioitinh;
         this.soDienThoai = soDienThoai;
-        this.ngayDangKy = ngayDangKy;
-        this.ngaysinh = ngaysinh;
+        this.ngayDangKy = ngayDangky;
+        this.ngaySinh = ngaySinh;
+        this.trangthai = trangthai;
+        this.email = email;
+    }
+
+    public NhanVien(int maNhanVien, String hoTen, int gioitinh, String soDienThoai, Date ngayDangky,Date ngaySinh, int trangthai,
+            String matKhau, String email, String vaiTro) {
+        this.maNhanVien = maNhanVien;
+        this.hoTen = hoTen;
+        this.gioitinh = gioitinh;
+        this.soDienThoai = soDienThoai;
+        this.ngayDangKy = ngayDangky;
+        this.ngaySinh = ngaySinh;
         this.trangthai = trangthai;
         this.matKhau = matKhau;
         this.email = email;
         this.vaiTro = vaiTro;
     }
 
-    public NhanVien(int maNhanVien, String hoTen, int gioitinh, String soDienThoai, Date ngaysinh, int trangthai,
-            String email) {
-        this.maNhanVien = maNhanVien;
-        this.hoTen = hoTen;
-        this.gioitinh = gioitinh;
-        this.soDienThoai = soDienThoai;
-        this.ngaysinh = ngaysinh;
-        this.trangthai = trangthai;
-        this.email = email;
-    }
-
-    public NhanVien(int maNhanVien, String hoTen, String soDienThoai, Date ngayDangKy, String matKhau, VaiTro vaiTro) {
-        this.maNhanVien = maNhanVien;
-        this.hoTen = hoTen;
-        this.soDienThoai = soDienThoai;
-        this.ngayDangKy = ngayDangKy;
-        this.matKhau = matKhau;
+    public void setVaiTro(String vaiTro) {
         this.vaiTro = vaiTro;
     }
 
-    public void setVaiTro(VaiTro vaiTro) {
-        this.vaiTro = vaiTro;
-    }
-
-    public VaiTro getVaiTro() {
+    public String getVaiTro() {
         return vaiTro;
     }
 
@@ -140,11 +131,11 @@ public class NhanVien {
     }
 
     public Date getNgaysinh() {
-        return ngaysinh;
+        return ngaySinh;
     }
 
     public void setNgaysinh(Date ngaysinh) {
-        this.ngaysinh = ngaysinh;
+        this.ngaySinh = ngaysinh;
     }
 
     public int getTrangthai() {

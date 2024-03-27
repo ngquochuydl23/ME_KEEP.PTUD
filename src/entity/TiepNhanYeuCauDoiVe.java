@@ -10,7 +10,6 @@ public class TiepNhanYeuCauDoiVe {
     private LocalDateTime thoiGianYeuCauDoi;
 
     private String ghiChu;
-
     private NhanVien nhanVien;
     private KhachHang khachHang;
 

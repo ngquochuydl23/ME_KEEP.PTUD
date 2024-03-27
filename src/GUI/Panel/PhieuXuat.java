@@ -1,7 +1,6 @@
     package GUI.Panel;
 
 import BUS.KhachHangBUS;
-import BUS.NhanVienBUS;
 import BUS.PhieuXuatBUS;
 import DTO.PhieuXuatDTO;
 import DTO.TaiKhoanDTO;
@@ -63,7 +62,7 @@ public final class PhieuXuat extends JPanel implements ActionListener, KeyListen
 
     ArrayList<PhieuXuatDTO> listPhieuXuat;
 
-    NhanVienBUS nvBUS = new NhanVienBUS();
+   // NhanVienBUS nvBUS = new NhanVienBUS();
     PhieuXuatBUS pxBUS = new PhieuXuatBUS();
     KhachHangBUS khachHangBUS = new KhachHangBUS();
 
@@ -171,12 +170,12 @@ public final class PhieuXuat extends JPanel implements ActionListener, KeyListen
         // Handel
         String[] listKh = khachHangBUS.getArrTenKhachHang();
         listKh = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listKh)).toArray(String[]::new);
-        String[] listNv = nvBUS.getArrTenNhanVien();
-        listNv = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listNv)).toArray(String[]::new);
+      //  String[] listNv = nvBUS.getArrTenNhanVien();
+    //    listNv = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listNv)).toArray(String[]::new);
 
         // init
         cbxKhachHang = new SelectForm("Khách hàng", listKh);
-        cbxNhanVien = new SelectForm("Nhân viên xuất", listNv);
+     //   cbxNhanVien = new SelectForm("Nhân viên xuất", listNv);
         dateStart = new InputDate("Từ ngày");
         dateEnd = new InputDate("Đến ngày");
         moneyMin = new InputForm("Từ số tiền (VND)");
@@ -249,7 +248,7 @@ public final class PhieuXuat extends JPanel implements ActionListener, KeyListen
                 i + 1,
                 listphieuxuat.get(i).getMaphieu(),
                 khachHangBUS.getTenKhachHang(listphieuxuat.get(i).getMakh()),
-                nvBUS.getNameById(listphieuxuat.get(i).getManguoitao()),
+         //       nvBUS.getNameById(listphieuxuat.get(i).getManguoitao()),
                 Formater.FormatTime(listphieuxuat.get(i).getThoigiantao()),
                 Formater.FormatVND(listphieuxuat.get(i).getTongTien()),});
         }
@@ -263,13 +262,13 @@ public final class PhieuXuat extends JPanel implements ActionListener, KeyListen
         if (validateSelectDate()) {
             int type = search.cbxChoose.getSelectedIndex();
             int makh = cbxKhachHang.getSelectedIndex() == 0 ? 0 : khachHangBUS.getByIndex(cbxKhachHang.getSelectedIndex() - 1).getMaKH();
-            int manv = cbxNhanVien.getSelectedIndex() == 0 ? 0 : nvBUS.getByIndex(cbxNhanVien.getSelectedIndex() - 1).getManv();
+     //       int manv = cbxNhanVien.getSelectedIndex() == 0 ? 0 : nvBUS.getByIndex(cbxNhanVien.getSelectedIndex() - 1).getManv();
             String input = search.txtSearchForm.getText() != null ? search.txtSearchForm.getText() : "";
             Date time_start = dateStart.getDate() != null ? dateStart.getDate() : new Date(0);
             Date time_end = dateEnd.getDate() != null ? dateEnd.getDate() : new Date(System.currentTimeMillis());
             String min_price = moneyMin.getText();
             String max_price = moneyMax.getText();
-            this.listPhieuXuat = pxBUS.fillerPhieuXuat(type, input, makh, manv, time_start, time_end, min_price, max_price);
+        //    this.listPhieuXuat = pxBUS.fillerPhieuXuat(type, input, makh, manv, time_start, time_end, min_price, max_price);
             loadDataTalbe(listPhieuXuat);
         }
     }

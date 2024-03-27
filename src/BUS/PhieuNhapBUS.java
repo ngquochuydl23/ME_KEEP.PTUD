@@ -24,7 +24,7 @@ public class PhieuNhapBUS {
     public final ChiTietSanPhamDAO chitietsanphamDAO = new ChiTietSanPhamDAO();
 
     NhaCungCapBUS nccBUS = new NhaCungCapBUS();
-    NhanVienBUS nvBUS = new NhanVienBUS();
+    //NhanVienBUS nvBUS = new NhanVienBUS();
 
     ArrayList<PhieuNhapDTO> listPhieuNhap;
 
@@ -109,11 +109,11 @@ public class PhieuNhapBUS {
             boolean match = false;
             switch (type) {
                 case 0 -> {
-                    if (Integer.toString(phieuNhap.getMaphieu()).contains(input)
-                            || nccBUS.getTenNhaCungCap(phieuNhap.getManhacungcap()).toLowerCase().contains(input)
-                            || nvBUS.getNameById(phieuNhap.getManguoitao()).toLowerCase().contains(input)) {
-                        match = true;
-                    }
+//                    if (Integer.toString(phieuNhap.getMaphieu()).contains(input)
+//                            || nccBUS.getTenNhaCungCap(phieuNhap.getManhacungcap()).toLowerCase().contains(input)
+//                            || nvBUS.getNameById(phieuNhap.getManguoitao()).toLowerCase().contains(input)) {
+//                        match = true;
+//                    }
                 }
                 case 1 -> {
                     if (Integer.toString(phieuNhap.getMaphieu()).contains(input)) {
@@ -126,9 +126,9 @@ public class PhieuNhapBUS {
                     }
                 }
                 case 3 -> {
-                    if (nvBUS.getNameById(phieuNhap.getManguoitao()).toLowerCase().contains(input)) {
-                        match = true;
-                    }
+//                    if (nvBUS.getNameById(phieuNhap.getManguoitao()).toLowerCase().contains(input)) {
+//                        match = true;
+//                    }
                 }
             }
 

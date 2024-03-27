@@ -96,8 +96,8 @@ public class NhanVienDAO implements DAOinterface<NhanVien> {
                 String sdt = rs.getString("sdt");
                 int trangthai = rs.getInt("trangthai");
                 String email = rs.getString("email");
-                NhanVien nv = new NhanVien(manv, hoten, gioitinh, sdt, ngaysinh, trangthai, email);
-                result.add(nv);
+               // NhanVien nv = new NhanVien(manv, hoten, gioitinh, sdt, ngaysinh, trangthai, email);
+              //  result.add(nv);
             }
             JDBCUtil.closeConnection(con);
         } catch (Exception e) {
@@ -121,8 +121,8 @@ public class NhanVienDAO implements DAOinterface<NhanVien> {
                 String sdt = rs.getString("sdt");
                 int trangthai = rs.getInt("trangthai");
                 String email = rs.getString("email");
-                NhanVien nv = new NhanVien(manv, hoten, gioitinh, sdt, ngaysinh, trangthai, email);
-                result.add(nv);
+                //NhanVien nv = new NhanVien(manv, hoten, gioitinh, sdt, ngaysinh, trangthai, email);
+                //result.add(nv);
             }
             JDBCUtil.closeConnection(con);
         } catch (Exception e) {
@@ -146,8 +146,8 @@ public class NhanVienDAO implements DAOinterface<NhanVien> {
                 String sdt = rs.getString("sdt");
                 int trangthai = rs.getInt("trangthai");
                 String email = rs.getString("email");
-                NhanVien nv = new NhanVien(manv, hoten, gioitinh, sdt, ngaysinh, trangthai, email);
-                result.add(nv);
+               // NhanVien nv = new NhanVien(manv, hoten, gioitinh, sdt, ngaysinh, trangthai, email);
+             //   result.add(nv);
             }
             JDBCUtil.closeConnection(con);
         } catch (Exception e) {
@@ -173,7 +173,7 @@ public class NhanVienDAO implements DAOinterface<NhanVien> {
                 String sdt = rs.getString("sdt");
                 int trangthai = rs.getInt("trangthai");
                 String email = rs.getString("email");
-                NhanVien nv = new NhanVien(manv, hoten, gioitinh, sdt, ngaysinh, trangthai, email);
+            //    NhanVien nv = new NhanVien(manv, hoten, gioitinh, sdt, ngaysinh, trangthai, email);
 
             }
             JDBCUtil.closeConnection(con);
@@ -198,7 +198,7 @@ public class NhanVienDAO implements DAOinterface<NhanVien> {
                 String sdt = rs.getString("sdt");
                 int trangthai = rs.getInt("trangthai");
                 String email = rs.getString("email");
-                NhanVien nv = new NhanVien(manv, hoten, gioitinh, sdt, ngaysinh, trangthai, email);
+             //   NhanVien nv = new NhanVien(manv, hoten, gioitinh, sdt, ngaysinh, trangthai, email);
             }
             JDBCUtil.closeConnection(con);
         } catch (Exception e) {

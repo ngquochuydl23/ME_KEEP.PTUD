@@ -1,37 +1,51 @@
 package GUI.Panel;
 
-import BUS.NhanVienBUS;
+
+import GUI.Component.ChucNangChinh;
 import GUI.Component.IntegratedSearch;
 import GUI.Component.MainFunction;
+
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
 import GUI.Component.PanelBorderRadius;
 import GUI.Main;
+import dao1.NhanVienDao;
+import entity.NhanVien;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public final class NhanVien extends JPanel {
+public final class NhanVienPanel extends JPanel {
+
+
+    private NhanVienDao nhanVienDao;
 
     public JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
-    NhanVienBUS nvBus = new NhanVienBUS(this);
-    PanelBorderRadius main, functionBar;
-    JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
-    JTable tableNhanVien;
-    JScrollPane scrollTableSanPham;
-    MainFunction mainFunction;
-    public IntegratedSearch search;
-    Main m;
-    ArrayList<DTO.NhanVienDTO> listnv = nvBus.getAll();
+    private PanelBorderRadius main, functionBar;
+    private JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
+    private JTable tableNhanVien;
+    private JScrollPane scrollTableSanPham;
+    private ChucNangChinh chucNangChinh;
+    private IntegratedSearch search;
+    private Main m;
 
-    Color BackgroundColor = new Color(240, 247, 250);
+    private List<NhanVien> dsNhanVien;
+
+    private Color BackgroundColor = new Color(240, 247, 250);
     private DefaultTableModel tblModel;
 
     private void initComponent() {
         this.setBackground(BackgroundColor);
         this.setLayout(new BorderLayout(0, 0));
         this.setOpaque(true);
+
+        nhanVienDao = new NhanVienDao();
 
         // pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4 chỉ để thêm contentCenter ở giữa mà contentCenter không bị dính sát vào các thành phần khác
         pnlBorder1 = new JPanel();
@@ -67,18 +81,37 @@ public final class NhanVien extends JPanel {
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
         contentCenter.add(functionBar, BorderLayout.NORTH);
 
-        String[] action = {"create", "update", "delete", "detail", "import", "export"};
-        mainFunction = new MainFunction(m.user.getManhomquyen(), "nhanvien", action);
-        for (String ac : action) {
-            mainFunction.btn.get(ac).addActionListener(nvBus);
-        }
-        functionBar.add(mainFunction);
-        search = new IntegratedSearch(new String[]{"Tất cả", "Họ tên", "Email"});
+        chucNangChinh = new ChucNangChinh(new String[]{"them", "xoa", "sua", "chi-tiet", "nhap-excel", "xuat-excel"});
+        functionBar.add(chucNangChinh);
+        search = new IntegratedSearch(new String[]{"Tất cả", "Họ tên", "Số điện thoại"});
         functionBar.add(search);
-        search.btnReset.addActionListener(nvBus);
-        search.cbxChoose.addActionListener(nvBus);
-        search.txtSearchForm.getDocument().addDocumentListener(new NhanVienBUS(search.txtSearchForm, this));
 
+        search.setActionReset(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Reset");
+                layDsNhanVien();
+            }
+        });
+        search.txtSearchForm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String searchText = search.txtSearchForm.getText().trim();
+                String luaChon = search.cbxChoose.getSelectedItem().toString();
+                System.out.println(searchText);
+                if (!searchText.isEmpty()) {
+                    switch (luaChon) {
+                        case "Tất cả" -> {
+                            System.out.println("Tất cả");
+                        }
+                        case "Họ tên" -> layDsNhanVienTheoTen(searchText);
+                        case "Số điện thoại" -> {
+                            System.out.println("Số điện thoại");
+                        }
+                    }
+                }
+            }
+        });
         // main là phần ở dưới để thống kê bảng biểu
         main = new PanelBorderRadius();
         BoxLayout boxly = new BoxLayout(main, BoxLayout.Y_AXIS);
@@ -90,9 +123,9 @@ public final class NhanVien extends JPanel {
         scrollTableSanPham = new JScrollPane();
         tableNhanVien = new JTable();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"MNV", "Họ tên", "Giới tính", "Ngày Sinh", "SDT", "Email"};
+        String[] headerCols = "Mã nhân viên;Họ tên;Số Điện thoại;Giới tính;Ngày sinh;Email".split(";");
 
-        tblModel.setColumnIdentifiers(header);
+        tblModel.setColumnIdentifiers(headerCols);
         tableNhanVien.setModel(tblModel);
         tableNhanVien.setFocusable(false);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -108,29 +141,40 @@ public final class NhanVien extends JPanel {
         main.add(scrollTableSanPham);
     }
 
-    
-
-    public NhanVien(Main m) {
+    public NhanVienPanel(Main m) {
         this.m = m;
         initComponent();
         tableNhanVien.setDefaultEditor(Object.class, null);
-        loadDataTalbe(listnv);
+        layDsNhanVien();
     }
 
     public int getRow() {
         return tableNhanVien.getSelectedRow();
     }
 
-    public DTO.NhanVienDTO getNhanVien() {
-        return listnv.get(tableNhanVien.getSelectedRow());
+    public void layDsNhanVien() {
+        while (tblModel.getRowCount() > 0) {
+            tblModel.removeRow(0);
+        }
+        dsNhanVien = nhanVienDao.layHet();
+        for (entity.NhanVien nhanVien : dsNhanVien) {
+            tblModel.addRow(new Object[]{
+                    nhanVien.getMaNhanVien(), nhanVien.getHoTen(), nhanVien.getSoDienThoai(), nhanVien.getGioitinh() == 1 ? "Nam" : "Nữ", nhanVien.getNgaysinh(), nhanVien.getEmail()
+            });
+        }
     }
 
-    public void loadDataTalbe(ArrayList<DTO.NhanVienDTO> list) {
-        listnv = list;
-        tblModel.setRowCount(0);
-        for (DTO.NhanVienDTO nhanVien : listnv) {
+    public void layDsNhanVienTheoTen(String ten) {
+        while (tblModel.getRowCount() > 0) {
+            tblModel.removeRow(0);
+        }
+        dsNhanVien = new ArrayList<>();
+        NhanVien nhanVien = nhanVienDao.layDsNhanVienTheoTen(ten);
+        if (nhanVien != null) {
+            dsNhanVien.add(nhanVien);
+
             tblModel.addRow(new Object[]{
-                nhanVien.getManv(), nhanVien.getHoten(), nhanVien.getGioitinh() == 1 ? "Nam" : "Nữ", nhanVien.getNgaysinh(), nhanVien.getSdt(), nhanVien.getEmail()
+                    nhanVien.getMaNhanVien(), nhanVien.getHoTen(), nhanVien.getSoDienThoai(), nhanVien.getGioitinh() == 1 ? "Nam" : "Nữ", nhanVien.getNgaysinh(), nhanVien.getEmail()
             });
         }
     }

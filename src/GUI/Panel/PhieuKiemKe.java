@@ -1,7 +1,6 @@
 package GUI.Panel;
 
 import BUS.NhaCungCapBUS;
-import BUS.NhanVienBUS;
 import BUS.PhieuKiemKeBUS;
 import DTO.SanPhamDTO;
 import BUS.SanPhamBUS;
@@ -63,7 +62,7 @@ public class PhieuKiemKe extends JPanel implements ActionListener, PropertyChang
     InputForm moneyMin, moneyMax;
     
     NhaCungCapBUS nccBUS = new NhaCungCapBUS();
-    NhanVienBUS nvBUS = new NhanVienBUS();
+   // NhanVienBUS nvBUS = new NhanVienBUS();
     PhieuKiemKeBUS phieuKiemKeBUS = new PhieuKiemKeBUS();
     
     ArrayList<PhieuKiemKeDTO> listPhieu;
@@ -140,11 +139,11 @@ public class PhieuKiemKe extends JPanel implements ActionListener, PropertyChang
         contentCenter.add(box, BorderLayout.WEST);
 
         // Handel
-        String[] listNv = nvBUS.getArrTenNhanVien();
-        listNv = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listNv)).toArray(String[]::new);
+//        String[] listNv = nvBUS.getArrTenNhanVien();
+//        listNv = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listNv)).toArray(String[]::new);
 
         // init
-        cbxNhanVien = new SelectForm("Nhân viên kiểm kê", listNv);
+//        cbxNhanVien = new SelectForm("Nhân viên kiểm kê", listNv);
         dateStart = new InputDate("Từ ngày");
         dateEnd = new InputDate("Đến ngày");
         
@@ -233,7 +232,7 @@ public class PhieuKiemKe extends JPanel implements ActionListener, PropertyChang
             tblModel.addRow(new Object[]{
                 i + 1,
                 listphieuxuat.get(i).getMaphieukiemke(),
-                nvBUS.getNameById(listphieuxuat.get(i).getNguoitao()),
+          //      nvBUS.getNameById(listphieuxuat.get(i).getNguoitao()),
                 Formater.FormatTime(listphieuxuat.get(i).getThoigiantao()),
             });
         }
@@ -242,11 +241,11 @@ public class PhieuKiemKe extends JPanel implements ActionListener, PropertyChang
     public void Fillter() throws ParseException {
         if (validateSelectDate()) {
             int type = search.cbxChoose.getSelectedIndex();
-            int manv = cbxNhanVien.getSelectedIndex() == 0 ? 0 : nvBUS.getByIndex(cbxNhanVien.getSelectedIndex() - 1).getManv();
+           // int manv = cbxNhanVien.getSelectedIndex() == 0 ? 0 : nvBUS.getByIndex(cbxNhanVien.getSelectedIndex() - 1).getManv();
             String input = search.txtSearchForm.getText() != null ? search.txtSearchForm.getText() : "";
             Date time_start = dateStart.getDate() != null ? dateStart.getDate() : new Date(0);
             Date time_end = dateEnd.getDate() != null ? dateEnd.getDate() : new Date(System.currentTimeMillis());
-            this.listPhieu = phieuKiemKeBUS.fillerPhieuKiemKe(type, input, manv, time_start, time_end);
+          //  this.listPhieu = phieuKiemKeBUS.fillerPhieuKiemKe(type, input, manv, time_start, time_end);
             loadDataTalbe(listPhieu);
         }
     }

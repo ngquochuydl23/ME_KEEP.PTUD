@@ -25,7 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.border.EmptyBorder;
 
-public class Log_In extends JFrame implements KeyListener {
+public class DangNhapForm extends JFrame implements KeyListener {
 
     JPanel pnlMain, pnlLogIn;
     JLabel lblImage, lbl1, lbl2, lbl3, lbl4, lbl5, lbl6, lbl7;
@@ -33,9 +33,9 @@ public class Log_In extends JFrame implements KeyListener {
 
     Color FontColor = new Color(96, 125, 139);
 
-    public Log_In() {
+    public DangNhapForm() {
         initComponent();
-        txtUsername.setText("0868684962");
+        txtUsername.setText("0868684961");
         txtPassword.setPass("123!@#");
     }
 
@@ -97,7 +97,7 @@ public class Log_In extends JFrame implements KeyListener {
                 try {
                     pnlLogInMousePressed(evt);
                 } catch (UnsupportedLookAndFeelException ex) {
-                    Logger.getLogger(Log_In.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(DangNhapForm.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
@@ -146,17 +146,14 @@ public class Log_In extends JFrame implements KeyListener {
             return;
         }
 
-        new Main(new TaiKhoanDTO(2, "hgbaodev","$2a$12$SAlAhcsudMzNEouyBaoHnOKR23ixdH0ZkcoyXUJ5gS/NFt.b4oqw6", 1,1 )).setVisible(true);
+        new Main().setVisible(true);
         this.dispose();
     }
 
     private void pnlLogInMousePressed(java.awt.event.MouseEvent evt) throws UnsupportedLookAndFeelException {
         //checkLogin();
-
-
         NhanVienSuDungSingleton.setThongTinNhanVienHienTai(new NhanVien());
-
-        new Main(new TaiKhoanDTO(1, "admin","$2a$12$6GSkiQ05XjTRvCW9MB6MNuf7hOJEbbeQx11Eb8oELil1OrCq6uBXm", 1,1 )).setVisible(true);
+        new Main().setVisible(true);
         this.dispose();
     }
 
@@ -169,31 +166,6 @@ public class Log_In extends JFrame implements KeyListener {
 
         pnlLogIn.setBackground(Color.BLACK);
         pnlLogIn.setForeground(Color.white);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                FlatRobotoFont.install();
-                FlatLaf.setPreferredFontFamily(FlatRobotoFont.FAMILY);
-                FlatLaf.setPreferredLightFontFamily(FlatRobotoFont.FAMILY_LIGHT);
-                FlatLaf.setPreferredSemiboldFontFamily(FlatRobotoFont.FAMILY_SEMIBOLD);
-                FlatIntelliJLaf.registerCustomDefaultsSource("style");
-                FlatIntelliJLaf.setup();
-                UIManager.put("PasswordField.showRevealButton", true);
-                Log_In login = new Log_In();
-                login.setVisible(true);
-
-
-                try {
-                    DatabaseUtil.connect();
-                    System.out.println("Kết nối thành công");
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     public void imgIntro() {
@@ -210,9 +182,7 @@ public class Log_In extends JFrame implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public void keyTyped(KeyEvent e) {}
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -220,13 +190,11 @@ public class Log_In extends JFrame implements KeyListener {
             try {
                 checkLogin();
             } catch (UnsupportedLookAndFeelException ex) {
-                Logger.getLogger(Log_In.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DangNhapForm.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public void keyReleased(KeyEvent e) {}
 }

@@ -4,17 +4,15 @@ import DAO.ChiTietQuyenDAO;
 import DAO.NhanVienDAO;
 import DAO.NhomQuyenDAO;
 import DTO.ChiTietQuyenDTO;
-import DTO.NhanVienDTO;
 import DTO.NhomQuyenDTO;
 import DTO.TaiKhoanDTO;
-import GUI.Log_In;
+import GUI.DangNhapForm;
 import GUI.Main;
 import GUI.Panel.BanVe;
-import GUI.Panel.ChuyenKho;
 import GUI.Panel.KhachHang;
 import GUI.Panel.KhuVucKho;
 import GUI.Panel.NhaCungCap;
-import GUI.Panel.NhanVien;
+import GUI.Panel.NhanVienPanel;
 import GUI.Panel.PhanQuyen;
 import GUI.Panel.PhieuNhap;
 import GUI.Panel.PhieuXuat;
@@ -22,7 +20,7 @@ import GUI.Panel.QuanLyThuocTinhSP;
 import GUI.Panel.SanPham;
 import GUI.Panel.TaiKhoan;
 import GUI.Panel.TrangChu;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -30,7 +28,6 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import GUI.Dialog.MyAccount;
-import GUI.Panel.PhieuKiemKe;
 import GUI.Panel.ThongKe.ThongKe;
 
 //import GUI.Component.itemTaskbar;
@@ -45,7 +42,7 @@ public class MenuTaskbar extends JPanel {
     BanVe banVe;
     KhachHang khachHang;
     NhaCungCap nhacungcap;
-    NhanVien nhanVien;
+    NhanVienPanel nhanVien;
     TaiKhoan taiKhoan;
     PhanQuyen phanQuyen;
     ThongKe thongKe;
@@ -256,7 +253,7 @@ public class MenuTaskbar extends JPanel {
         listitem[8].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                nhanVien = new NhanVien(main);
+                nhanVien = new NhanVienPanel(main);
                 main.setPanel(nhanVien);
             }
         });
@@ -292,7 +289,7 @@ public class MenuTaskbar extends JPanel {
                         "Bạn có chắc chắn muốn đăng xuất?", "Đăng xuất",
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (input == 0) {
-                    Log_In login = new Log_In();
+                    DangNhapForm login = new DangNhapForm();
                     main.dispose();
                     login.setVisible(true);
                 }

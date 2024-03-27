@@ -20,7 +20,7 @@ public class PhieuKiemKeBUS {
     private PhieuKiemKeDAO phieuKiemKeDAO = PhieuKiemKeDAO.getInstance();
     private ChiTietKiemKeDAO chiTietKiemKeDAO = ChiTietKiemKeDAO.getInstance();
     private ChiTietKiemKeSanPhamDAO chiTietKiemKeSanPhamDAO = ChiTietKiemKeSanPhamDAO.getInstance();
-    private NhanVienBUS nvBUS = new NhanVienBUS();
+   // private NhanVienBUS nvBUS = new NhanVienBUS();
     private ArrayList<PhieuKiemKeDTO> danhSachPhieu;
     
     public PhieuKiemKeBUS(){
@@ -71,10 +71,10 @@ public class PhieuKiemKeBUS {
             boolean match = false;
             switch (type) {
                 case 0 -> {
-                    if (Integer.toString(phieuKiemKe.getMaphieukiemke()).contains(input)
-                            || nvBUS.getNameById(phieuKiemKe.getNguoitao()).toLowerCase().contains(input)) {
-                        match = true;
-                    }
+//                    if (Integer.toString(phieuKiemKe.getMaphieukiemke()).contains(input)
+//                            || nvBUS.getNameById(phieuKiemKe.getNguoitao()).toLowerCase().contains(input)) {
+//                        match = true;
+//                    }
                 }
                 case 1 -> {
                     if (Integer.toString(phieuKiemKe.getMaphieukiemke()).contains(input)) {
@@ -82,9 +82,9 @@ public class PhieuKiemKeBUS {
                     }
                 }
                 case 2 -> {
-                    if (nvBUS.getNameById(phieuKiemKe.getNguoitao()).toLowerCase().contains(input)) {
-                        match = true;
-                    }
+//                    if (nvBUS.getNameById(phieuKiemKe.getNguoitao()).toLowerCase().contains(input)) {
+//                        match = true;
+//                    }
                 }
             }
             if (match

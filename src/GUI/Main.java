@@ -50,12 +50,8 @@ public class Main extends JFrame {
         MainContent.add(trangChu).setVisible(true);
     }
 
-    public Main() {
-        initComponent();
-    }
-
-    public Main(TaiKhoanDTO user) throws UnsupportedLookAndFeelException {
-        this.user = user;
+    public Main() throws UnsupportedLookAndFeelException {
+        this.user = new TaiKhoanDTO();
         initComponent();
         FlatRobotoFont.install();
         FlatLaf.setPreferredFontFamily(FlatRobotoFont.FAMILY);

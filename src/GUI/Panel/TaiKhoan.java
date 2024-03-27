@@ -1,7 +1,6 @@
 package GUI.Panel;
 
 import BUS.NhaCungCapBUS;
-import BUS.NhanVienBUS;
 import BUS.NhomQuyenBUS;
 import BUS.TaiKhoanBUS;
 import DAO.TaiKhoanDAO;
@@ -251,16 +250,16 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
                         check1 = 1;
                     }
                     int manhomquyen = 0;
-                    NhanVienBUS nvbus = new NhanVienBUS();
-                    ArrayList<NhanVienDTO> nvlist = nvbus.getAll();
-                    for (NhanVienDTO nv : nvlist) {
-                        if (nv.getManv() == manv) {
-                            check2 = 0;
-                            break;
-                        } else {
-                            check2 = 1;
-                        }
-                    }
+                  //  NhanVienBUS nvbus = new NhanVienBUS();
+                 //   ArrayList<NhanVienDTO> nvlist = nvbus.getAll();
+//                 /   for (NhanVienDTO nv : nvlist) {
+//                        if (nv.getManv() == manv) {
+//                            check2 = 0;
+//                            break;
+//                        } else {
+//                            check2 = 1;
+//                        }
+//                    }
                     ArrayList<TaiKhoanDTO> curlist = taiKhoanBus.getTaiKhoanAll();
                     for (TaiKhoanDTO tk : curlist) {
                         if (tk.getUsername().equals(tendangnhap)) {

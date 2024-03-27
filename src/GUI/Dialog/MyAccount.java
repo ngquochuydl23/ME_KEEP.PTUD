@@ -4,7 +4,7 @@
  */
 package GUI.Dialog;
 
-import BUS.NhanVienBUS;
+
 import BUS.TaiKhoanBUS;
 import DAO.NhanVienDAO;
 import DAO.TaiKhoanDAO;
@@ -43,7 +43,7 @@ public class MyAccount extends JDialog implements ActionListener {
     InputForm current_pwd, phone, email, new_pwd, confirm;
     NhanVienDTO nv;
     TaiKhoanBUS tkbus;
-    NhanVienBUS nvbus;
+
     MenuTaskbar menuTaskbar;
     JRadioButton[] jbr;
     JPanel[] panel;
@@ -56,7 +56,7 @@ public class MyAccount extends JDialog implements ActionListener {
 
     public void initComponent(MenuTaskbar menutaskbar) {
         tkbus = new TaiKhoanBUS();
-        nvbus = new NhanVienBUS();
+       // nvbus = new NhanVienBUS();
         this.menuTaskbar = menutaskbar;
         this.setSize(400, 300);
         this.setLayout(new BorderLayout(0, 0));

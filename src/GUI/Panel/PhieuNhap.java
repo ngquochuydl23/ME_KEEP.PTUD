@@ -1,7 +1,6 @@
 package GUI.Panel;
 
 import BUS.NhaCungCapBUS;
-import BUS.NhanVienBUS;
 import BUS.PhieuNhapBUS;
 import DTO.NhanVienDTO;
 import DTO.PhieuNhapDTO;
@@ -60,7 +59,7 @@ public final class PhieuNhap extends JPanel implements ActionListener, KeyListen
 
     PhieuNhapBUS phieunhapBUS = new PhieuNhapBUS();
     NhaCungCapBUS nccBUS = new NhaCungCapBUS();
-    NhanVienBUS nvBUS = new NhanVienBUS();
+//    NhanVienBUS nvBUS = new NhanVienBUS();
     ArrayList<PhieuNhapDTO> listPhieu;
 
     Color BackgroundColor = new Color(240, 247, 250);
@@ -166,12 +165,12 @@ public final class PhieuNhap extends JPanel implements ActionListener, KeyListen
         // Handle
         String[] listNcc = nccBUS.getArrTenNhaCungCap();
         listNcc = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listNcc)).toArray(String[]::new);
-        String[] listNv = nvBUS.getArrTenNhanVien();
-        listNv = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listNv)).toArray(String[]::new);
+       // String[] listNv = nvBUS.getArrTenNhanVien();
+       // listNv = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listNv)).toArray(String[]::new);
 
         // init
         cbxNhaCungCap = new SelectForm("Nhà cung cấp", listNcc);
-        cbxNhanVien = new SelectForm("Nhân viên nhập", listNv);
+      //  cbxNhanVien = new SelectForm("Nhân viên nhập", listNv);
         dateStart = new InputDate("Từ ngày");
         dateEnd = new InputDate("Đến ngày");
         moneyMin = new InputForm("Từ số tiền (VND)");
@@ -213,7 +212,7 @@ public final class PhieuNhap extends JPanel implements ActionListener, KeyListen
             tblModel.addRow(new Object[]{
                 i + 1, (int) listphieunhap.get(i).getMaphieu(),
                 nccBUS.getTenNhaCungCap(listphieunhap.get(i).getManhacungcap()),
-                nvBUS.getNameById(listphieunhap.get(i).getManguoitao()),
+           //     nvBUS.getNameById(listphieunhap.get(i).getManguoitao()),
                 Formater.FormatTime(listphieunhap.get(i).getThoigiantao()),
                 Formater.FormatVND(listphieunhap.get(i).getTongTien())
             });
@@ -232,14 +231,14 @@ public final class PhieuNhap extends JPanel implements ActionListener, KeyListen
         if (validateSelectDate()) {
             int type = search.cbxChoose.getSelectedIndex();
             int mancc = cbxNhaCungCap.getSelectedIndex() == 0 ? 0 : nccBUS.getByIndex(cbxNhaCungCap.getSelectedIndex() - 1).getMancc();
-            int manv = cbxNhanVien.getSelectedIndex() == 0 ? 0 : nvBUS.getByIndex(cbxNhanVien.getSelectedIndex() - 1).getManv();
+        //    int manv = cbxNhanVien.getSelectedIndex() == 0 ? 0 : nvBUS.getByIndex(cbxNhanVien.getSelectedIndex() - 1).getManv();
             String input = search.txtSearchForm.getText() != null ? search.txtSearchForm.getText() : "";
             Date time_start = dateStart.getDate() != null ? dateStart.getDate() : new Date(0);
             Date time_end = dateEnd.getDate() != null ? dateEnd.getDate() : new Date(System.currentTimeMillis());
             String min_price = moneyMin.getText();
             String max_price = moneyMax.getText();
-            this.listPhieu = phieunhapBUS.fillerPhieuNhap(type, input, mancc, manv, time_start, time_end, min_price, max_price);
-            loadDataTalbe(listPhieu);
+     //       this.listPhieu = phieunhapBUS.fillerPhieuNhap(type, input, mancc, manv, time_start, time_end, min_price, max_price);
+       //     loadDataTalbe(listPhieu);
         }
     }
 
