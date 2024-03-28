@@ -106,4 +106,10 @@ public class LoaiVeDao implements IDao<LoaiVe, String> {
             return false;
         }
     }
+
+    @Override
+    public int getAutoIncrement() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAutoIncrement'");
+    }
 }

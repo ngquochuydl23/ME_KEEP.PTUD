@@ -5,6 +5,7 @@
 package GUI.Component;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;

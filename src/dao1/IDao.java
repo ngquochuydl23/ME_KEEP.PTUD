@@ -12,4 +12,6 @@ public interface IDao<T, TKey> {
     boolean xoa(TKey id);
 
     boolean sua(T entity);
+
+    int getAutoIncrement();
 }

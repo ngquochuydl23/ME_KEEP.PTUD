@@ -66,14 +66,13 @@ public class KhachHangDao implements IDao<KhachHang, Integer> {
     @Override
     public boolean them(KhachHang entity) {
         try {
-            String sql = "INSERT INTO `KhachHang`(`maKhachHang`, `hoTen`, `soDienThoai`, `thoiGianDangKy`, `laKhachHangThanThiet`) VALUES (?,?,?,?,?)";
+            String sql = "INSERT INTO `KhachHang`(`hoTen`, `soDienThoai`, `thoiGianDangKy`, `laKhachHangThanThiet`) VALUES (?,?,?,?)";
             PreparedStatement statement = con.prepareStatement(sql);
 
-            statement.setInt(1, entity.getMaKhachHang());
-            statement.setString(2, entity.getHoTen());
-            statement.setString(3, entity.getSoDienThoai());
-            statement.setTimestamp(4, Timestamp.valueOf(entity.getThoiGianDangKy()));
-            statement.setBoolean(5, false);
+            statement.setString(1, entity.getHoTen());
+            statement.setString(2, entity.getSoDienThoai());
+            statement.setTimestamp(3, Timestamp.valueOf(entity.getThoiGianDangKy()));
+            statement.setBoolean(4, false);
 
             return statement.executeUpdate() > 0;
         } catch (SQLException ex) {
@@ -98,8 +97,9 @@ public class KhachHangDao implements IDao<KhachHang, Integer> {
     @Override
     public boolean sua(KhachHang entity) {
         try {
+            Connection connect = DatabaseUtil.getConnection();
             String sql = "UPDATE `KhachHang` SET `hoTen`=?,`soDienThoai`=?,`laKhachHangThanThiet`=? WHERE maKhachHang=?";
-            PreparedStatement pst =  con.prepareStatement(sql);
+            PreparedStatement pst = connect.prepareStatement(sql);
 
             pst.setString(1, entity.getHoTen());
             pst.setString(2, entity.getSoDienThoai());
@@ -112,5 +112,26 @@ public class KhachHangDao implements IDao<KhachHang, Integer> {
             Logger.getLogger(KhachHangDao.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
+    }
+
+    @Override
+    public int getAutoIncrement() {
+        int result = -1;
+        try {
+            String sql = "SELECT MAX(id) AS max_id FROM KhachHang";
+            PreparedStatement pst = con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                result = rs.getInt("max_id") + 1;
+            } else {
+                System.out.println("No data");
+            }
+            rs.close(); // Đóng ResultSet sau khi sử dụng
+            pst.close(); // Đóng PreparedStatement sau khi sử dụng
+        } catch (SQLException ex) {
+            Logger.getLogger(KhachHangDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println(result);
+        return result;
     }
 }

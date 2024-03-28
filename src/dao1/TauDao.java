@@ -101,4 +101,10 @@ public class TauDao implements IDao<Tau, String>{
             return false;
         }
     }
+
+    @Override
+    public int getAutoIncrement() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAutoIncrement'");
+    }
 }

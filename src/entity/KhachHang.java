@@ -19,7 +19,15 @@ public class KhachHang {
         this.maKhachHang = maKhachHang;
     }
 
-    public KhachHang(int maKhachHang, String hoTen, String soDienThoai, LocalDateTime thoiGianDangKy, boolean laKhachHangThanThiet) {
+    public KhachHang(String hoTen, String soDienThoai, LocalDateTime thoiGianDangKy, boolean laKhachHangThanThiet) {
+        this.hoTen = hoTen;
+        this.soDienThoai = soDienThoai;
+        this.thoiGianDangKy = thoiGianDangKy;
+        this.laKhachHangThanThiet = laKhachHangThanThiet;
+    }
+
+    public KhachHang(int maKhachHang, String hoTen, String soDienThoai, LocalDateTime thoiGianDangKy,
+            boolean laKhachHangThanThiet) {
         this.maKhachHang = maKhachHang;
         this.hoTen = hoTen;
         this.soDienThoai = soDienThoai;
@@ -80,8 +88,10 @@ public class KhachHang {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         KhachHang khachHang = (KhachHang) o;
         return maKhachHang == khachHang.maKhachHang;
     }

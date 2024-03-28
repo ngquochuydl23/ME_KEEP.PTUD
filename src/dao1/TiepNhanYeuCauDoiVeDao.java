@@ -123,4 +123,10 @@ public class TiepNhanYeuCauDoiVeDao implements IDao<TiepNhanYeuCauDoiVe, Integer
             return false;
         }
     }
+
+    @Override
+    public int getAutoIncrement() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAutoIncrement'");
+    }
 }

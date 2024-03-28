@@ -109,4 +109,10 @@ public class TuyenDao implements IDao<Tuyen, String>{
             return false;
         }
     }
+
+    @Override
+    public int getAutoIncrement() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAutoIncrement'");
+    }
 }

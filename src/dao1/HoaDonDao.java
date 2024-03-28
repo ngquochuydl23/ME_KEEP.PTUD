@@ -76,4 +76,10 @@ public class HoaDonDao implements IDao<HoaDon, String> {
     public boolean sua(HoaDon entity) {
         return false;
     }
+
+    @Override
+    public int getAutoIncrement() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

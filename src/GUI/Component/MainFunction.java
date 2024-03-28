@@ -34,9 +34,9 @@ public final class MainFunction extends JToolBar {
         initData();
         for (String btnn : listBtn) {
             this.add(btn.get(btnn));
-            if (!nhomquyenBus.checkPermisson(manhomquyen, chucnang, btn.get(btnn).getPermisson())) {
-                btn.get(btnn).setEnabled(false);
-            }
+            // if (!nhomquyenBus.checkPermisson(manhomquyen, chucnang, btn.get(btnn).getPermisson())) {
+                btn.get(btnn).setEnabled(true);
+            // }
         }
     }
 }

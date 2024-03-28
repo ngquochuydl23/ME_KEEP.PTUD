@@ -101,4 +101,10 @@ public class QuyenDao implements IDao<Quyen, String>{
             return false;
         }
     }
+
+    @Override
+    public int getAutoIncrement() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAutoIncrement'");
+    }
 }

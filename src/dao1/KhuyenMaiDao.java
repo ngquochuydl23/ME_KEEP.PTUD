@@ -115,4 +115,10 @@ public class KhuyenMaiDao implements IDao<KhuyenMai, String> {
             return false;
         }
     }
+
+    @Override
+    public int getAutoIncrement() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAutoIncrement'");
+    }
 }

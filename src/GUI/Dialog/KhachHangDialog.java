@@ -4,18 +4,21 @@ import GUI.Component.HeaderTitle;
 import GUI.Component.InputForm;
 import GUI.Component.ButtonCustom;
 import DAO.KhachHangDAO;
-import DTO.KhachHangDTO;
 import GUI.Panel.KhachHang;
-import BUS.KhachHangBUS;
+import dao1.KhachHangDao;
 import GUI.Component.NumericDocumentFilter;
 import helper.Validation;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.List;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.PlainDocument;
-import org.apache.commons.codec.language.bm.Rule;
 
 public class KhachHangDialog extends JDialog implements MouseListener {
 
@@ -23,32 +26,31 @@ public class KhachHangDialog extends JDialog implements MouseListener {
     private HeaderTitle titlePage;
     private JPanel pnlMain, pnlButtom;
     private ButtonCustom btnThem, btnCapNhat, btnHuyBo;
-    private InputForm tenKH, sdtKH, diachiKH;
+    private InputForm tenKH, sdtKH;
     private JTextField maKH;
-    KhachHangDTO kh;
+    private KhachHangDao khachHangDao = new KhachHangDao();
+    entity.KhachHang kh;
 
     public KhachHangDialog(KhachHang jpKH, JFrame owner, String title, boolean modal, String type) {
         super(owner, title, modal);
         this.jpKH = jpKH;
         tenKH = new InputForm("Tên khách hàng");
         sdtKH = new InputForm("Số điện thoại");
-        PlainDocument phonex = (PlainDocument)sdtKH.getTxtForm().getDocument();
+        PlainDocument phonex = (PlainDocument) sdtKH.getTxtForm().getDocument();
         phonex.setDocumentFilter((new NumericDocumentFilter()));
-        diachiKH = new InputForm("Địa chỉ");
         initComponents(title, type);
     }
 
-    public KhachHangDialog(KhachHang jpKH, JFrame owner, String title, boolean modal, String type, DTO.KhachHangDTO kh) {
+    public KhachHangDialog(KhachHang jpKH, JFrame owner, String title, boolean modal, String type,
+            entity.KhachHang kh) {
         super(owner, title, modal);
-        this.kh=kh;
+        this.kh = kh;
         maKH = new JTextField("");
-        setMaKH(Integer.toString(kh.getMaKH()));
+        setMaKH(Integer.toString(kh.getMaKhachHang()));
         tenKH = new InputForm("Tên khách hàng");
-        setTenKH(kh.getHoten());
+        setTenKH(kh.getHoTen());
         sdtKH = new InputForm("Số điện thoại");
-        setSdtKH(kh.getSdt());
-        diachiKH = new InputForm("Địa chỉ");
-        setDiaChiKH(kh.getDiachi());
+        setSdtKH(kh.getSoDienThoai());
         this.jpKH = jpKH;
         initComponents(title, type);
     }
@@ -62,7 +64,6 @@ public class KhachHangDialog extends JDialog implements MouseListener {
 
         pnlMain.add(tenKH);
         pnlMain.add(sdtKH);
-        pnlMain.add(diachiKH);
 
         pnlButtom = new JPanel(new FlowLayout());
         pnlButtom.setBorder(new EmptyBorder(10, 0, 10, 0));
@@ -71,7 +72,7 @@ public class KhachHangDialog extends JDialog implements MouseListener {
         btnCapNhat = new ButtonCustom("Lưu thông tin", "success", 14);
         btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
 
-        //Add MouseListener btn
+        // Add MouseListener btn
         btnThem.addMouseListener(this);
         btnCapNhat.addMouseListener(this);
         btnHuyBo.addMouseListener(this);
@@ -84,7 +85,6 @@ public class KhachHangDialog extends JDialog implements MouseListener {
             case "view" -> {
                 tenKH.setDisable();
                 sdtKH.setDisable();
-                diachiKH.setDisable();
             }
             default ->
                 throw new AssertionError();
@@ -122,47 +122,43 @@ public class KhachHangDialog extends JDialog implements MouseListener {
         this.sdtKH.setText(id);
     }
 
-    public String getDiaChiKH() {
-        return diachiKH.getText();
-    }
-
-    public void setDiaChiKH(String id) {
-        this.diachiKH.setText(id);
-    }
-
     @Override
     public void mouseClicked(MouseEvent e) {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    boolean Validation(){
+    boolean Validation() {
         if (Validation.isEmpty(tenKH.getText())) {
-            JOptionPane.showMessageDialog(this, "Tên khách hàng không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên khách hàng không được rỗng", "Cảnh báo !",
+                    JOptionPane.WARNING_MESSAGE);
             return false;
-         }
-         else if (Validation.isEmpty(sdtKH.getText()) || !Validation.isNumber(sdtKH.getText()) && sdtKH.getText().length()!=10) {
-            JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng và phải là 10 ký tự số", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        } else if (Validation.isEmpty(sdtKH.getText())
+                || !Validation.isNumber(sdtKH.getText()) && sdtKH.getText().length() != 10) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng và phải là 10 ký tự số", "Cảnh báo !",
+                    JOptionPane.WARNING_MESSAGE);
             return false;
-         }
-        else  if (Validation.isEmpty(diachiKH.getText())) {
-            JOptionPane.showMessageDialog(this, "Địa chỉ không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-            return false;
-         }
-          return true;
+        }
+
+        return true;
     }
+
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getSource() == btnThem && Validation()) {
-                int id=KhachHangDAO.getInstance().getAutoIncrement();
-                jpKH.khachhangBUS.add(new DTO.KhachHangDTO(id, tenKH.getText(),sdtKH.getText(), diachiKH.getText()));
-                jpKH.loadDataTable(jpKH.listkh);
-                dispose();
-
+            entity.KhachHang khachHang = new entity.KhachHang(getTenKH(), getSdtKH(), LocalDateTime.now(), false);
+            this.khachHangDao.them(khachHang);
+            jpKH.loadDataTable();
+            dispose();
         } else if (e.getSource() == btnHuyBo) {
             dispose();
         } else if (e.getSource() == btnCapNhat && Validation()) {
-            jpKH.khachhangBUS.update(new KhachHangDTO(kh.getMaKH(), tenKH.getText(), sdtKH.getText(), diachiKH.getText()));
-            jpKH.loadDataTable(jpKH.listkh);
+            this.kh.setHoTen(getTenKH());
+            this.kh.setSoDienThoai(getSdtKH());
+            
+            this.khachHangDao.sua(this.kh);
+            jpKH.loadDataTable();
             dispose();
         }
     }
@@ -172,7 +168,7 @@ public class KhachHangDialog extends JDialog implements MouseListener {
         str = str.replaceAll("\\s+", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\-", "");
 
         // Kiểm tra xem chuỗi có phải là một số điện thoại hợp lệ hay không
-        if (str.matches("\\d{10}")) { // Kiểm tra số điện thoại 10 chữ số
+        if (str.matches("\\d{10}")) {
             return true;
         } else if (str.matches("\\d{3}-\\d{3}-\\d{4}")) { // Kiểm tra số điện thoại có dấu gạch ngang
             return true;
@@ -185,17 +181,23 @@ public class KhachHangDialog extends JDialog implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

@@ -29,6 +29,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -45,6 +46,8 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.swing.text.PlainDocument;
 
+import org.w3c.dom.events.MouseEvent;
+
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
@@ -59,6 +62,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     IntegratedSearch search;
     DefaultTableModel tblModel;
     SelectForm cbxNhaCungCap, cbxNhanVien;
+    JCheckBox checkBoxKhuHoi;
     InputDate dateStart, dateEnd;
     InputForm moneyMin, moneyMax;
 
@@ -174,24 +178,23 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         contentCenter.add(box, BorderLayout.WEST);
 
         // Handle
-        String[] listNcc = {"Vui vẻ nha"};
+        String[] listNcc = { "Vui vẻ nha" };
         listNcc = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listNcc)).toArray(String[]::new);
-        String[] listNv = {"Nhân viên thân thiện"};
+        String[] listNv = { "Nhân viên thân thiện" };
         listNv = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listNv)).toArray(String[]::new);
 
         // init
-        cbxNhaCungCap = new SelectForm("Nhà cung cấp", listNcc);
-        cbxNhanVien = new SelectForm("Nhân viên nhập", listNv);
-        dateStart = new InputDate("Từ ngày");
-        dateEnd = new InputDate("Đến ngày");
-        moneyMin = new InputForm("Từ số tiền (VND)");
-        moneyMax = new InputForm("Đến số tiền (VND)");
+        cbxNhaCungCap = new SelectForm("Ga đi", listNcc);
+        cbxNhanVien = new SelectForm("Ga đến", listNv);
+        dateStart = new InputDate("Ngày đi");
+        checkBoxKhuHoi = new JCheckBox("Khứ hồi");
+        dateEnd = new InputDate("Ngày về");
+        dateEnd.setVisible(false);
+        moneyMin = new InputForm("Số lượng hành khách");
+        moneyMin.setEditable(false);
 
         PlainDocument doc_min = (PlainDocument) moneyMin.getTxtForm().getDocument();
         doc_min.setDocumentFilter(new NumericDocumentFilter());
-
-        PlainDocument doc_max = (PlainDocument) moneyMax.getTxtForm().getDocument();
-        doc_max.setDocumentFilter(new NumericDocumentFilter());
 
         // add listener
         cbxNhaCungCap.getCbb().addItemListener(this);
@@ -199,14 +202,28 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         dateStart.getDateChooser().addPropertyChangeListener(this);
         dateEnd.getDateChooser().addPropertyChangeListener(this);
         moneyMin.getTxtForm().addKeyListener(this);
-        moneyMax.getTxtForm().addKeyListener(this);
+        moneyMin.getTxtForm().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                System.out.println("TextField được click");
+            }
+        });
+
+        checkBoxKhuHoi.addActionListener(e -> {
+            boolean isKhuHoi = checkBoxKhuHoi.isSelected();
+            isKhuHoi = !isKhuHoi;
+
+            dateEnd.setVisible(!isKhuHoi);
+        });
 
         box.add(cbxNhaCungCap);
         box.add(cbxNhanVien);
-        box.add(dateStart);
-        box.add(dateEnd);
+        Box box1 = Box.createHorizontalBox();
         box.add(moneyMin);
-        box.add(moneyMax);
+        box1.add(dateStart);
+        box1.add(checkBoxKhuHoi);
+        box.add(box1);
+        box.add(dateEnd);
 
         main = new PanelBorderRadius();
         BoxLayout boxly = new BoxLayout(main, BoxLayout.Y_AXIS);
@@ -242,16 +259,16 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         if (validateSelectDate()) {
             int type = search.cbxChoose.getSelectedIndex();
             // int mancc = cbxNhaCungCap.getSelectedIndex() == 0 ? 0
-            //         : nccBUS.getByIndex(cbxNhaCungCap.getSelectedIndex() - 1).getMancc();
+            // : nccBUS.getByIndex(cbxNhaCungCap.getSelectedIndex() - 1).getMancc();
             // int manv = cbxNhanVien.getSelectedIndex() == 0 ? 0
-            //         : nvBUS.getByIndex(cbxNhanVien.getSelectedIndex() - 1).getManv();
+            // : nvBUS.getByIndex(cbxNhanVien.getSelectedIndex() - 1).getManv();
             String input = search.txtSearchForm.getText() != null ? search.txtSearchForm.getText() : "";
             Date time_start = dateStart.getDate() != null ? dateStart.getDate() : new Date(0);
             Date time_end = dateEnd.getDate() != null ? dateEnd.getDate() : new Date(System.currentTimeMillis());
             String min_price = moneyMin.getText();
-            String max_price = moneyMax.getText();
-            // this.listPhieu = phieunhapBUS.fillerPhieuNhap(type, input, mancc, manv, time_start, time_end, min_price,
-            //         max_price);
+            // this.listPhieu = phieunhapBUS.fillerPhieuNhap(type, input, mancc, manv,
+            // time_start, time_end, min_price,
+            // max_price);
             loadDataTalbe(listPhieu);
         }
     }
@@ -299,7 +316,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source == mainFunction.btn.get("create")) {
-            nhapKho = new TaoPhieuNhap(nv, "create", m);
+            // nhapKho = new TaoPhieuNhap(nv, "create", m);
             m.setPanel(nhapKho);
         } else if (source == mainFunction.btn.get("detail")) {
             int index = getRowSelected();
@@ -318,16 +335,16 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
                     PhieuNhapDTO pn = listPhieu.get(index);
                     System.out.println(pn);
                     // if (!phieunhapBUS.checkCancelPn(pn.getMaphieu())) {
-                    //     JOptionPane.showMessageDialog(null,
-                    //             "Sản phẩm trong phiếu này đã được xuất đi không thể hủy phiếu này!");
+                    // JOptionPane.showMessageDialog(null,
+                    // "Sản phẩm trong phiếu này đã được xuất đi không thể hủy phiếu này!");
                     // } else {
-                    //     int c = phieunhapBUS.cancelPhieuNhap(pn.getMaphieu());
-                    //     if (c == 0) {
-                    //         JOptionPane.showMessageDialog(null, "Hủy phiếu không thành công!");
-                    //     } else {
-                    //         JOptionPane.showMessageDialog(null, "Hủy phiếu thành công!");
-                    //         loadDataTalbe(phieunhapBUS.getAll());
-                    //     }
+                    // int c = phieunhapBUS.cancelPhieuNhap(pn.getMaphieu());
+                    // if (c == 0) {
+                    // JOptionPane.showMessageDialog(null, "Hủy phiếu không thành công!");
+                    // } else {
+                    // JOptionPane.showMessageDialog(null, "Hủy phiếu thành công!");
+                    // loadDataTalbe(phieunhapBUS.getAll());
+                    // }
                     // }
                 }
             }

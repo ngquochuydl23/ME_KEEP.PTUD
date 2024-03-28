@@ -36,4 +36,10 @@ public class TaiKhoanDao implements IDao<NhanVien, Integer> {
         return null;
     }
 
+    @Override
+    public int getAutoIncrement() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAutoIncrement'");
+    }
+
 }

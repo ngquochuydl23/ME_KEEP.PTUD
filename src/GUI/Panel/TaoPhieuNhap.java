@@ -10,7 +10,7 @@ import BUS.SanPhamBUS;
 import DTO.PhienBanSanPhamDTO;
 import DTO.ChiTietPhieuNhapDTO;
 import DTO.ChiTietSanPhamDTO;
-import DTO.entity.NhanVien;
+import DTO.NhanVienDTO;
 import DTO.PhieuNhapDTO;
 import DTO.SanPhamDTO;
 import GUI.Component.ButtonCustom;
@@ -75,7 +75,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     DungLuongRomBUS romBus = new DungLuongRomBUS();
     PhieuNhapBUS phieunhapBus = new PhieuNhapBUS();
     MauSacBUS mausacBus = new MauSacBUS();
-    entity.NhanVien nvDto;
+    NhanVienDTO nvDto;
 
     ArrayList<DTO.SanPhamDTO> listSP = spBUS.getAll();
     ArrayList<PhienBanSanPhamDTO> ch = new ArrayList<>();
@@ -86,7 +86,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     int rowPhieuSelect = -1;
     private ButtonCustom scanImei, importImei;
 
-    public TaoPhieuNhap(entity.NhanVien nv, String type, Main m) {
+    public TaoPhieuNhap(NhanVienDTO nv, String type, Main m) {
         this.nvDto = nv;
         this.m = m;
         maphieunhap = phieunhapBus.phieunhapDAO.getAutoIncrement();

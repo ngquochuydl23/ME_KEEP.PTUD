@@ -12,6 +12,8 @@ import javax.swing.border.EmptyBorder;
 import GUI.Component.PanelBorderRadius;
 import GUI.Component.TableSorter;
 import GUI.Dialog.KhachHangDialog;
+import dao1.KhachHangDao;
+import event.KhachHangEvent;
 import GUI.Main;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -29,7 +31,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
+
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -39,17 +42,17 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class KhachHang extends JPanel implements ActionListener, ItemListener {
 
-    PanelBorderRadius main, functionBar;
-    JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
-    JTable tableKhachHang;
-    JScrollPane scrollTableKhachHang;
-    MainFunction mainFunction;
-    JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
-    IntegratedSearch search;
-    DefaultTableModel tblModel;
-    public KhachHangBUS khachhangBUS = new KhachHangBUS();
-    public ArrayList<KhachHangDTO> listkh = khachhangBUS.getAll();
-    KhachHangDTO kh = new KhachHangDTO();
+    protected PanelBorderRadius main, functionBar;
+    protected JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
+    protected JTable tableKhachHang;
+    protected JScrollPane scrollTableKhachHang;
+    protected MainFunction mainFunction;
+    protected JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
+    protected IntegratedSearch search;
+    protected DefaultTableModel tblModel;
+    protected KhachHangDao khachHangDAO;
+    protected List<entity.KhachHang> listkh;
+
     Main m;
     Color BackgroundColor = new Color(240, 247, 250);
 
@@ -57,11 +60,13 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
         this.setBackground(BackgroundColor);
         this.setLayout(new BorderLayout(0, 0));
         this.setOpaque(true);
+        this.khachHangDAO = new KhachHangDao();
 
         tableKhachHang = new JTable();
         scrollTableKhachHang = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"Mã khách hàng", "Tên khách hàng", "Địa chỉ", "Số điện thoại", "Ngày tham gia"};
+        String[] header = new String[] { "Mã khách hàng", "Tên khách hàng", "Số điện thoại", "Khách hàng thân thiết",
+                "Ngày tham gia" };
         tblModel.setColumnIdentifiers(header);
         tableKhachHang.setModel(tblModel);
         tableKhachHang.setFocusable(false);
@@ -73,11 +78,11 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
         tableKhachHang.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
         tableKhachHang.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         tableKhachHang.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
-
         tableKhachHang.setAutoCreateRowSorter(true);
         TableSorter.configureTableColumnSorter(tableKhachHang, 0, TableSorter.INTEGER_COMPARATOR);
 
-        // pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4 chỉ để thêm contentCenter ở giữa mà contentCenter không bị dính sát vào các thành phần khác
+        // pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4 chỉ để thêm contentCenter ở
+        // giữa mà contentCenter không bị dính sát vào các thành phần khác
         pnlBorder1 = new JPanel();
         pnlBorder1.setPreferredSize(new Dimension(0, 10));
         pnlBorder1.setBackground(BackgroundColor);
@@ -104,36 +109,23 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
         contentCenter.setLayout(new BorderLayout(10, 10));
         this.add(contentCenter, BorderLayout.CENTER);
 
-        // functionBar là thanh bên trên chứa các nút chức năng như thêm xóa sửa, và tìm kiếm
+        // functionBar là thanh bên trên chứa các nút chức năng như thêm xóa sửa, và tìm
+        // kiếm
         functionBar = new PanelBorderRadius();
         functionBar.setPreferredSize(new Dimension(0, 100));
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        String[] action = {"create", "update", "delete", "detail", "import", "export"};
+        String[] action = { "create", "update", "delete", "detail", "import", "export" };
         mainFunction = new MainFunction(m.user.getManhomquyen(), "khachhang", action);
         for (String ac : action) {
             mainFunction.btn.get(ac).addActionListener(this);
         }
         functionBar.add(mainFunction);
 
-        search = new IntegratedSearch(new String[]{"Tất cả", "Mã khách hàng", "Tên khách hàng", "Địa chỉ", "Số điện thoại"});
-        search.cbxChoose.addItemListener(this);
-        search.txtSearchForm.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                String type = (String) search.cbxChoose.getSelectedItem();
-                String txt = search.txtSearchForm.getText();
-                listkh = khachhangBUS.search(txt, type);
-                loadDataTable(listkh);
-            }
-        });
+        search = new IntegratedSearch(
+                new String[] { "Tất cả", "Mã khách hàng", "Tên khách hàng", "Khách hàng thân thiết", "Số điện thoại" });
 
-        search.btnReset.addActionListener((ActionEvent e) -> {
-            search.txtSearchForm.setText("");
-            listkh = khachhangBUS.getAll();
-            loadDataTable(listkh);
-        });
         functionBar.add(search);
 
         contentCenter.add(functionBar, BorderLayout.NORTH);
@@ -142,24 +134,40 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
         main = new PanelBorderRadius();
         BoxLayout boxly = new BoxLayout(main, BoxLayout.Y_AXIS);
         main.setLayout(boxly);
-//        main.setBorder(new EmptyBorder(20, 20, 20, 20));
+        // main.setBorder(new EmptyBorder(20, 20, 20, 20));
         contentCenter.add(main, BorderLayout.CENTER);
 
         main.add(scrollTableKhachHang);
+
     }
 
     public KhachHang(Main m) {
         this.m = m;
         initComponent();
+        // Đăng ký sự kiện ở đây
+        // search.cbxChoose.addItemListener(this);
+        // search.btnReset.addActionListener(this);
+        // search.txtSearchForm.addKeyListener(this);
+
         tableKhachHang.setDefaultEditor(Object.class, null);
-        loadDataTable(listkh);
+        loadDataTable();
+
+        new KhachHangEvent(this.m);
     }
 
-    public void loadDataTable(ArrayList<KhachHangDTO> result) {
+    public void loadDataTable() {
         tblModel.setRowCount(0);
-        for (DTO.KhachHangDTO khachHang : result) {
-            tblModel.addRow(new Object[]{
-                khachHang.getMaKH(), khachHang.getHoten(), khachHang.getDiachi(), khachHang.getSdt(), khachHang.getNgaythamgia()
+        tableKhachHang.repaint();
+        tableKhachHang.revalidate();
+
+        this.listkh = khachHangDAO.layHet();
+        for (entity.KhachHang khachHang : listkh) {
+            tblModel.addRow(new Object[] {
+                    "KH" + khachHang.getMaKhachHang(),
+                    khachHang.getHoTen(),
+                    khachHang.getSoDienThoai(),
+                    khachHang.laKhachHangThanThiet() == true ? "Có" : "Không",
+                    khachHang.getThoiGianDangKy()
             });
         }
     }
@@ -202,7 +210,7 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
                         check = 0;
                     }
                     if (check == 1) {
-                        khachhangBUS.add(new KhachHangDTO(id, tenkh, sdt, diachi));
+                        // khachhangBUS.add(new KhachHangDTO(id, tenkh, sdt, diachi));
                     } else {
                         k += 1;
                     }
@@ -217,7 +225,7 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
         if (k != 0) {
             JOptionPane.showMessageDialog(this, "Những dữ liệu không hợp lệ không được thêm vào");
         }
-        loadDataTable(listkh);
+        loadDataTable();
     }
 
     public static boolean isPhoneNumber(String str) {
@@ -239,13 +247,14 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == mainFunction.btn.get("create")) {
-            System.out.println("ok");
-
-            KhachHangDialog khDialog = new KhachHangDialog(this, owner, "Thêm khách hàng", true, "create");
+            new KhachHangDialog(this, owner, "Thêm khách hàng", true, "create");
         } else if (e.getSource() == mainFunction.btn.get("update")) {
             int index = getRowSelected();
             if (index != -1) {
-                KhachHangDialog khDialog = new KhachHangDialog(this, owner, "Chỉnh sửa khách hàng", true, "update", listkh.get(index));
+                new KhachHangDialog(
+                        this,
+                        owner, "Chỉnh sửa khách hàng", true, "update",
+                        listkh.get(index));
             }
         } else if (e.getSource() == mainFunction.btn.get("delete")) {
             int index = getRowSelected();
@@ -253,15 +262,17 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
                 int input = JOptionPane.showConfirmDialog(null,
                         "Bạn có chắc chắn muốn xóa khách hàng ?", "Xóa khách hàng",
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                if (input == 0) {
-                    khachhangBUS.delete(listkh.get(index));
-                    loadDataTable(listkh);
+                if (input == JOptionPane.YES_OPTION) {
+                    khachHangDAO.xoa(listkh.get(index).getMaKhachHang());
+                    loadDataTable();
                 }
             }
         } else if (e.getSource() == mainFunction.btn.get("detail")) {
             int index = getRowSelected();
+            System.out.println(listkh.get(index).getMaKhachHang());
             if (index != -1) {
-                KhachHangDialog khDialog = new KhachHangDialog(this, owner, "Xem khách hàng", true, "view", listkh.get(index));
+                new KhachHangDialog(this, owner, "Xem khách hàng",
+                        true, "view", listkh.get(index));
             }
         } else if (e.getSource() == mainFunction.btn.get("import")) {
             importExcel();
@@ -278,7 +289,7 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
     public void itemStateChanged(ItemEvent e) {
         String type = (String) search.cbxChoose.getSelectedItem();
         String txt = search.txtSearchForm.getText();
-        listkh = khachhangBUS.search(txt, type);
-        loadDataTable(listkh);
+        // listkh = khachhangBUS.search(txt, type);
+        loadDataTable();
     }
 }
