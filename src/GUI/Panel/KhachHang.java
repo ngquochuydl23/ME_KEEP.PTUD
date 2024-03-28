@@ -50,8 +50,8 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
     protected JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
     protected IntegratedSearch search;
     protected DefaultTableModel tblModel;
-    protected KhachHangDao khachHangDAO;
-    protected List<entity.KhachHang> listkh;
+    protected KhachHangDao khachHangDAO = new KhachHangDao();
+    protected List<entity.KhachHang> listkh = khachHangDAO.layHet();
 
     Main m;
     Color BackgroundColor = new Color(240, 247, 250);
@@ -60,7 +60,6 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
         this.setBackground(BackgroundColor);
         this.setLayout(new BorderLayout(0, 0));
         this.setOpaque(true);
-        this.khachHangDAO = new KhachHangDao();
 
         tableKhachHang = new JTable();
         scrollTableKhachHang = new JScrollPane();
@@ -125,9 +124,44 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
 
         search = new IntegratedSearch(
                 new String[] { "Tất cả", "Mã khách hàng", "Tên khách hàng", "Khách hàng thân thiết", "Số điện thoại" });
+        search.btnReset.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                listkh = khachHangDAO.layHet();
+                loadDataTable();
+            }
+        });
+        search.txtSearchForm.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String txt = search.txtSearchForm.getText();
+                String type = (String) search.cbxChoose.getSelectedItem();
+                if (txt.isEmpty()) {
+                    listkh = khachHangDAO.layHet();
+                    loadDataTable();
+                } else {
+                    listkh = search(txt, type);
+                    loadDataTable();
+                }
+            }
+        });
+        search.cbxChoose.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    String selectedOption = (String) search.cbxChoose.getSelectedItem();
+                    if (selectedOption.equals("Khách hàng thân thiết")) {
+                        listkh = search("", selectedOption); // Truyền rỗng cho text và "Khách hàng thân thiết" cho type
+                        loadDataTable();
+                    } else {
+                        listkh = khachHangDAO.layHet();
+                        loadDataTable();
+                    }
+                }
+            }
+        });
 
         functionBar.add(search);
-
         contentCenter.add(functionBar, BorderLayout.NORTH);
 
         // main là phần ở dưới để thống kê bảng biểu
@@ -144,15 +178,55 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
     public KhachHang(Main m) {
         this.m = m;
         initComponent();
-        // Đăng ký sự kiện ở đây
-        // search.cbxChoose.addItemListener(this);
-        // search.btnReset.addActionListener(this);
-        // search.txtSearchForm.addKeyListener(this);
-
         tableKhachHang.setDefaultEditor(Object.class, null);
         loadDataTable();
+    }
 
-        new KhachHangEvent(this.m);
+    public List<entity.KhachHang> search(String text, String type) {
+        List<entity.KhachHang> result = new ArrayList<>();
+        text = text.toLowerCase();
+
+        switch (type) {
+            case "Tất cả" -> {
+                for (entity.KhachHang i : this.listkh) {
+                    if (Integer.toString(i.getMaKhachHang()).toLowerCase().contains(text)
+                            || i.getHoTen().toLowerCase().contains(text) || i.laKhachHangThanThiet() == true
+                            || i.getSoDienThoai().toLowerCase().contains(text)) {
+                        result.add(i);
+                    }
+                }
+            }
+            case "Mã khách hàng" -> {
+                for (entity.KhachHang i : this.listkh) {
+                    if (Integer.toString(i.getMaKhachHang()).toLowerCase().contains(text)) {
+                        result.add(i);
+                    }
+                }
+            }
+            case "Tên khách hàng" -> {
+                for (entity.KhachHang i : this.listkh) {
+                    if (i.getHoTen().toLowerCase().contains(text)) {
+                        result.add(i);
+                    }
+                }
+            }
+            case "Khách hàng thân thiết" -> {
+                for (entity.KhachHang i : this.listkh) {
+                    if (i.laKhachHangThanThiet()) {
+                        result.add(i);
+                    }
+                }
+            }
+            case "Số điện thoại" -> {
+                for (entity.KhachHang i : this.listkh) {
+                    if (i.getSoDienThoai().toLowerCase().contains(text)) {
+                        result.add(i);
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 
     public void loadDataTable() {
@@ -160,7 +234,6 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
         tableKhachHang.repaint();
         tableKhachHang.revalidate();
 
-        this.listkh = khachHangDAO.layHet();
         for (entity.KhachHang khachHang : listkh) {
             tblModel.addRow(new Object[] {
                     "KH" + khachHang.getMaKhachHang(),
