@@ -62,41 +62,41 @@ public class KhachHangBUS {
         ArrayList<KhachHangDTO> result = new ArrayList<>();
         text = text.toLowerCase();
         switch (type) {
-            case "Tất cả" -> {
+            case "Tất cả":
                 for (KhachHangDTO i : this.listKhachHang) {
                     if (Integer.toString(i.getMaKH()).toLowerCase().contains(text) || i.getHoten().toLowerCase().contains(text) || i.getDiachi().toLowerCase().contains(text) || i.getSdt().toLowerCase().contains(text)) {
                         result.add(i);
                     }
                 }
-            }
-            case "Mã khách hàng" -> {
+            
+            case "Mã khách hàng" :
                 for (KhachHangDTO i : this.listKhachHang) {
                     if (Integer.toString(i.getMaKH()).toLowerCase().contains(text)) {
                         result.add(i);
                     }
                 }
-            }
-            case "Tên khách hàng" -> {
+            
+            case "Tên khách hàng" :
                 for (KhachHangDTO i : this.listKhachHang) {
                     if (i.getHoten().toLowerCase().contains(text)) {
                         result.add(i);
                     }
                 }
-            }
-            case "Địa chỉ" -> {
+            
+            case "Địa chỉ" :
                 for (KhachHangDTO i : this.listKhachHang) {
                     if (i.getDiachi().toLowerCase().contains(text)) {
                         result.add(i);
                     }
                 }
-            }
-            case "Số điện thoại" -> {
+            
+            case "Số điện thoại" :
                 for (KhachHangDTO i : this.listKhachHang) {
                     if (i.getSdt().toLowerCase().contains(text)) {
                         result.add(i);
                     }
                 }
-            }
+            
         }
 
         return result;

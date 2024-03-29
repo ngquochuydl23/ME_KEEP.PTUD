@@ -20,13 +20,16 @@ import GUI.Panel.QuanLyThuocTinhSP;
 import GUI.Panel.SanPham;
 import GUI.Panel.TaiKhoan;
 import GUI.Panel.TrangChu;
-
+import DTO.NhanVienDTO;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+
 import GUI.Dialog.MyAccount;
 import GUI.Panel.ThongKe.ThongKe;
 
@@ -39,18 +42,18 @@ public class MenuTaskbar extends JPanel {
     KhuVucKho quanLyKho;
     PhieuNhap phieuNhap;
     PhieuXuat phieuXuat;
-    BanVe banVe;
     KhachHang khachHang;
     NhaCungCap nhacungcap;
     NhanVienPanel nhanVien;
     TaiKhoan taiKhoan;
     PhanQuyen phanQuyen;
+    BanVe banVe;
     ThongKe thongKe;
     String[][] getSt = {
             { "Trang chủ", "home.svg", "trangchu" },
-            { "Vé", "product.svg", "sanpham" },
-            { "Loại vé", "brand.svg", "thuoctinh" },
-            { "Chuyến tàu", "area.svg", "khuvuckho" },
+            { "Sản phẩm", "product.svg", "sanpham" },
+            { "Thuộc tính", "brand.svg", "thuoctinh" },
+            { "Khu vực kho", "area.svg", "khuvuckho" },
             { "Phiếu nhập", "import.svg", "nhaphang" },
             { "Phiếu xuất", "export.svg", "xuathang" },
             { "Khách hàng", "customer.svg", "khachhang" },
@@ -61,6 +64,7 @@ public class MenuTaskbar extends JPanel {
             { "Phân quyền", "permission.svg", "nhomquyen" },
             { "Đăng xuất", "log_out.svg", "dangxuat" },
             { "Bán vé", "import.svg", "banve" },
+
     };
 
     Main main;
@@ -79,7 +83,7 @@ public class MenuTaskbar extends JPanel {
     Color HowerBackgroundColor = new Color(199, 18, 190);
     private ArrayList<ChiTietQuyenDTO> listQuyen;
     NhomQuyenDTO nhomQuyenDTO;
-    public entity.NhanVien nhanVienDTO;
+    public NhanVienDTO nhanVienDTO;
     JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
 
     public MenuTaskbar(Main main) {
@@ -225,7 +229,8 @@ public class MenuTaskbar extends JPanel {
         listitem[4].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                // main.setPanel(new PhieuNhap(main, nhanVienDTO));
+                phieuNhap = new PhieuNhap(main, nhanVienDTO);
+                main.setPanel(phieuNhap);
             }
         });
         listitem[5].addMouseListener(new MouseAdapter() {
@@ -297,9 +302,9 @@ public class MenuTaskbar extends JPanel {
         });
 
         listitem[13].addMouseListener(new MouseAdapter() {
+
             @Override
             public void mousePressed(MouseEvent evt) {
-
                 banVe = new BanVe(main);
                 main.setPanel(banVe);
             }
@@ -335,43 +340,43 @@ public class MenuTaskbar extends JPanel {
     }
 
     public void resetChange() {
-        this.nhanVienDTO = new NhanVienDAO().selectById(String.valueOf(nhanVienDTO.getMaNhanVien()));
+        this.nhanVienDTO = new NhanVienDAO().selectById(String.valueOf(nhanVienDTO.getManv()));
     }
 
     public void in4(JPanel info) {
-        JPanel pnlIcon = new JPanel(new FlowLayout());
-        pnlIcon.setPreferredSize(new Dimension(60, 0));
-        pnlIcon.setOpaque(false);
-        info.add(pnlIcon, BorderLayout.WEST);
-        JLabel lblIcon = new JLabel();
-        lblIcon.setPreferredSize(new Dimension(50, 70));
-        // if (nhanVienDTO.getGioitinh() == 1) {
-        //     lblIcon.setIcon(new FlatSVGIcon("./icon/man_50px.svg"));
-        // } else {
-        //     lblIcon.setIcon(new FlatSVGIcon("./icon/women_50px.svg"));
-        // }
-        pnlIcon.add(lblIcon);
+//        JPanel pnlIcon = new JPanel(new FlowLayout());
+//        pnlIcon.setPreferredSize(new Dimension(60, 0));
+//        pnlIcon.setOpaque(false);
+//        info.add(pnlIcon, BorderLayout.WEST);
+//        JLabel lblIcon = new JLabel();
+//        lblIcon.setPreferredSize(new Dimension(50, 70));
+//        if (nhanVienDTO.getGioitinh() == 1) {
+//            lblIcon.setIcon(new FlatSVGIcon("./icon/man_50px.svg"));
+//        } else {
+//            lblIcon.setIcon(new FlatSVGIcon("./icon/women_50px.svg"));
+//        }
+      //  pnlIcon.add(lblIcon);
 
-        JPanel pnlInfo = new JPanel();
-        pnlInfo.setOpaque(false);
-        pnlInfo.setLayout(new FlowLayout(0, 10, 5));
-        pnlInfo.setBorder(new EmptyBorder(15, 0, 0, 0));
-        info.add(pnlInfo, BorderLayout.CENTER);
+//        JPanel pnlInfo = new JPanel();
+//        pnlInfo.setOpaque(false);
+//        pnlInfo.setLayout(new FlowLayout(0, 10, 5));
+//        pnlInfo.setBorder(new EmptyBorder(15, 0, 0, 0));
+//        info.add(pnlInfo, BorderLayout.CENTER);
 
-        // lblUsername = new JLabel(nhanVienDTO.getHoTen());
-        // lblUsername.putClientProperty("FlatLaf.style", "font: 150% $semibold.font");
-        // pnlInfo.add(lblUsername);
+        //lblUsername = new JLabel(nhanVienDTO.getHoten());
+        //lblUsername.putClientProperty("FlatLaf.style", "font: 150% $semibold.font");
+       // pnlInfo.add(lblUsername);
 
-        // lblTenNhomQuyen = new JLabel(nhomQuyenDTO.getTennhomquyen());
-        // lblTenNhomQuyen.putClientProperty("FlatLaf.style", "font: 120% $light.font");
-        // lblTenNhomQuyen.setForeground(Color.GRAY);
-        // pnlInfo.add(lblTenNhomQuyen);
+       // lblTenNhomQuyen = new JLabel(nhomQuyenDTO.getTennhomquyen());
+       /// lblTenNhomQuyen.putClientProperty("FlatLaf.style", "font: 120% $light.font");
+       // lblTenNhomQuyen.setForeground(Color.GRAY);
+      //  pnlInfo.add(lblTenNhomQuyen);
 
-        lblIcon.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                MyAccount ma = new MyAccount(owner, MenuTaskbar.this, "Chỉnh sửa thông tin tài khoản", true);
-            }
-        });
+//        lblIcon.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mousePressed(MouseEvent evt) {
+//                MyAccount ma = new MyAccount(owner, MenuTaskbar.this, "Chỉnh sửa thông tin tài khoản", true);
+//            }
+//        });
     }
 }

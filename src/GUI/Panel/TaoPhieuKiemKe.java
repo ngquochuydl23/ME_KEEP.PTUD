@@ -304,12 +304,12 @@ public final class TaoPhieuKiemKe extends JPanel implements ItemListener, Action
         right_bottom.setOpaque(false);
 
         switch (type) {
-            case "create" -> {
+            case "create" : 
                 btnXacNhan = new ButtonCustom("Xác nhận", "excel", 14);
                 btnXacNhan.addActionListener(this);
                 right_bottom.add(btnXacNhan);
                 left_top.add(content_btn, BorderLayout.SOUTH);
-            }
+            
         }
 
         right.add(right_top, BorderLayout.NORTH);

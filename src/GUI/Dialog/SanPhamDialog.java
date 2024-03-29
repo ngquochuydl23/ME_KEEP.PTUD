@@ -171,24 +171,24 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         pnbottom.setBorder(new EmptyBorder(20, 0, 10, 0));
         pnbottom.setBackground(Color.white);
         switch (type) {
-            case "view" -> {
+            case "view":
                 btnViewCauHinh = new ButtonCustom("Xem cấu hình", "warning", 14);
                 btnViewCauHinh.addActionListener(this);
                 pnbottom.add(btnViewCauHinh);
-            }
-            case "update" -> {
+            
+            case "update":
                 btnSaveCH = new ButtonCustom("Lưu thông tin", "success", 14);
                 btnEditCT = new ButtonCustom("Sửa cấu hình", "warning", 14);
                 btnSaveCH.addActionListener(this);
                 btnEditCT.addActionListener(this);
                 pnbottom.add(btnSaveCH);
                 pnbottom.add(btnEditCT);
-            }
-            case "create" -> {
+            
+            case "create":
                 btnThemCHMS = new ButtonCustom("Tạo cấu hình", "success", 14);
                 btnThemCHMS.addActionListener(this);
                 pnbottom.add(btnThemCHMS);
-            }
+            
         }
 
         btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
@@ -288,20 +288,20 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         cauhinhbottom.setBorder(new EmptyBorder(0, 0, 10, 0));
 
         switch (type) {
-            case "view" -> {
+            case "view":
                 loadDataToTableCauHinh(listch);
                 btnAddCauHinh.setVisible(false);
                 btnEditCTCauHinh.setVisible(false);
                 btnDeleteCauHinh.setVisible(false);
                 btnResetCauHinh.setVisible(false);
                 cauhinhcenter.remove(cauhinhcenter_right);
-            }
-            case "update" -> loadDataToTableCauHinh(listch);
-            case "create" -> {
+            
+            case "update": loadDataToTableCauHinh(listch);
+            case "create" :
                 btnAddSanPham = new ButtonCustom("Thêm sản phẩm", "success", 14);
                 btnAddSanPham.addActionListener(this);
                 cauhinhbottom.add(btnAddSanPham);
-            }
+            
         }
         
         btnBack = new ButtonCustom("Quay lại trang trước", "warning", 14);
@@ -329,10 +329,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         pnmain.add(pncard2);
 
         switch (type) {
-            case "view" -> setInfo(sp);
-            case "update" -> setInfo(sp);
-            default -> {
-            }
+            case "view": setInfo(sp);
+            case "update": setInfo(sp);
         }
 //                throw new AssertionError();
 

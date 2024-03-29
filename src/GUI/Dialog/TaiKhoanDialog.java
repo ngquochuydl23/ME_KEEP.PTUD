@@ -145,23 +145,21 @@ public class TaiKhoanDialog extends JDialog {
         });
 
         switch (type) {
-            case "create" ->
+            case "create":
                 pnbottom.add(btnThem);
-            case "update" -> {
+            case "update":
                 pnmain.remove(password);
                 pnbottom.add(btnCapNhat);
                 password.setDisablePass();
-            }
-            case "view" -> {
+            
+            case "view":
                 pnmain.remove(password);
                 username.setEditable(false);
 //                password.setEditable(false);
                 maNhomQuyen.setDisable();
                 trangthai.setDisable();
                 this.setSize(new Dimension(500, 550));
-            }
-            default ->
-                throw new AssertionError();
+            
         }
         pnbottom.add(btnHuyBo);
         this.add(titlePage, BorderLayout.NORTH);

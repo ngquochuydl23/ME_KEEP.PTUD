@@ -70,48 +70,48 @@ public class NhaCungCapBUS {
         ArrayList<NhaCungCapDTO> result = new ArrayList<>();
         txt = txt.toLowerCase();
         switch (type) {
-            case "Tất cả" -> {
+            case "Tất cả":
                 for (NhaCungCapDTO i : listNcc) {
                     if (Integer.toString(i.getMancc()).contains(txt) || i.getTenncc().contains(txt) || i.getDiachi().contains(txt) || i.getEmail().contains(txt) || i.getSdt().contains(txt)) {
                         result.add(i);
                     }
                 }
-            }
-            case "Mã nhà cung cấp" -> {
+            
+            case "Mã nhà cung cấp":
                 for (NhaCungCapDTO i : listNcc) {
                     if (Integer.toString(i.getMancc()).contains(txt)) {
                         result.add(i);
                     }
                 }
-            }
-            case "Tên nhà cung cấp" -> {
+            
+            case "Tên nhà cung cấp":
                 for (NhaCungCapDTO i : listNcc) {
                     if (i.getTenncc().toLowerCase().contains(txt)) {
                         result.add(i);
                     }
                 }
-            }
-            case "Địa chỉ" -> {
+            
+            case "Địa chỉ":
                 for (NhaCungCapDTO i : listNcc) {
                     if (i.getDiachi().toLowerCase().contains(txt)) {
                         result.add(i);
                     }
                 }
-            }
-            case "Số điện thoại" -> {
+            
+            case "Số điện thoại":
                 for (NhaCungCapDTO i : listNcc) {
                     if (i.getSdt().toLowerCase().contains(txt)) {
                         result.add(i);
                     }
                 }
-            }
-            case "Email" -> {
+            
+            case "Email":
                 for (NhaCungCapDTO i : listNcc) {
                     if (i.getEmail().toLowerCase().contains(txt)) {
                         result.add(i);
                     }
                 }
-            }
+            
         }
         return result;
     }

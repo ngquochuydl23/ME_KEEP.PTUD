@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class VeDao implements IDao<Ve, String>{
+public class VeDao implements IDao<Ve, String> {
 
     private Connection con;
 
@@ -32,8 +32,8 @@ public class VeDao implements IDao<Ve, String>{
                 double giaVe = rs.getDouble("giaVe");
                 String moTa = rs.getString("moTa");
                 String tinhTrangVe = rs.getString("tinhTrangVe");
-                String maLoaiVe =  rs.getString("maLoaiVe");
-                String maChuyen =  rs.getString("maChuyen");
+                String maLoaiVe = rs.getString("maLoaiVe");
+                String maChuyen = rs.getString("maChuyen");
 
                 return new Ve(maVe, choNgoi, giaVe, moTa, tinhTrangVe, new LoaiVe(maLoaiVe), new Chuyen(maChuyen));
             }
@@ -57,8 +57,8 @@ public class VeDao implements IDao<Ve, String>{
                 double giaVe = rs.getDouble("giaVe");
                 String moTa = rs.getString("moTa");
                 String tinhTrangVe = rs.getString("tinhTrangVe");
-                String maLoaiVe =  rs.getString("maLoaiVe");
-                String maChuyen =  rs.getString("maChuyen");
+                String maLoaiVe = rs.getString("maLoaiVe");
+                String maChuyen = rs.getString("maChuyen");
 
                 dsVe.add(new Ve(maVe, choNgoi, giaVe, moTa, tinhTrangVe, new LoaiVe(maLoaiVe), new Chuyen(maChuyen)));
             }
@@ -81,7 +81,6 @@ public class VeDao implements IDao<Ve, String>{
             statement.setString(5, entity.getTinhTrangVe());
             statement.setString(6, entity.getLoaiVe().getMaLoaiVe());
             statement.setString(7, entity.getChuyen().getMaChuyen());
-
 
             return statement.executeUpdate() > 0;
         } catch (SQLException ex) {
@@ -107,7 +106,7 @@ public class VeDao implements IDao<Ve, String>{
     public boolean sua(Ve entity) {
         try {
             String sql = "UPDATE `Ve` SET `choNgoi`=?,`giaVe`=?,`moTa`=?, `tinhTrangVe`=?, `maLoaiVe`=?, `maChuyen`=? WHERE maVe=?";
-            PreparedStatement pst =  con.prepareStatement(sql);
+            PreparedStatement pst = con.prepareStatement(sql);
 
             pst.setInt(1, entity.getChoNgoi());
             pst.setDouble(2, entity.getGiaVe());

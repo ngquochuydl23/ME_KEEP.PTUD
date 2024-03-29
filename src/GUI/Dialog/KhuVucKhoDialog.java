@@ -82,12 +82,10 @@ public final class KhuVucKhoDialog extends JDialog implements ActionListener {
         btnHuyBo.addActionListener(this);
 
         switch (type) {
-            case "create" -> pnbottom.add(btnThem);
-            case "update" -> {
+            case "create": pnbottom.add(btnThem);
+            case "update": 
                 pnbottom.add(btnCapNhat);
                 initInfo();
-            }
-            default -> throw new AssertionError();
         }
         pnbottom.add(btnHuyBo);
         this.add(titlePage, BorderLayout.NORTH);

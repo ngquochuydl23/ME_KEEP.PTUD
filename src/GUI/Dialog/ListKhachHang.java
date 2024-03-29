@@ -9,7 +9,6 @@ import DAO.NhanVienDAO;
 import DTO.KhachHangDTO;
 import DTO.KhachHangDTO;
 import GUI.Component.ButtonCustom;
-import GUI.Panel.KhachHang;
 import GUI.Panel.TaiKhoan;
 import GUI.Panel.TaoPhieuXuat;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;

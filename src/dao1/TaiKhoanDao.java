@@ -35,5 +35,4 @@ public class TaiKhoanDao implements IDao<NhanVien, Integer> {
     public NhanVien layTheoSdt(String sdt) {
         return null;
     }
-
 }

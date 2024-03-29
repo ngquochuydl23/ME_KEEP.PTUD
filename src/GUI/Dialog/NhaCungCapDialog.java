@@ -86,18 +86,16 @@ public class NhaCungCapDialog extends JDialog implements ActionListener {
         btnHuyBo.addActionListener(this);
 
         switch (type) {
-            case "create" ->
+            case "create":
                 pnbottom.add(btnThem);
-            case "update" -> {
+            case "update": {
                 pnbottom.add(btnCapNhat);
                 initInfo();
             }
-            case "view" -> {
+            case "view": {
                 initInfo();
                 initView();
             }
-            default ->
-                throw new AssertionError();
         }
         pnbottom.add(btnHuyBo);
         this.add(titlePage, BorderLayout.NORTH);

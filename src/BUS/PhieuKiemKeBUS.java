@@ -69,24 +69,7 @@ public class PhieuKiemKeBUS {
         ArrayList<PhieuKiemKeDTO> result = new ArrayList<>();
         for (PhieuKiemKeDTO phieuKiemKe : getDanhSachPhieu()) {
             boolean match = false;
-            switch (type) {
-                case 0 -> {
-//                    if (Integer.toString(phieuKiemKe.getMaphieukiemke()).contains(input)
-//                            || nvBUS.getNameById(phieuKiemKe.getNguoitao()).toLowerCase().contains(input)) {
-//                        match = true;
-//                    }
-                }
-                case 1 -> {
-                    if (Integer.toString(phieuKiemKe.getMaphieukiemke()).contains(input)) {
-                        match = true;
-                    }
-                }
-                case 2 -> {
-//                    if (nvBUS.getNameById(phieuKiemKe.getNguoitao()).toLowerCase().contains(input)) {
-//                        match = true;
-//                    }
-                }
-            }
+      
             if (match
                     && (manv == 0 || phieuKiemKe.getNguoitao()==manv)
                     && (phieuKiemKe.getThoigiantao().compareTo(time_start) >= 0)

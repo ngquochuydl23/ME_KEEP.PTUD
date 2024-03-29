@@ -45,57 +45,7 @@ public class ThongKeDAO {
         calendar.set(Calendar.MILLISECOND, 0);
         try {
             Connection con = JDBCUtil.getConnection();
-            String sql = """
-                         WITH nhap AS (
-                           SELECT maphienbansp, SUM(soluong) AS sl_nhap
-                           FROM ctphieunhap
-                           JOIN phieunhap ON phieunhap.maphieunhap = ctphieunhap.maphieunhap
-                           WHERE thoigian BETWEEN ? AND ?
-                           GROUP BY maphienbansp
-                         ),
-                         xuat AS (
-                           SELECT maphienbansp, SUM(soluong) AS sl_xuat
-                           FROM ctphieuxuat
-                           JOIN phieuxuat ON phieuxuat.maphieuxuat = ctphieuxuat.maphieuxuat
-                           WHERE thoigian BETWEEN ? AND ?
-                           GROUP BY maphienbansp
-                         ),
-                         nhap_dau AS (
-                           SELECT ctphieunhap.maphienbansp, SUM(ctphieunhap.soluong) AS sl_nhap_dau
-                           FROM phieunhap
-                           JOIN ctphieunhap ON phieunhap.maphieunhap = ctphieunhap.maphieunhap
-                           WHERE phieunhap.thoigian < ?
-                           GROUP BY ctphieunhap.maphienbansp
-                         ),
-                         xuat_dau AS (
-                           SELECT ctphieuxuat.maphienbansp, SUM(ctphieuxuat.soluong) AS sl_xuat_dau
-                           FROM phieuxuat
-                           JOIN ctphieuxuat ON phieuxuat.maphieuxuat = ctphieuxuat.maphieuxuat
-                           WHERE phieuxuat.thoigian < ?
-                           GROUP BY ctphieuxuat.maphienbansp
-                         ),
-                         dau_ky AS (
-                           SELECT
-                             phienbansanpham.maphienbansp,
-                             COALESCE(nhap_dau.sl_nhap_dau, 0) - COALESCE(xuat_dau.sl_xuat_dau, 0) AS soluongdauky
-                           FROM phienbansanpham
-                           LEFT JOIN nhap_dau ON phienbansanpham.maphienbansp = nhap_dau.maphienbansp
-                           LEFT JOIN xuat_dau ON phienbansanpham.maphienbansp = xuat_dau.maphienbansp
-                         ),
-                         temp_table AS (
-                         SELECT sanpham.masp, phienbansanpham.maphienbansp, sanpham.tensp, dau_ky.soluongdauky, COALESCE(nhap.sl_nhap, 0) AS soluongnhap, COALESCE(xuat.sl_xuat, 0)  AS soluongxuat, (dau_ky.soluongdauky + COALESCE(nhap.sl_nhap, 0) - COALESCE(xuat.sl_xuat, 0)) AS soluongcuoiky, kichthuocram, kichthuocrom, tenmau
-                         FROM dau_ky
-                         LEFT JOIN nhap ON dau_ky.maphienbansp = nhap.maphienbansp
-                         LEFT JOIN xuat ON dau_ky.maphienbansp = xuat.maphienbansp
-                         JOIN phienbansanpham ON phienbansanpham.maphienbansp = dau_ky.maphienbansp
-                         JOIN sanpham ON phienbansanpham.masp = sanpham.masp
-                         JOIN dungluongram ON phienbansanpham.ram = dungluongram.madlram
-                         JOIN dungluongrom ON phienbansanpham.rom = dungluongrom.madlrom
-                         JOIN mausac ON phienbansanpham.mausac = mausac.mamau
-                         )
-                         SELECT * FROM temp_table
-                         WHERE tensp LIKE ? OR masp LIKE ?
-                         ORDER BY masp;""";
+            String sql ="";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setTimestamp(1, new Timestamp(timeStart.getTime()));
             pst.setTimestamp(2, new Timestamp(calendar.getTimeInMillis()));
@@ -133,25 +83,7 @@ public class ThongKeDAO {
             Connection con = JDBCUtil.getConnection();
             String sqlSetStartYear = "SET @start_year = ?;";
             String sqlSetEndYear = "SET @end_year = ?;";
-            String sqlSelect = """
-                     WITH RECURSIVE years(year) AS (
-                       SELECT @start_year
-                       UNION ALL
-                       SELECT year + 1
-                       FROM years
-                       WHERE year < @end_year
-                     )
-                     SELECT 
-                       years.year AS nam,
-                       COALESCE(SUM(ctphieunhap.dongia), 0) AS chiphi, 
-                       COALESCE(SUM(ctphieuxuat.dongia), 0) AS doanhthu
-                     FROM years
-                     LEFT JOIN phieuxuat ON YEAR(phieuxuat.thoigian) = years.year
-                     LEFT JOIN ctphieuxuat ON phieuxuat.maphieuxuat = ctphieuxuat.maphieuxuat
-                     LEFT JOIN ctsanpham ON ctsanpham.maphieuxuat = ctphieuxuat.maphieuxuat AND ctsanpham.maphienbansp = ctphieuxuat.maphienbansp
-                     LEFT JOIN ctphieunhap ON ctsanpham.maphieunhap = ctphieunhap.maphieunhap AND ctsanpham.maphienbansp = ctphieunhap.maphienbansp
-                     GROUP BY years.year
-                     ORDER BY years.year;""";
+            String sqlSelect = "";
             PreparedStatement pstStartYear = con.prepareStatement(sqlSetStartYear);
             PreparedStatement pstEndYear = con.prepareStatement(sqlSetEndYear);
             PreparedStatement pstSelect = con.prepareStatement(sqlSelect);
@@ -187,15 +119,7 @@ public class ThongKeDAO {
         calendar.set(Calendar.MILLISECOND, 0);
         try {
             Connection con = JDBCUtil.getConnection();
-            String sql = """
-                          WITH kh AS (
-                         SELECT khachhang.makh, khachhang.tenkhachhang , COUNT(phieuxuat.maphieuxuat ) AS tongsophieu, SUM(phieuxuat.tongtien) AS tongsotien
-                         FROM khachhang
-                         JOIN phieuxuat ON khachhang.makh = phieuxuat.makh
-                         WHERE phieuxuat.thoigian BETWEEN ? AND ? 
-                         GROUP BY khachhang.makh, khachhang.tenkhachhang)
-                         SELECT makh,tenkhachhang,COALESCE(kh.tongsophieu, 0) AS soluong ,COALESCE(kh.tongsotien, 0) AS total 
-                         FROM kh WHERE tenkhachhang LIKE ? OR makh LIKE ?""";
+            String sql = "";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setTimestamp(1, new Timestamp(timeStart.getTime()));
             pst.setTimestamp(2, new Timestamp(calendar.getTimeInMillis()));
@@ -228,15 +152,7 @@ public class ThongKeDAO {
         calendar.set(Calendar.MILLISECOND, 0);
         try {
             Connection con = JDBCUtil.getConnection();
-            String sql = """
-                          WITH ncc AS (
-                         SELECT nhacungcap.manhacungcap, nhacungcap.tennhacungcap , COUNT(phieunhap.maphieunhap ) AS tongsophieu, SUM(phieunhap.tongtien) AS tongsotien
-                         FROM nhacungcap
-                         JOIN phieunhap ON nhacungcap.manhacungcap = phieunhap.manhacungcap
-                         WHERE phieunhap.thoigian BETWEEN ? AND ? 
-                         GROUP BY nhacungcap.manhacungcap, nhacungcap.tennhacungcap)
-                         SELECT manhacungcap,tennhacungcap,COALESCE(ncc.tongsophieu, 0) AS soluong ,COALESCE(ncc.tongsotien, 0) AS total 
-                         FROM ncc WHERE tennhacungcap LIKE ? OR manhacungcap LIKE ?""";
+            String sql = "";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setTimestamp(1, new Timestamp(timeStart.getTime()));
             pst.setTimestamp(2, new Timestamp(calendar.getTimeInMillis()));
@@ -374,25 +290,7 @@ public class ThongKeDAO {
         ArrayList<ThongKeTungNgayTrongThangDTO> result = new ArrayList<>();
         try {
             Connection con = JDBCUtil.getConnection();
-            String sql = """
-                         WITH RECURSIVE dates(date) AS (
-                           SELECT DATE_SUB(CURDATE(), INTERVAL 7 DAY)
-                           UNION ALL
-                           SELECT DATE_ADD(date, INTERVAL 1 DAY)
-                           FROM dates
-                           WHERE date < CURDATE()
-                         )
-                         SELECT 
-                           dates.date AS ngay,
-                           COALESCE(SUM(ctphieuxuat.dongia), 0) AS doanhthu,
-                           COALESCE(SUM(ctphieunhap.dongia), 0) AS chiphi
-                         FROM dates
-                         LEFT JOIN phieuxuat ON DATE(phieuxuat.thoigian) = dates.date
-                         LEFT JOIN ctphieuxuat ON phieuxuat.maphieuxuat = ctphieuxuat.maphieuxuat
-                         LEFT JOIN ctsanpham ON ctsanpham.maphieuxuat = ctphieuxuat.maphieuxuat AND ctsanpham.maphienbansp = ctphieuxuat.maphienbansp
-                         LEFT JOIN ctphieunhap ON ctsanpham.maphieunhap = ctphieunhap.maphieunhap AND ctsanpham.maphienbansp = ctphieunhap.maphienbansp
-                         GROUP BY dates.date
-                         ORDER BY dates.date;""";
+            String sql = "";
             PreparedStatement pst = con.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {

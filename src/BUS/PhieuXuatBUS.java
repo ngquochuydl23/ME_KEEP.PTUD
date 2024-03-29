@@ -73,39 +73,39 @@ public class PhieuXuatBUS {
         ArrayList<PhieuXuatDTO> result = new ArrayList<>();
         for (PhieuXuatDTO phieuXuat : getAll()) {
             boolean match = false;
-            switch (type) {
-                case 0 -> {
-//                    if (Integer.toString(phieuXuat.getMaphieu()).contains(input)
-//                            || khBUS.getTenKhachHang(phieuXuat.getMakh()).toLowerCase().contains(input)
-//                            || nvBUS.getNameById(phieuXuat.getManguoitao()).toLowerCase().contains(input)) {
-//                        match = true;
-//                    }
-                }
-                case 1 -> {
-                    if (Integer.toString(phieuXuat.getMaphieu()).contains(input)) {
-                        match = true;
-                    }
-                }
-                case 2 -> {
-                    if (khBUS.getTenKhachHang(phieuXuat.getMakh()).toLowerCase().contains(input)) {
-                        match = true;
-                    }
-                }
-                case 3 -> {
-//                    if (nvBUS.getNameById(phieuXuat.getManguoitao()).toLowerCase().contains(input)) {
-//                        match = true;
-//                    }
-                }
-            }
+//             switch (type) {
+//                 case 0 -> {
+// //                    if (Integer.toString(phieuXuat.getMaphieu()).contains(input)
+// //                            || khBUS.getTenKhachHang(phieuXuat.getMakh()).toLowerCase().contains(input)
+// //                            || nvBUS.getNameById(phieuXuat.getManguoitao()).toLowerCase().contains(input)) {
+// //                        match = true;
+// //                    }
+//                 }
+//                 case 1 -> {
+//                     if (Integer.toString(phieuXuat.getMaphieu()).contains(input)) {
+//                         match = true;
+//                     }
+//                 }
+//                 case 2 -> {
+//                     if (khBUS.getTenKhachHang(phieuXuat.getMakh()).toLowerCase().contains(input)) {
+//                         match = true;
+//                     }
+//                 }
+//                 case 3 -> {
+// //                    if (nvBUS.getNameById(phieuXuat.getManguoitao()).toLowerCase().contains(input)) {
+// //                        match = true;
+// //                    }
+//                 }
+//             }
 
-            if (match
-                    && (manv == 0 || phieuXuat.getManguoitao() == manv) && (makh == 0 || phieuXuat.getMakh() == makh)
-                    && (phieuXuat.getThoigiantao().compareTo(time_start) >= 0)
-                    && (phieuXuat.getThoigiantao().compareTo(time_end) <= 0)
-                    && phieuXuat.getTongTien() >= price_min
-                    && phieuXuat.getTongTien() <= price_max) {
-                result.add(phieuXuat);
-            }
+            // if (match
+            //         && (manv == 0 || phieuXuat.getManguoitao() == manv) && (makh == 0 || phieuXuat.getMakh() == makh)
+            //         && (phieuXuat.getThoigiantao().compareTo(time_start) >= 0)
+            //         && (phieuXuat.getThoigiantao().compareTo(time_end) <= 0)
+            //         && phieuXuat.getTongTien() >= price_min
+            //         && phieuXuat.getTongTien() <= price_max) {
+            //     result.add(phieuXuat);
+            // }
         }
 
         return result;

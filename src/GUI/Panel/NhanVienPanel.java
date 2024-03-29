@@ -111,13 +111,13 @@ public final class NhanVienPanel extends JPanel {
                 System.out.println(searchText);
                 if (!searchText.isEmpty()) {
                     switch (luaChon) {
-                        case "Tất cả" -> {
+                        case "Tất cả":
                             System.out.println("Tất cả");
-                        }
-                        case "Họ tên" -> layDsNhanVienTheoTen(searchText);
-                        case "Số điện thoại" -> {
+                        
+                        case "Họ tên": layDsNhanVienTheoTen(searchText);
+                        case "Số điện thoại":
                             System.out.println("Số điện thoại");
-                        }
+                        
                     }
                 }
             }

@@ -76,4 +76,5 @@ public class HoaDonDao implements IDao<HoaDon, String> {
     public boolean sua(HoaDon entity) {
         return false;
     }
+
 }

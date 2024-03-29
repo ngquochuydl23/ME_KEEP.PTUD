@@ -95,7 +95,7 @@ public final class ChiTietPhieuDialog extends JDialog implements ActionListener 
     public void initPhieuNhap() {
         txtMaPhieu.setText("PN" + Integer.toString(this.phieunhap.getMaphieu()));
         txtNhaCungCap.setText(NhaCungCapDAO.getInstance().selectById(phieunhap.getManhacungcap() + "").getTenncc());
-        txtNhanVien.setText(NhanVienDAO.getInstance().selectById(phieunhap.getManguoitao() + "").getHoTen());
+       // txtNhanVien.setText(NhanVienDAO.getInstance().selectById(phieunhap.getManguoitao() + "").getHoTen());
         txtThoiGian.setText(Formater.FormatTime(phieunhap.getThoigiantao()));
     }
 

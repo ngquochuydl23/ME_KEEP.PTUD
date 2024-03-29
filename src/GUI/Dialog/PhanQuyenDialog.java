@@ -106,21 +106,20 @@ public final class PhanQuyenDialog extends JDialog implements ActionListener {
         jpBottom.setBorder(new EmptyBorder(20, 0, 20, 0));
         
         switch (type) {
-            case "create" -> {
+            case "create": 
                 btnAddNhomQuyen = new ButtonCustom("Thêm nhóm quyền", "success", 14);
                 btnAddNhomQuyen.addActionListener(this);
                 jpBottom.add(btnAddNhomQuyen);
-            }
-            case "update" -> {
+            
+            case "update":
                 btnUpdateNhomQuyen = new ButtonCustom("Cập nhật nhóm quyền", "success", 14);
                 btnUpdateNhomQuyen.addActionListener(this);
                 jpBottom.add(btnUpdateNhomQuyen);
                 initUpdate();
-            }
-            case "view" -> {
+            
+            case "view": 
                 initUpdate();
-            }
-            default -> throw new AssertionError();
+            
         }
         
         

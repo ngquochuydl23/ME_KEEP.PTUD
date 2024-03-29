@@ -84,27 +84,27 @@ public class KhuVucKhoBUS {
         ArrayList<KhuVucKhoDTO> result = new ArrayList<>();
         txt = txt.toLowerCase();
         switch (type) {
-            case "Tất cả" -> {
+            case "Tất cả":
                 for (KhuVucKhoDTO i : listKVK) {
                     if (Integer.toString(i.getMakhuvuc()).contains(txt) || i.getTenkhuvuc().toLowerCase().contains(txt)){
                         result.add(i);
                     }
                 }
-            }
-            case "Mã khu vực kho" -> {
+            
+            case "Mã khu vực kho":
                 for (KhuVucKhoDTO i : listKVK) {
                     if (Integer.toString(i.getMakhuvuc()).contains(txt)) {
                         result.add(i);
                     }
                 }
-            }
-            case "Tên khu vực kho" -> {
+            
+            case "Tên khu vực kho":
                 for (KhuVucKhoDTO i : listKVK) {
                     if (i.getTenkhuvuc().toLowerCase().contains(txt)) {
                         result.add(i);
                     }
                 }
-            }
+            
         }
         return result;
     }

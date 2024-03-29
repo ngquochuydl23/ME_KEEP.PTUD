@@ -7,14 +7,13 @@ import java.util.Objects;
 public class NhanVien {
     private int maNhanVien;
     private String hoTen;
-    private int gioitinh;
     private String soDienThoai;
     private LocalDate ngayDangKy;
     private LocalDate ngaySinh;
     private int trangthai;
     private String matKhau;
     private String email;
-
+    private int gioitinh;
     private String vaiTro;
 
     public NhanVien() {
@@ -68,7 +67,6 @@ public class NhanVien {
     public String getVaiTro() {
         return vaiTro;
     }
-
     public int getMaNhanVien() {
         return maNhanVien;
     }
@@ -122,10 +120,8 @@ public class NhanVien {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         NhanVien taiKhoan = (NhanVien) o;
         return maNhanVien == taiKhoan.maNhanVien;
     }

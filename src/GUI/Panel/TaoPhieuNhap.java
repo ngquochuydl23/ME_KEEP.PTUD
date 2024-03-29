@@ -26,6 +26,7 @@ import GUI.Main;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import helper.Formater;
+import DTO.NhanVienDTO;
 import helper.Validation;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -75,7 +76,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     DungLuongRomBUS romBus = new DungLuongRomBUS();
     PhieuNhapBUS phieunhapBus = new PhieuNhapBUS();
     MauSacBUS mausacBus = new MauSacBUS();
-    entity.NhanVien nvDto;
+    //NhanVienDTO nvDto;
 
     ArrayList<DTO.SanPhamDTO> listSP = spBUS.getAll();
     ArrayList<PhienBanSanPhamDTO> ch = new ArrayList<>();
@@ -86,8 +87,8 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     int rowPhieuSelect = -1;
     private ButtonCustom scanImei, importImei;
 
-    public TaoPhieuNhap(entity.NhanVien nv, String type, Main m) {
-        this.nvDto = nv;
+    public TaoPhieuNhap(NhanVienDTO nv, String type, Main m) {
+       // this.nvDto = nv;
         this.m = m;
         maphieunhap = phieunhapBus.phieunhapDAO.getAutoIncrement();
         chitietphieu = new ArrayList<>();
@@ -526,10 +527,10 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
             int index = cbxPtNhap.cbb.getSelectedIndex();
             CardLayout c = (CardLayout) content_right_bottom.getLayout();
             switch (index) {
-                case 0 ->
-                    c.first(content_right_bottom);
-                case 1 ->
-                    c.last(content_right_bottom);
+                case 0: c.first(content_right_bottom);
+                    
+                case 1:   c.last(content_right_bottom);
+                  
             }
         } else if(source == btnImport ) {
             JOptionPane.showMessageDialog(this, "Tính năng chưa phát triển");
