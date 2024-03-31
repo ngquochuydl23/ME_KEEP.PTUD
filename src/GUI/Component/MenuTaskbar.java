@@ -258,7 +258,7 @@ public class MenuTaskbar extends JPanel {
         listitem[8].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                nhanVien = new NhanVienPanel(main);
+                nhanVien = new NhanVienPanel();
                 main.setPanel(nhanVien);
             }
         });

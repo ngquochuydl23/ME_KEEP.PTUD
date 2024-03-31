@@ -27,61 +27,48 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.AbstractButton;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.PlainDocument;
 
 
-public class NhanVienDialog extends JDialog {
+public class NhanVienDialog extends JFrame {
     private HeaderTitle titlePage;
-    private JPanel main, bottom;
-    private ButtonCustom btnAdd, btnEdit, btnExit;
+    private ButtonCustom btnSubmit, btnExit;
     private InputForm hoTenInputForm;
     private InputForm sdtInputForm;
     private InputForm emailInputForm;
+    private InputForm matKhauInputForm;
+    private JComboBox<String> vaiTroCb;
     private ButtonGroup gioiTinhBtnGroup;
     private JRadioButton gioiTinhNamRbtn;
     private JRadioButton gioiTinhNuRbtn;
     private InputDate ngaySinhInputDate;
     private NhanVien nhanVien;
 
+    private boolean dangChinhSua;
     private NhanVienDao nhanVienDao;
 
+    private TaoNhanVienListener taoNhanVienListener;
+    private SuaNhanVienListener suaNhanVienListener;
+    private JPanel main, bottom;
+
+    private boolean dangXemChiTiet;
+
     public NhanVienDialog() {
-        setLocationRelativeTo(null);
         init();
+        enableFrom();
+        dangChinhSua = false;
+        dangXemChiTiet = false;
         nhanVienDao = new NhanVienDao();
-    }
-
-    public NhanVienDialog(NhanVien nhanVien) {
-        setLocationRelativeTo(null);
-
-        this.nhanVien = nhanVien;
-        nhanVienDao = new NhanVienDao();
-
-        hoTenInputForm.setText(nhanVien.getHoTen());
-        sdtInputForm.setText(nhanVien.getSoDienThoai());
-        emailInputForm.setText(nhanVien.getEmail());
-        gioiTinhNamRbtn.setSelected(nhanVien.getGioitinh() == 1);
-        //ngaySinhInputDate.setDate(nhanVien.getNgaysinh());
-
-        init();
     }
 
     public void init() {
+        setSize(new Dimension(450, 590));
+        setLocationRelativeTo(null);
 
-        this.setVisible(true);
-        this.setSize(new Dimension(450, 590));
-        this.setLayout(new BorderLayout(0, 0));
 
-        titlePage = new HeaderTitle(nhanVien != null ? "Thêm" : "Sửa");
+        titlePage = new HeaderTitle("Thêm");
 
         main = new JPanel();
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
@@ -96,6 +83,11 @@ public class NhanVienDialog extends JDialog {
         gioiTinhBtnGroup = new ButtonGroup();
         gioiTinhBtnGroup.add(gioiTinhNamRbtn);
         gioiTinhBtnGroup.add(gioiTinhNuRbtn);
+        vaiTroCb = new JComboBox<>(new String[]{"Quản lí", "Nhân viên bán vé"});
+        matKhauInputForm = new InputForm("Mật khẩu");
+
+
+        // Gioi tinh - Field
         JPanel jpanelG = new JPanel(new GridLayout(2, 1, 0, 2));
         jpanelG.setBackground(Color.white);
         jpanelG.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -107,28 +99,50 @@ public class NhanVienDialog extends JDialog {
         JLabel labelGender = new JLabel("Giới tính");
         jpanelG.add(labelGender);
         jpanelG.add(jgender);
-        JPanel jpaneljd = new JPanel();
-        jpaneljd.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+
+        // Ngày sinh field
         JLabel lbBd = new JLabel("Ngày sinh");
         lbBd.setSize(new Dimension(100, 100));
+
+        ngaySinhInputDate = new InputDate("Ngày sinh");
+        ngaySinhInputDate.setSize(new Dimension(100, 100));
+
+        JPanel jpaneljd = new JPanel();
+        jpaneljd.setBorder(new EmptyBorder(10, 10, 10, 10));
         jpaneljd.setSize(new Dimension(500, 100));
         jpaneljd.setLayout(new FlowLayout(FlowLayout.LEFT));
         jpaneljd.setBackground(Color.white);
-        ngaySinhInputDate = new InputDate("Ngày sinh");
-        ngaySinhInputDate.setSize(new Dimension(100, 100));
         jpaneljd.add(lbBd);
         jpaneljd.add(ngaySinhInputDate);
+
+        // Vai tro combo box
+        JLabel vaiTroLabel = new JLabel("Vai Trò");
+        vaiTroLabel.setSize(new Dimension(100, 100));
+
+        JPanel vaiTroPanel = new JPanel();
+        vaiTroPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        vaiTroPanel.setSize(new Dimension(500, 100));
+        vaiTroPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        vaiTroPanel.setBackground(Color.white);
+        vaiTroPanel.add(vaiTroLabel);
+        vaiTroPanel.add(vaiTroCb);
+
+
         main.add(hoTenInputForm);
-        main.add(emailInputForm);
         main.add(sdtInputForm);
+        main.add(emailInputForm);
+        main.add(matKhauInputForm);
+
         main.add(jpanelG);
         main.add(ngaySinhInputDate);
+        main.add(vaiTroPanel);
+
 
         bottom = new JPanel(new FlowLayout());
         bottom.setBorder(new EmptyBorder(10, 0, 10, 0));
         bottom.setBackground(Color.white);
-        btnAdd = new ButtonCustom("Thêm người dùng", "success", 14);
-        btnEdit = new ButtonCustom("Lưu thông tin", "success", 14);
+        btnSubmit = new ButtonCustom(dangChinhSua ? "Lưu thông tin" : "Thêm người dùng", "success", 14);
         btnExit = new ButtonCustom("Hủy bỏ", "danger", 14);
         btnExit.addActionListener(new ActionListener() {
             @Override
@@ -137,38 +151,19 @@ public class NhanVienDialog extends JDialog {
             }
         });
 
-        btnAdd.addActionListener(new ActionListener() {
+        btnSubmit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (dangChinhSua){
+                    suaNhanVien();
+                    return;
+                }
                 themNhanVien();
             }
         });
 
-        btnEdit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-
-//        switch (type) {
-//            case "create" -> bottom.add(btnAdd);
-//            case "update" -> bottom.add(btnEdit);
-//            case "detail" -> {
-//                name.setDisable();
-//                sdtInputForm.setDisable();
-//                email.setDisable();
-//                Enumeration<AbstractButton> enumeration = gender.getElements();
-//                while (enumeration.hasMoreElements()) {
-//                    enumeration.nextElement().setEnabled(false);
-//                }
-//                jcBd.setDisable();
-//            }
-//            default -> throw new AssertionError();
-//        }
-
+        bottom.add(btnSubmit);
         bottom.add(btnExit);
-
         this.add(titlePage, BorderLayout.NORTH);
         this.add(main, BorderLayout.CENTER);
         this.add(bottom, BorderLayout.SOUTH);
@@ -176,23 +171,47 @@ public class NhanVienDialog extends JDialog {
     }
 
     boolean validationInput() throws ParseException {
-        if (Validation.isEmpty(hoTenInputForm.getText())) {
+        String hoTen = hoTenInputForm.getText().trim();
+        String email = emailInputForm.getText().trim();
+        LocalDate ngaySinh = ngaySinhInputDate
+                .getDate()
+                .toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        String matKhau = matKhauInputForm.getText().trim();
+        String sdt = sdtInputForm.getText().trim();
+
+
+        if (Validation.isEmpty(hoTen)) {
             JOptionPane.showMessageDialog(this, "Tên nhân viên không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
             return false;
-        } else if (hoTenInputForm.getText().length() < 6) {
+        }
+        if (hoTen.length() < 6) {
             JOptionPane.showMessageDialog(this, "Tên nhân viên ít nhất 6 kí tự!");
             return false;
-        } else if (Validation.isEmpty(emailInputForm.getText()) || !Validation.isEmail(emailInputForm.getText())) {
+        }
+        if (Validation.isEmpty(email) || !Validation.kiemTraEmail(email)) {
             JOptionPane.showMessageDialog(this, "Email không được rỗng và phải đúng cú pháp", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
             return false;
-        } else if (Validation.isEmpty(sdtInputForm.getText()) && !Validation.isNumber(sdtInputForm.getText()) && sdtInputForm.getText().length() != 10) {
-            JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng và phải là 10 ký tự số", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        }
+        if (Validation.isEmpty(sdt) || !Validation.kiemTraSoDienThoai(sdt)) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng và phải đúng định dạng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
             return false;
-        } else if (ngaySinhInputDate.getDate() == null) {
+        }
+        if (ngaySinh == null) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày sinh!");
             return false;
-        } else if (!gioiTinhNamRbtn.isSelected() && !gioiTinhNuRbtn.isSelected()) {
+        }
+        if (!gioiTinhNamRbtn.isSelected() && !gioiTinhNuRbtn.isSelected()) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn giới tính!");
+            return false;
+        }
+        if (Validation.isEmpty(matKhau)) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu!");
+            return false;
+        }
+        if (vaiTroCb.getSelectedItem() == null || vaiTroCb.getSelectedItem().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn vai trò!");
             return false;
         }
         return true;
@@ -202,23 +221,24 @@ public class NhanVienDialog extends JDialog {
         try {
             if (validationInput()) {
 
-                String sdt = sdtInputForm.getText().trim();
-                if (nhanVienDao.timNhanVienTheoSdt(sdt) == null) {
+                NhanVien nhanVienMoi = layNhanVienTuField();
+
+                if (nhanVienDao.timNhanVienTheoSdt(nhanVienMoi.getSoDienThoai()) != null) {
                     JOptionPane.showMessageDialog(this, "Số điện thoại này đã được sử dụng trong hệ thống!");
                     return;
                 }
 
-                int gioiTinh = gioiTinhNamRbtn.isSelected() ? 1 : 0;
-                String hoTen = hoTenInputForm.getText();
-                String email = emailInputForm.getText();
-                LocalDate ngaySinh = ngaySinhInputDate
-                        .getDate()
-                        .toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate();
+                if (nhanVienDao.timNhanVienTheoEmail(nhanVienMoi.getEmail()) != null) {
+                    JOptionPane.showMessageDialog(this, "Email này đã được sử dụng trong hệ thống!");
+                    return;
+                }
 
-              //  nhanVienDao.them(new NhanVien(hoTen, gioiTinh, sdt, ngaySinh, 1, ))
-                dispose();
+                if (nhanVienDao.them(nhanVienMoi)) {
+                    if (taoNhanVienListener != null) {
+                        taoNhanVienListener.taoNhanVienThanhCong();
+                    }
+                    dispose();
+                }
             }
         } catch (ParseException ex) {
             Logger.getLogger(NhanVienDialog.class.getName()).log(Level.SEVERE, null, ex);
@@ -230,10 +250,147 @@ public class NhanVienDialog extends JDialog {
     private void suaNhanVien() {
         try {
             if (validationInput()) {
+                NhanVien thongNVTinMoi = layNhanVienTuField();
+                thongNVTinMoi.setMaNhanVien(nhanVien.getMaNhanVien());
 
+                if (!nhanVien.getSoDienThoai().equals(thongNVTinMoi.getSoDienThoai()) && nhanVienDao.timNhanVienTheoSdt(thongNVTinMoi.getSoDienThoai()) != null) {
+                    JOptionPane.showMessageDialog(this, "Số điện thoại này đã được sử dụng trong hệ thống!");
+                    return;
+                }
+
+                if (!nhanVien.getEmail().equals(thongNVTinMoi.getEmail()) && nhanVienDao.timNhanVienTheoEmail(thongNVTinMoi.getEmail()) != null) {
+                    JOptionPane.showMessageDialog(this, "Email này đã được sử dụng trong hệ thống!");
+                    return;
+                }
+
+                if (nhanVienDao.sua(thongNVTinMoi)) {
+                    if (suaNhanVienListener != null) {
+                        suaNhanVienListener.suaNhanVienThanhCong();
+                    }
+                    dispose();
+                }
             }
         } catch (ParseException ex) {
             Logger.getLogger(NhanVienDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void setTaoNhanVienListener(TaoNhanVienListener taoNhanVienListener) {
+        this.taoNhanVienListener = taoNhanVienListener;
+    }
+
+    public void setSuaNhanVienListener(SuaNhanVienListener suaNhanVienListener) {
+        this.suaNhanVienListener = suaNhanVienListener;
+    }
+
+    public void xoaDuLieu() {
+        dangChinhSua = false;
+        dangXemChiTiet = false;
+        titlePage.setLblTitle("Thêm");
+
+
+        enableFrom();
+
+        hoTenInputForm.setText("");
+        sdtInputForm.setText("");
+        emailInputForm.setText("");
+        gioiTinhNamRbtn.setSelected(false);
+        gioiTinhNuRbtn.setSelected(false);
+        vaiTroCb.setSelectedItem(null);
+        ngaySinhInputDate.setDate(LocalDate.of(1900, 1, 1));
+        btnSubmit.setText("Thêm người dùng");
+        btnSubmit.setVisible(true);
+        invalidate();
+        validate();
+        repaint();
+    }
+
+    public void setNhanVien(NhanVien nhanVien) {
+        this.nhanVien = nhanVien;
+        dangChinhSua = true;
+        dangXemChiTiet = false;
+        titlePage.setLblTitle("Sửa");
+        enableFrom();
+        hoTenInputForm.setText(nhanVien.getHoTen());
+        sdtInputForm.setText(nhanVien.getSoDienThoai());
+        emailInputForm.setText(nhanVien.getEmail());
+        gioiTinhNamRbtn.setSelected(nhanVien.getGioitinh() == 1);
+        ngaySinhInputDate.setDate(nhanVien.getNgaysinh());
+        matKhauInputForm.setText(nhanVien.getMatKhau());
+        vaiTroCb.setSelectedItem(nhanVien.getVaiTro());
+
+        gioiTinhNamRbtn.setSelected(nhanVien.getGioitinh() == 1);
+        gioiTinhNuRbtn.setSelected(nhanVien.getGioitinh() == 0);
+
+        btnSubmit.setText("Lưu thông tin");
+        btnSubmit.setVisible(true);
+        invalidate();
+        validate();
+        repaint();
+    }
+
+    public void xemChiTietNhanVien(NhanVien nhanVien) {
+        this.nhanVien = nhanVien;
+        setVisible(true);
+
+        dangChinhSua = false;
+        dangXemChiTiet = true;
+        titlePage.setLblTitle("Sửa");
+        disableForm();
+        hoTenInputForm.setText(nhanVien.getHoTen());
+        sdtInputForm.setText(nhanVien.getSoDienThoai());
+        emailInputForm.setText(nhanVien.getEmail());
+        gioiTinhNamRbtn.setSelected(nhanVien.getGioitinh() == 1);
+        ngaySinhInputDate.setDate(nhanVien.getNgaysinh());
+        matKhauInputForm.setText(nhanVien.getMatKhau());
+        vaiTroCb.setSelectedItem(nhanVien.getVaiTro());
+
+        gioiTinhNamRbtn.setSelected(nhanVien.getGioitinh() == 1);
+        gioiTinhNuRbtn.setSelected(nhanVien.getGioitinh() == 0);
+
+        btnSubmit.setVisible(false);
+        invalidate();
+        validate();
+        repaint();
+    }
+
+    private NhanVien layNhanVienTuField() throws ParseException {
+        int gioiTinh = gioiTinhNamRbtn.isSelected() ? 1 : 0;
+        String hoTen = hoTenInputForm.getText().trim();
+        String email = emailInputForm.getText().trim();
+        LocalDate ngaySinh = ngaySinhInputDate
+                .getDate()
+                .toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        String matKhau = matKhauInputForm.getText().trim();
+        String vaiTro = vaiTroCb.getSelectedItem().toString();
+        String sdt = sdtInputForm.getText().trim();
+
+        return new NhanVien(hoTen, gioiTinh, sdt, ngaySinh, 1, matKhau, email, vaiTro);
+    }
+
+    private void enableFrom() {
+        hoTenInputForm.setEditable(true);
+        sdtInputForm.setEditable(true);
+        emailInputForm.setEditable(true);
+        gioiTinhNamRbtn.setEnabled(true);
+        gioiTinhNuRbtn.setEnabled(true);
+        vaiTroCb.setEditable(true);
+        vaiTroCb.setEnabled(true);
+        matKhauInputForm.setEditable(true);
+        ngaySinhInputDate.getDateChooser().setEnabled(true);
+    }
+
+    private void disableForm()  {
+        hoTenInputForm.setEditable(false);
+        sdtInputForm.setEditable(false);
+        emailInputForm.setEditable(false);
+        gioiTinhNamRbtn.setEnabled(false);
+        gioiTinhNuRbtn.setEnabled(false);
+        vaiTroCb.setEditable(false);
+        vaiTroCb.setEnabled(false);
+        ngaySinhInputDate.getDateChooser().setEnabled(false);
+        matKhauInputForm.setEditable(false);
     }
 }

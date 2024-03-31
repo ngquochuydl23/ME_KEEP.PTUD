@@ -1,6 +1,10 @@
 package GUI.Panel;
 
 
+import BUS.NhomQuyenBUS;
+import DAO.TaiKhoanDAO;
+import DTO.NhomQuyenDTO;
+import DTO.TaiKhoanDTO;
 import GUI.Component.ChucNangChinh;
 import GUI.Component.IntegratedSearch;
 import GUI.Component.MainFunction;
@@ -11,12 +15,25 @@ import javax.swing.border.EmptyBorder;
 
 import GUI.Component.PanelBorderRadius;
 import GUI.Dialog.nhanVienDialog.NhanVienDialog;
+import GUI.Dialog.nhanVienDialog.SuaNhanVienListener;
+import GUI.Dialog.nhanVienDialog.TaoNhanVienListener;
 import GUI.Main;
+import com.kitfox.svg.A;
 import dao1.NhanVienDao;
 import entity.NhanVien;
+import helper.BCrypt;
+import helper.JTableExporter;
+import helper.Validation;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -24,30 +41,35 @@ import javax.swing.table.DefaultTableModel;
 
 public final class NhanVienPanel extends JPanel {
 
-
     private NhanVienDao nhanVienDao;
-
-    public JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
-    private PanelBorderRadius main, functionBar;
-    private JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
-    private JTable tableNhanVien;
-    private JScrollPane scrollTableSanPham;
-    private ChucNangChinh chucNangChinh;
-    private IntegratedSearch search;
-    private Main m;
-
     private List<NhanVien> dsNhanVien;
-
-    private Color BackgroundColor = new Color(240, 247, 250);
+    private JTable tableNhanVien;
     private DefaultTableModel tblModel;
+    private NhanVienDialog nhanVienDialog;
+
+
+    public NhanVienPanel() {
+        initComponent();
+        tableNhanVien.setDefaultEditor(Object.class, null);
+        layDsNhanVien();
+    }
 
     private void initComponent() {
+        IntegratedSearch search;
+        Color BackgroundColor = new Color(240, 247, 250);
+
         this.setBackground(BackgroundColor);
         this.setLayout(new BorderLayout(0, 0));
         this.setOpaque(true);
 
-        nhanVienDao = new NhanVienDao();
+        JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
+        PanelBorderRadius main, functionBar;
+        JScrollPane scrollTableSanPham;
 
+
+        ChucNangChinh chucNangChinh;
+        nhanVienDao = new NhanVienDao();
+        nhanVienDialog = new NhanVienDialog();
         // pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4 chỉ để thêm contentCenter ở giữa mà contentCenter không bị dính sát vào các thành phần khác
         pnlBorder1 = new JPanel();
         pnlBorder1.setPreferredSize(new Dimension(0, 10));
@@ -84,25 +106,102 @@ public final class NhanVienPanel extends JPanel {
 
         chucNangChinh = new ChucNangChinh(new String[]{"them", "xoa", "sua", "chi-tiet", "nhap-excel", "xuat-excel"});
         functionBar.add(chucNangChinh);
-        search = new IntegratedSearch(new String[]{"Tất cả", "Họ tên", "Số điện thoại"});
+        search = new IntegratedSearch(new String[]{ "Họ tên", "Số điện thoại"});
         functionBar.add(search);
+
+        nhanVienDialog.setTaoNhanVienListener(new TaoNhanVienListener() {
+            @Override
+            public void taoNhanVienThanhCong() {
+                nhanVienDialog.xoaDuLieu();
+                layDsNhanVien();
+            }
+        });
+
+        nhanVienDialog.setSuaNhanVienListener(new SuaNhanVienListener() {
+            @Override
+            public void suaNhanVienThanhCong() {
+                nhanVienDialog.xoaDuLieu();
+                layDsNhanVien();
+            }
+        });
 
         chucNangChinh
                 .getToolbar("them")
                 .addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new NhanVienDialog();
-            }
-        });
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        nhanVienDialog.xoaDuLieu();
+                        nhanVienDialog.setVisible(true);
+                    }
+                });
+
+        chucNangChinh
+                .getToolbar("sua")
+                .addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (!kiemTraChonDong())
+                            return;
+                        nhanVienDialog.xoaDuLieu();
+                        nhanVienDialog.setNhanVien(layThongTinNhanVienTaiDong());
+                        nhanVienDialog.setVisible(true);
+                    }
+                });
+
+        chucNangChinh
+                .getToolbar("xoa")
+                .addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (!kiemTraChonDong())
+                            return;
+                        xoaNhanVienTheoMa(layThongTinNhanVienTaiDong());
+                    }
+                });
+
+        chucNangChinh
+                .getToolbar("chi-tiet")
+                .addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (!kiemTraChonDong())
+                            return;
+                        nhanVienDialog.xoaDuLieu();
+                        nhanVienDialog.xemChiTietNhanVien(layThongTinNhanVienTaiDong());
+                    }
+                });
+
+        chucNangChinh
+                .getToolbar("nhap-excel")
+                .addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        nhapExcel();
+                    }
+                });
+
+        chucNangChinh
+                .getToolbar("xuat-excel")
+                .addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            JTableExporter.exportJTableToExcel(tableNhanVien);
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(null, ex.getMessage());
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+
 
         search.setActionReset(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Reset");
                 layDsNhanVien();
             }
         });
+
         search.txtSearchForm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -111,13 +210,11 @@ public final class NhanVienPanel extends JPanel {
                 System.out.println(searchText);
                 if (!searchText.isEmpty()) {
                     switch (luaChon) {
-                        case "Tất cả":
-                            System.out.println("Tất cả");
-                        
-                        case "Họ tên": layDsNhanVienTheoTen(searchText);
+                        case "Họ tên":
+                            layDsNhanVienTheoTen(searchText);
                         case "Số điện thoại":
-                            System.out.println("Số điện thoại");
-                        
+                            layDsNhanVienTheoSdt(searchText);
+
                     }
                 }
             }
@@ -133,7 +230,7 @@ public final class NhanVienPanel extends JPanel {
         scrollTableSanPham = new JScrollPane();
         tableNhanVien = new JTable();
         tblModel = new DefaultTableModel();
-        String[] headerCols = "Mã nhân viên;Họ tên;Số Điện thoại;Giới tính;Ngày sinh;Email".split(";");
+        String[] headerCols = "Mã nhân viên;Họ tên;Số Điện thoại;Giới tính;Ngày sinh;Email;Vai Trò".split(";");
 
         tblModel.setColumnIdentifiers(headerCols);
         tableNhanVien.setModel(tblModel);
@@ -147,19 +244,9 @@ public final class NhanVienPanel extends JPanel {
         tableNhanVien.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
         tableNhanVien.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
         tableNhanVien.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+        tableNhanVien.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
         scrollTableSanPham.setViewportView(tableNhanVien);
         main.add(scrollTableSanPham);
-    }
-
-    public NhanVienPanel(Main m) {
-        this.m = m;
-        initComponent();
-        tableNhanVien.setDefaultEditor(Object.class, null);
-        layDsNhanVien();
-    }
-
-    public int getRow() {
-        return tableNhanVien.getSelectedRow();
     }
 
     public void layDsNhanVien() {
@@ -169,7 +256,8 @@ public final class NhanVienPanel extends JPanel {
         dsNhanVien = nhanVienDao.layHet();
         for (entity.NhanVien nhanVien : dsNhanVien) {
             tblModel.addRow(new Object[]{
-                    nhanVien.getMaNhanVien(), nhanVien.getHoTen(), nhanVien.getSoDienThoai(), nhanVien.getGioitinh() == 1 ? "Nam" : "Nữ", nhanVien.getNgaysinh(), nhanVien.getEmail()
+                    nhanVien.getMaNhanVien(), nhanVien.getHoTen(), nhanVien.getSoDienThoai(), nhanVien.getGioitinh() == 1 ? "Nam" : "Nữ", nhanVien.getNgaysinh(), nhanVien.getEmail(),
+                    nhanVien.getVaiTro()
             });
         }
     }
@@ -182,10 +270,137 @@ public final class NhanVienPanel extends JPanel {
         NhanVien nhanVien = nhanVienDao.layDsNhanVienTheoTen(ten);
         if (nhanVien != null) {
             dsNhanVien.add(nhanVien);
-
             tblModel.addRow(new Object[]{
                     nhanVien.getMaNhanVien(), nhanVien.getHoTen(), nhanVien.getSoDienThoai(), nhanVien.getGioitinh() == 1 ? "Nam" : "Nữ", nhanVien.getNgaysinh(), nhanVien.getEmail()
             });
         }
+    }
+
+    public void layDsNhanVienTheoSdt(String sdt) {
+        while (tblModel.getRowCount() > 0) {
+            tblModel.removeRow(0);
+        }
+        dsNhanVien = new ArrayList<>();
+        NhanVien nhanVien = nhanVienDao.timNhanVienTheoSdt(sdt);
+        if (nhanVien != null) {
+            dsNhanVien.add(nhanVien);
+            tblModel.addRow(new Object[]{
+                    nhanVien.getMaNhanVien(), nhanVien.getHoTen(), nhanVien.getSoDienThoai(), nhanVien.getGioitinh() == 1 ? "Nam" : "Nữ", nhanVien.getNgaysinh(), nhanVien.getEmail()
+            });
+        }
+    }
+
+    private NhanVien layThongTinNhanVienTaiDong() {
+        int row = tableNhanVien.getSelectedRow();
+
+        int maNhanVien = Integer.parseInt(tblModel.getValueAt(row, 0).toString());
+        return dsNhanVien.stream()
+                .filter(nhanVien -> nhanVien.getMaNhanVien() == maNhanVien)
+                .findAny()
+                .orElse(null);
+    }
+
+    private void xoaNhanVienTheoMa(NhanVien nhanVien) {
+        if (JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa nhân viên " + nhanVien.getHoTen()) == 0) {
+            if (nhanVienDao.xoa(nhanVien.getMaNhanVien())) {
+                JOptionPane.showMessageDialog(null, "Đã xóa nhân viên thành công");
+                layDsNhanVien();
+            }
+        }
+    }
+
+    private boolean kiemTraChonDong() {
+        if (tableNhanVien.getSelectedRow() < 0) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên");
+            return false;
+        }
+        return true;
+    }
+
+    public void nhapExcel() {
+        List<NhanVien> importingNhanVien = new ArrayList<>();
+        layDsNhanVien();
+
+        File excelFile;
+        FileInputStream excelFIS = null;
+        BufferedInputStream excelBIS = null;
+        XSSFWorkbook excelJTableImport = null;
+        JFileChooser jf = new JFileChooser();
+        int result = jf.showOpenDialog(null);
+        jf.setDialogTitle("Chọn đường dẫn lưu file Excel");
+
+        int k = 0;
+        if (result == JFileChooser.APPROVE_OPTION) {
+            try {
+                excelFile = jf.getSelectedFile();
+                excelFIS = new FileInputStream(excelFile);
+                excelBIS = new BufferedInputStream(excelFIS);
+                excelJTableImport = new XSSFWorkbook(excelBIS);
+                XSSFSheet excelSheet = excelJTableImport.getSheetAt(0);
+                for (int row = 1; row <= excelSheet.getLastRowNum(); row++) {
+
+                    XSSFRow excelRow = excelSheet.getRow(row);
+
+                    String hoTen = excelRow.getCell(1).getStringCellValue();
+                    String soDienThoai = excelRow.getCell(2).getStringCellValue();
+                    int gioiTinh = excelRow.getCell(3).getStringCellValue().equals("Nam") ? 1 : 0;
+
+                    LocalDate ngaySinh = LocalDate.parse(excelRow.getCell(4).getStringCellValue());
+                    String email = excelRow.getCell(5).getStringCellValue();
+                    String vaiTro = excelRow.getCell(6).getStringCellValue();
+
+                    NhanVien nhanVien = new NhanVien(hoTen, gioiTinh, soDienThoai, ngaySinh, 1, "123456789", email, vaiTro);
+                    if (!kiemTraNhanVienHopLe(nhanVien)) {
+                        break;
+                    }
+
+                    if (dsNhanVien.stream()
+                            .filter(item -> item.getEmail().equals(nhanVien.getEmail()) || item.getSoDienThoai().equals(nhanVien.getSoDienThoai()))
+                            .findAny()
+                            .orElse(null) != null) {
+                        break;
+                    }
+                    importingNhanVien.add(nhanVien);
+                }
+
+                if (nhanVienDao.themVoiDanhSach(importingNhanVien)) {
+                    JOptionPane.showMessageDialog(this, "Nhập dữ liệu thành công");
+                }
+
+            } catch (FileNotFoundException ex) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy file");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Lỗi đọc file");
+            }
+        }
+        layDsNhanVien();
+    }
+
+    private boolean kiemTraNhanVienHopLe(NhanVien nhanVien) {
+        if (Validation.isEmpty(nhanVien.getHoTen())) {
+            JOptionPane.showMessageDialog(this, "Tên nhân viên không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        if (nhanVien.getHoTen().length() < 6) {
+            JOptionPane.showMessageDialog(this, "Tên nhân viên ít nhất 6 kí tự!");
+            return false;
+        }
+        if (Validation.isEmpty(nhanVien.getEmail()) || !Validation.kiemTraEmail(nhanVien.getEmail())) {
+            JOptionPane.showMessageDialog(this, "Email không được rỗng và phải đúng cú pháp", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        if (Validation.isEmpty(nhanVien.getSoDienThoai()) || !Validation.kiemTraSoDienThoai(nhanVien.getSoDienThoai())) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng và phải đúng định dạng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        if (nhanVien.getNgaysinh() == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày sinh!");
+            return false;
+        }
+        if (Validation.isEmpty(nhanVien.getVaiTro())) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn vai trò!");
+            return false;
+        }
+        return true;
     }
 }

@@ -12,6 +12,8 @@ import java.awt.GridLayout;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -31,6 +33,7 @@ public class InputDate extends JPanel {
         this.setBorder(new EmptyBorder(10, 10, 10, 10));
         lbltitle = new JLabel(title);
         date = new JDateChooser();
+        date.setSize(new Dimension(date.getPreferredSize().width, 40));
         date.setDateFormatString("dd/MM/yyyy");
         dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         this.add(lbltitle);
@@ -69,6 +72,10 @@ public class InputDate extends JPanel {
 
     public void setDate(Date date) {
         this.date.setDate(date);
+    }
+
+    public void setDate(LocalDate localDate) {
+        this.date.setDate(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
     }
 
     public void setDisable() {

@@ -34,7 +34,7 @@ public class NhanVien {
         this.email = email;
     }
 
-    public NhanVien(int maNhanVien, String hoTen, int gioitinh, String soDienThoai, LocalDate ngayDangky,LocalDate ngaySinh, int trangthai,
+    public NhanVien(int maNhanVien, String hoTen, int gioitinh, String soDienThoai, LocalDate ngayDangky, LocalDate ngaySinh, int trangthai,
             String matKhau, String email, String vaiTro) {
         this.maNhanVien = maNhanVien;
         this.hoTen = hoTen;
@@ -50,6 +50,19 @@ public class NhanVien {
 
     public NhanVien(String hoTen, int gioitinh, String soDienThoai, LocalDate ngaySinh, int trangthai,
                     String matKhau, String email, String vaiTro) {
+        this.hoTen = hoTen;
+        this.gioitinh = gioitinh;
+        this.soDienThoai = soDienThoai;
+        this.ngaySinh = ngaySinh;
+        this.trangthai = trangthai;
+        this.matKhau = matKhau;
+        this.email = email;
+        this.vaiTro = vaiTro;
+    }
+
+    public NhanVien(int maNhanVien, String hoTen, int gioitinh, String soDienThoai, LocalDate ngaySinh, int trangthai,
+                    String matKhau, String email, String vaiTro) {
+        this.maNhanVien = maNhanVien;
         this.hoTen = hoTen;
         this.gioitinh = gioitinh;
         this.soDienThoai = soDienThoai;
