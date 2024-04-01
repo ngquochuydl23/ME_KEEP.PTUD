@@ -8,18 +8,7 @@ import DTO.NhomQuyenDTO;
 import DTO.TaiKhoanDTO;
 import GUI.DangNhapForm;
 import GUI.Main;
-import GUI.Panel.BanVe;
-import GUI.Panel.KhachHang;
-import GUI.Panel.KhuVucKho;
-import GUI.Panel.NhaCungCap;
-import GUI.Panel.NhanVienPanel;
-import GUI.Panel.PhanQuyen;
-import GUI.Panel.PhieuNhap;
-import GUI.Panel.PhieuXuat;
-import GUI.Panel.QuanLyThuocTinhSP;
-import GUI.Panel.SanPham;
-import GUI.Panel.TaiKhoan;
-import GUI.Panel.TrangChu;
+import GUI.Panel.*;
 import DTO.NhanVienDTO;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -28,9 +17,6 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import com.formdev.flatlaf.extras.FlatSVGIcon;
-
-import GUI.Dialog.MyAccount;
 import GUI.Panel.ThongKe.ThongKe;
 
 //import GUI.Component.itemTaskbar;
@@ -45,7 +31,6 @@ public class MenuTaskbar extends JPanel {
     KhachHang khachHang;
     NhaCungCap nhacungcap;
     NhanVienPanel nhanVien;
-    TaiKhoan taiKhoan;
     PhanQuyen phanQuyen;
     BanVe banVe;
     ThongKe thongKe;
@@ -54,17 +39,15 @@ public class MenuTaskbar extends JPanel {
             { "Sản phẩm", "product.svg", "sanpham" },
             { "Thuộc tính", "brand.svg", "thuoctinh" },
             { "Khu vực kho", "area.svg", "khuvuckho" },
-            { "Phiếu nhập", "import.svg", "nhaphang" },
+            { "Lịch sử trả vé", "import.svg", "nhaphang" },
             { "Phiếu xuất", "export.svg", "xuathang" },
             { "Khách hàng", "customer.svg", "khachhang" },
             { "Nhà cung cấp", "supplier.svg", "nhacungcap" },
             { "Nhân viên", "staff.svg", "nhanvien" },
-            { "Tài khoản", "account.svg", "taikhoan" },
             { "Thống kê", "statistical.svg", "thongke" },
             { "Phân quyền", "permission.svg", "nhomquyen" },
             { "Đăng xuất", "log_out.svg", "dangxuat" },
-            { "Bán vé", "import.svg", "banve" },
-
+            { "Bán vé", "import.svg", "banve" }
     };
 
     Main main;
@@ -229,8 +212,8 @@ public class MenuTaskbar extends JPanel {
         listitem[4].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                phieuNhap = new PhieuNhap(main, nhanVienDTO);
-                main.setPanel(phieuNhap);
+                trangChu = new TrangChu();
+                main.setPanel(new LichSuTraVePanel());
             }
         });
         listitem[5].addMouseListener(new MouseAdapter() {
@@ -265,31 +248,22 @@ public class MenuTaskbar extends JPanel {
         listitem[9].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                taiKhoan = new TaiKhoan(main);
-                main.setPanel(taiKhoan);
+                thongKe = new ThongKe();
+                main.setPanel(thongKe);
             }
         });
+
         listitem[10].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                thongKe = new ThongKe();
-                main.setPanel(thongKe);
+                phanQuyen = new PhanQuyen(main);
+                main.setPanel(phanQuyen);
             }
         });
 
         listitem[11].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-
-                phanQuyen = new PhanQuyen(main);
-                main.setPanel(phanQuyen);
-            }
-        });
-
-        listitem[12].addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent evt) {
-
                 int input = JOptionPane.showConfirmDialog(null,
                         "Bạn có chắc chắn muốn đăng xuất?", "Đăng xuất",
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
@@ -301,7 +275,7 @@ public class MenuTaskbar extends JPanel {
             }
         });
 
-        listitem[13].addMouseListener(new MouseAdapter() {
+        listitem[12].addMouseListener(new MouseAdapter() {
 
             @Override
             public void mousePressed(MouseEvent evt) {

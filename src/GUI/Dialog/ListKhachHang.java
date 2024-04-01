@@ -5,11 +5,8 @@
 package GUI.Dialog;
 
 import DAO.KhachHangDAO;
-import DAO.NhanVienDAO;
-import DTO.KhachHangDTO;
 import DTO.KhachHangDTO;
 import GUI.Component.ButtonCustom;
-import GUI.Panel.TaiKhoan;
 import GUI.Panel.TaoPhieuXuat;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import java.awt.BorderLayout;
@@ -28,7 +25,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
