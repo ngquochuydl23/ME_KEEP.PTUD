@@ -7,6 +7,7 @@ package GUI.Component;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionListener;
 import javax.accessibility.AccessibleContext;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,10 +17,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.EventListenerList;
 import javax.swing.plaf.ComponentUI;
 
-/**
- *
- * @author Tran Nhat Sinh
- */
 public final class InputForm extends JPanel {
 
     private JLabel lblTitle;
@@ -149,4 +146,7 @@ public final class InputForm extends JPanel {
         return txtForm.getText();
     }
 
+    public void addActionListener(ActionListener actionListener) {
+        txtForm.addActionListener(actionListener);
+    }
 }

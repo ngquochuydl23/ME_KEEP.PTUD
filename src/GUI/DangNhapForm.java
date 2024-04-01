@@ -1,15 +1,11 @@
 package GUI;
 
-import DTO.TaiKhoanDTO;
 import GUI.Component.InputForm;
 import GUI.Dialog.QuenMatKhau;
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
-import config.DatabaseUtil;
-import dao1.TaiKhoanDao;
+import dao1.NhanVienDao;
 import entity.NhanVien;
 import helper.BCrypt;
 import singleton.NhanVienSuDungSingleton;
@@ -20,23 +16,26 @@ import java.awt.event.KeyListener;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.border.EmptyBorder;
 
 public class DangNhapForm extends JFrame implements KeyListener {
 
-    JPanel pnlMain, pnlLogIn;
-    JLabel lblImage, lbl1, lbl2, lbl3, lbl4, lbl5, lbl6, lbl7;
-    InputForm txtUsername, txtPassword;
-
-    Color FontColor = new Color(96, 125, 139);
+    private JPanel pnlMain, pnlLogIn;
+    private JLabel lblImage, lbl3, lbl6, lbl7;
+    private InputForm matKhauInputForm, soDienThoaiInputForm;
+    private NhanVienDao nhanVienDao;
+    private Color FontColor = new Color(96, 125, 139);
 
     public DangNhapForm() {
         initComponent();
-        txtUsername.setText("0868684961");
-        txtPassword.setPass("123!@#");
+        nhanVienDao = new NhanVienDao();
+
+
+
+        soDienThoaiInputForm.setText("0868684961");
+        matKhauInputForm.setPass("12345678");
     }
 
     private void initComponent() {
@@ -66,13 +65,14 @@ public class DangNhapForm extends JFrame implements KeyListener {
         paneldn.setPreferredSize(new Dimension(400, 200));
         paneldn.setLayout(new GridLayout(2, 1));
 
-        txtUsername = new InputForm("Tên đăng nhập");
-        paneldn.add(txtUsername);
-        txtPassword = new InputForm("Mật khẩu", "password");
-        paneldn.add(txtPassword);
+        soDienThoaiInputForm = new InputForm("Số điện thoại");
+        paneldn.add(soDienThoaiInputForm);
 
-        txtUsername.getTxtForm().addKeyListener(this);
-        txtPassword.getTxtPass().addKeyListener(this);
+        matKhauInputForm = new InputForm("Mật khẩu", "password");
+        paneldn.add(matKhauInputForm);
+
+        soDienThoaiInputForm.getTxtForm().addKeyListener(this);
+        matKhauInputForm.getTxtPass().addKeyListener(this);
 
         pnlMain.add(paneldn);
 
@@ -126,43 +126,43 @@ public class DangNhapForm extends JFrame implements KeyListener {
     }
 
     public void checkLogin() throws UnsupportedLookAndFeelException {
-        String soDienThoai = txtUsername.getText().trim();
-        String matKhau = txtPassword.getPass();
+        String soDienThoai = soDienThoaiInputForm.getText().trim();
+        String matKhau = matKhauInputForm.getPass();
 
         if (soDienThoai.isEmpty() || matKhau.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin đầy đủ", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        TaiKhoanDao taiKhoanDao = new TaiKhoanDao();
 
-        NhanVien taiKhoan = taiKhoanDao.layTheoSdt(soDienThoai);
-        if (taiKhoan == null) {
+        NhanVien nhanVien = nhanVienDao.timNhanVienTheoSdt(soDienThoai);
+        if (nhanVien == null) {
             JOptionPane.showMessageDialog(this, "Tài khoản của bạn không tồn tại trên hệ thống", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        if (!BCrypt.checkpw(matKhau, "")) {
+        if (!nhanVien.getMatKhau().equals(matKhau)) {
             JOptionPane.showMessageDialog(this, "Mật khẩu không khớp", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
+        NhanVienSuDungSingleton.setThongTinNhanVienHienTai(nhanVien);
         new Main().setVisible(true);
         this.dispose();
     }
 
-    private void pnlLogInMousePressed(java.awt.event.MouseEvent evt) throws UnsupportedLookAndFeelException {
-        //checkLogin();
-        NhanVienSuDungSingleton.setThongTinNhanVienHienTai(new NhanVien());
-        new Main().setVisible(true);
-        this.dispose();
+    private void pnlLogInMousePressed(MouseEvent e) throws UnsupportedLookAndFeelException {
+        try {
+            checkLogin();
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(DangNhapForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    private void pnlLogInMouseEntered(java.awt.event.MouseEvent evt) {
+    private void pnlLogInMouseEntered(MouseEvent e) {
         pnlLogIn.setBackground(FontColor);
         pnlLogIn.setForeground(Color.black);
     }
 
-    private void pnlLogInMouseExited(java.awt.event.MouseEvent evt) {
+    private void pnlLogInMouseExited(MouseEvent e) {
 
         pnlLogIn.setBackground(Color.BLACK);
         pnlLogIn.setForeground(Color.white);

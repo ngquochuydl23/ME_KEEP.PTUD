@@ -6,6 +6,7 @@ package GUI.Component;
 
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -13,6 +14,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import javax.swing.JLabel;
@@ -33,6 +35,7 @@ public class InputDate extends JPanel {
         this.setBorder(new EmptyBorder(10, 10, 10, 10));
         lbltitle = new JLabel(title);
         date = new JDateChooser();
+        setDate(LocalDate.now());
         date.setSize(new Dimension(date.getPreferredSize().width, 40));
         date.setDateFormatString("dd/MM/yyyy");
         dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -51,7 +54,7 @@ public class InputDate extends JPanel {
         this.add(lbltitle);
         this.add(date);
     }
-    
+
     public JDateChooser getDateChooser() {
         return this.date;
     }
@@ -76,6 +79,10 @@ public class InputDate extends JPanel {
 
     public void setDate(LocalDate localDate) {
         this.date.setDate(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+    }
+
+    public LocalDate getDateAsLocalDate() throws ParseException {
+        return getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     public void setDisable() {

@@ -4,14 +4,11 @@
  */
 package GUI.Dialog;
 
-import BUS.SanPhamBUS;
-import DAO.KhuVucKhoDAO;
 import DTO.KhuVucKhoDTO;
-import DTO.SanPhamDTO;
 import GUI.Component.ButtonCustom;
 import GUI.Component.HeaderTitle;
 import GUI.Component.InputForm;
-import GUI.Panel.KhuVucKho;
+import GUI.Panel.HoaDonPanelDrop;
 import helper.Validation;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -20,23 +17,15 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import javax.swing.BoxLayout;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 
 public final class KhuVucKhoDialog extends JDialog implements ActionListener {
 
-    private KhuVucKho jpkvk;
+    private HoaDonPanelDrop jpkvk;
     private HeaderTitle titlePage;
     private JPanel pnmain, pnbottom;
     private ButtonCustom btnThem, btnCapNhat, btnHuyBo;
@@ -44,13 +33,13 @@ public final class KhuVucKhoDialog extends JDialog implements ActionListener {
     private InputForm ghichu;
     private KhuVucKhoDTO kvk;
 
-    public KhuVucKhoDialog(KhuVucKho jpkvk, JFrame owner, String title, boolean modal, String type) {
+    public KhuVucKhoDialog(HoaDonPanelDrop jpkvk, JFrame owner, String title, boolean modal, String type) {
         super(owner, title, modal);
         this.jpkvk = jpkvk;
         initComponents(title, type);
     }
 
-    public KhuVucKhoDialog(KhuVucKho jpkvk, JFrame owner, String title, boolean modal, String type, KhuVucKhoDTO kvk) {
+    public KhuVucKhoDialog(HoaDonPanelDrop jpkvk, JFrame owner, String title, boolean modal, String type, KhuVucKhoDTO kvk) {
         super(owner, title, modal);
         this.jpkvk = jpkvk;
         this.kvk = kvk;
@@ -110,22 +99,22 @@ public final class KhuVucKhoDialog extends JDialog implements ActionListener {
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnThem && Validation()) {
-            int makhuvuc = KhuVucKhoDAO.getInstance().getAutoIncrement();
-            String tenkhuvuc = this.tenkhuvuc.getText();
-            String ghichu = this.ghichu.getText();
-            jpkvk.kvkBUS.add(new KhuVucKhoDTO(makhuvuc, tenkhuvuc, ghichu));
-            jpkvk.loadDataTable(jpkvk.listKVK);
-            dispose();
-        } else if (e.getSource() == btnHuyBo) {
-            dispose();
-        } else if (e.getSource() == btnCapNhat && Validation()) {
-            String tenkhuvuc = this.tenkhuvuc.getText();
-            String ghichu = this.ghichu.getText();
-            jpkvk.kvkBUS.update(new KhuVucKhoDTO(kvk.getMakhuvuc(), tenkhuvuc, ghichu));
-            jpkvk.loadDataTable(jpkvk.listKVK);
-            dispose();
-        }
+//        if (e.getSource() == btnThem && Validation()) {
+//            int makhuvuc = KhuVucKhoDAO.getInstance().getAutoIncrement();
+//            String tenkhuvuc = this.tenkhuvuc.getText();
+//            String ghichu = this.ghichu.getText();
+//            jpkvk.kvkBUS.add(new KhuVucKhoDTO(makhuvuc, tenkhuvuc, ghichu));
+//            jpkvk.loadDataTable(jpkvk.listKVK);
+//            dispose();
+//        } else if (e.getSource() == btnHuyBo) {
+//            dispose();
+//        } else if (e.getSource() == btnCapNhat && Validation()) {
+//            String tenkhuvuc = this.tenkhuvuc.getText();
+//            String ghichu = this.ghichu.getText();
+//            jpkvk.kvkBUS.update(new KhuVucKhoDTO(kvk.getMakhuvuc(), tenkhuvuc, ghichu));
+//            jpkvk.loadDataTable(jpkvk.listKVK);
+//            dispose();
+//        }
     }
 
 }
