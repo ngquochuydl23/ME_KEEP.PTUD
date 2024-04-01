@@ -13,7 +13,6 @@ import GUI.Component.PanelBorderRadius;
 import GUI.Component.TableSorter;
 import GUI.Dialog.KhachHangDialog;
 import dao1.KhachHangDao;
-import event.KhachHangEvent;
 import GUI.Main;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -195,35 +194,35 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
                         result.add(i);
                     }
                 }
-            
+
             case "Mã khách hàng":
                 for (entity.KhachHang i : this.listkh) {
                     if (Integer.toString(i.getMaKhachHang()).toLowerCase().contains(text)) {
                         result.add(i);
                     }
                 }
-            
+
             case "Tên khách hàng":
                 for (entity.KhachHang i : this.listkh) {
                     if (i.getHoTen().toLowerCase().contains(text)) {
                         result.add(i);
                     }
                 }
-            
+
             case "Khách hàng thân thiết":
                 for (entity.KhachHang i : this.listkh) {
                     if (i.laKhachHangThanThiet()) {
                         result.add(i);
                     }
                 }
-            
+
             case "Số điện thoại":
                 for (entity.KhachHang i : this.listkh) {
                     if (i.getSoDienThoai().toLowerCase().contains(text)) {
                         result.add(i);
                     }
                 }
-            
+
         }
 
         return result;
@@ -337,6 +336,7 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (input == JOptionPane.YES_OPTION) {
                     khachHangDAO.xoa(listkh.get(index).getMaKhachHang());
+                    this.tableKhachHang.remove(index);
                     loadDataTable();
                 }
             }

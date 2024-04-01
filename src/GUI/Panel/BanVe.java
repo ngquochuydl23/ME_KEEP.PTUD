@@ -14,11 +14,13 @@ import GUI.Component.PanelBorderRadius;
 import GUI.Component.SelectForm;
 import GUI.Component.TableSorter;
 import GUI.Dialog.ChiTietPhieuDialog;
+import entity.Ga;
 import helper.JTableExporter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -31,6 +33,7 @@ import javax.swing.table.DefaultTableModel;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -45,7 +48,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     MainFunction mainFunction;
     IntegratedSearch search;
     DefaultTableModel tblModel;
-    SelectForm cbxNhaCungCap, cbxNhanVien;
+    SelectForm cbxGaDi, cbxNhanVien;
     JCheckBox checkBoxKhuHoi;
     InputDate dateStart, dateEnd;
     InputForm moneyMin, moneyMax;
@@ -54,10 +57,8 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     Main m;
     entity.NhanVien nv;
 
-    // PhieuNhapBUS phieunhapBUS = new PhieuNhapBUS();
-    // NhaCungCapBUS nccBUS = new NhaCungCapBUS();
-    // NhanVienBUS nvBUS = new NhanVienBUS();
     ArrayList<PhieuNhapDTO> listPhieu;
+    java.util.List<Ga> gaList;
 
     Color BackgroundColor = new Color(240, 247, 250);
 
@@ -162,14 +163,13 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         contentCenter.add(box, BorderLayout.WEST);
 
         // Handle
-        String[] listNcc = { "Vui vẻ nha" };
-        listNcc = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listNcc)).toArray(String[]::new);
-        String[] listNv = { "Nhân viên thân thiện" };
-        listNv = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listNv)).toArray(String[]::new);
+        String[] listTenGa = { "Sài Gòn", "Biên Hòa", "Thanh Hóa" };
 
         // init
-        cbxNhaCungCap = new SelectForm("Ga đi", listNcc);
-        cbxNhanVien = new SelectForm("Ga đến", listNv);
+        cbxGaDi = new SelectForm("Ga đi", listTenGa);
+        cbxGaDi.cbb.setEditable(true);
+        cbxNhanVien = new SelectForm("Ga đến", listTenGa);
+        cbxNhanVien.cbb.setEditable(true);
         dateStart = new InputDate("Ngày đi");
         checkBoxKhuHoi = new JCheckBox("Khứ hồi");
         dateEnd = new InputDate("Ngày về");
@@ -181,11 +181,21 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         doc_min.setDocumentFilter(new NumericDocumentFilter());
 
         // add listener
-        cbxNhaCungCap.getCbb().addItemListener(this);
+        cbxGaDi.getCbb().addItemListener(this);
         cbxNhanVien.getCbb().addItemListener(this);
         dateStart.getDateChooser().addPropertyChangeListener(this);
         dateEnd.getDateChooser().addPropertyChangeListener(this);
         moneyMin.getTxtForm().addKeyListener(this);
+
+        cbxGaDi.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String text = cbxGaDi.getCbb().getEditor().getItem().toString();
+                gaList = searchGa(text);
+
+            }
+        });
+
         moneyMin.getTxtForm().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
@@ -200,7 +210,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
             dateEnd.setVisible(!isKhuHoi);
         });
 
-        box.add(cbxNhaCungCap);
+        box.add(cbxGaDi);
         box.add(cbxNhanVien);
         Box box1 = Box.createHorizontalBox();
         box.add(moneyMin);
@@ -223,12 +233,21 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         for (int i = 0; i < size; i++) {
             tblModel.addRow(new Object[] {
                     i + 1, (int) listphieunhap.get(i).getMaphieu(),
-                    // nccBUS.getTenNhaCungCap(listphieunhap.get(i).getManhacungcap()),
-                    // nvBUS.getNameById(listphieunhap.get(i).getManguoitao()),
-                    // Formater.FormatTime(listphieunhap.get(i).getThoigiantao()),
-                    // Formater.FormatVND(listphieunhap.get(i).getTongTien())
             });
         }
+    }
+
+    private List<Ga> searchGa(String text) {
+        List<Ga> result = new ArrayList<>();
+        text = text.toLowerCase();
+
+        for (Ga ga : gaList) {
+            if (ga.getTenGa().toLowerCase().contains(text)) {
+                result.add(ga);
+            }
+        }
+
+        return result;
     }
 
     public int getRowSelected() {
@@ -242,8 +261,8 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     public void Fillter() throws ParseException {
         if (validateSelectDate()) {
             int type = search.cbxChoose.getSelectedIndex();
-            // int mancc = cbxNhaCungCap.getSelectedIndex() == 0 ? 0
-            // : nccBUS.getByIndex(cbxNhaCungCap.getSelectedIndex() - 1).getMancc();
+            // int mancc = cbxGaDi.getSelectedIndex() == 0 ? 0
+            // : nccBUS.getByIndex(cbxGaDi.getSelectedIndex() - 1).getMancc();
             // int manv = cbxNhanVien.getSelectedIndex() == 0 ? 0
             // : nvBUS.getByIndex(cbxNhanVien.getSelectedIndex() - 1).getManv();
             String input = search.txtSearchForm.getText() != null ? search.txtSearchForm.getText() : "";
@@ -258,7 +277,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     }
 
     public void resetForm() {
-        cbxNhaCungCap.setSelectedIndex(0);
+        cbxGaDi.setSelectedIndex(0);
         cbxNhanVien.setSelectedIndex(0);
         search.cbxChoose.setSelectedIndex(0);
         search.txtSearchForm.setText("");

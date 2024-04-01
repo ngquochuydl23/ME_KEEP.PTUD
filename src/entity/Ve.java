@@ -8,7 +8,6 @@ public class Ve {
     private double giaVe;
     private String moTa;
     private String tinhTrangVe;
-
     private LoaiVe loaiVe;
     private Chuyen chuyen;
 
