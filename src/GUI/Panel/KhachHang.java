@@ -336,13 +336,11 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (input == JOptionPane.YES_OPTION) {
                     khachHangDAO.xoa(listkh.get(index).getMaKhachHang());
-                    this.tableKhachHang.remove(index);
-                    loadDataTable();
+                    this.tblModel.removeRow(index);
                 }
             }
         } else if (e.getSource() == mainFunction.btn.get("detail")) {
             int index = getRowSelected();
-            System.out.println(listkh.get(index).getMaKhachHang());
             if (index != -1) {
                 new KhachHangDialog(this, owner, "Xem khách hàng",
                         true, "view", listkh.get(index));

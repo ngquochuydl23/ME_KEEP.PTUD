@@ -80,11 +80,14 @@ public class KhachHangDialog extends JDialog implements MouseListener {
         switch (type) {
             case "create":
                 pnlButtom.add(btnThem);
+                break;
             case "update":
                 pnlButtom.add(btnCapNhat);
-            case "view" : 
+                break;
+            case "view":
                 tenKH.setDisable();
                 sdtKH.setDisable();
+                break;
         }
         pnlButtom.add(btnHuyBo);
 
@@ -153,7 +156,7 @@ public class KhachHangDialog extends JDialog implements MouseListener {
         } else if (e.getSource() == btnCapNhat && Validation()) {
             this.kh.setHoTen(getTenKH());
             this.kh.setSoDienThoai(getSdtKH());
-            
+
             this.khachHangDao.sua(this.kh);
             jpKH.loadDataTable();
             dispose();
