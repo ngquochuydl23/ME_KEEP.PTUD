@@ -35,7 +35,7 @@ public class SelectForm extends JPanel {
         this.setBorder(new EmptyBorder(0, 10, 5, 10));
 
         lblTitle = new JLabel(title);
-
+        cbb = new JComboBox<String>();
         this.add(lblTitle);
         this.add(cbb);
     }

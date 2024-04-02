@@ -57,12 +57,12 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     private List<Chuyen> chuyenList;
     private String[] listTenGa;
 
-    private Color BackgroundColor = new Color(240, 247, 250);
+    Color BackgroundColor = new Color(240, 247, 250);
 
     public BanVe() {
-        tuyenDao = new TuyenDao();
-        chuyenDao = new ChuyenDao();
-        tauDao = new TauDao();
+        this.tuyenDao = new TuyenDao();
+        this.chuyenDao = new ChuyenDao();
+        this.tauDao = new TauDao();
 
         initComponent();
     }
@@ -130,7 +130,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        String[] action = { "create", "detail", "cancel", "export" };
+        String[] action = { "find", "detail", "cancel", "export" };
         mainFunction = new MainFunction("nhaphang", action);
 
         // Add Event MouseListener
@@ -215,18 +215,25 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         main.add(scrollTableChuyenTau);
     }
 
-    public void loadDataTalbe() {
-//        tblModel.setRowCount(0);
-//        int size = listphieunhap.size();
-//        for (int i = 0; i < size; i++) {
-//            tblModel.addRow(new Object[] {
-//                    i + 1, (int) listphieunhap.get(i).getMaphieu(),
-//                    // nccBUS.getTenNhaCungCap(listphieunhap.get(i).getManhacungcap()),
-//                    // nvBUS.getNameById(listphieunhap.get(i).getManguoitao()),
-//                    // Formater.FormatTime(listphieunhap.get(i).getThoigiantao()),
-//                    // Formater.FormatVND(listphieunhap.get(i).getTongTien())
-//            });
-//        }
+    public void loadDataTable() {
+        tblModel.setRowCount(0);
+        tableChuyenTau.repaint();
+        tableChuyenTau.revalidate();
+
+        this.chuyenList = this.timChuyen();
+        for (Chuyen chuyen : chuyenList) {
+            Tuyen tuyen = this.tuyenDao.layTheoMa(chuyen.getTuyen().getMaTuyen());
+            Ga gaDi = this.gaDao.layTheoMa(tuyen.getGaDi().getMaGa());
+            Ga gaDen = this.gaDao.layTheoMa(tuyen.getGaDen().getMaGa());
+            Tau tau = this.tauDao.layTheoMa(chuyen.getTau().getMaTau());
+            this.tblModel.addRow(new Object[] {
+                    chuyen.getMaChuyen(),
+                    gaDi.getTenGa() + "-" + gaDen.getTenGa(),
+                    tau.getTenTau(),
+                    chuyen.getThoiGianKhoiHanh(),
+                    chuyen.getThoiGianDen()
+            });
+        }
     }
 
     public String[] loadDataGaVaoComboBox(List<Ga> gaList) {
@@ -270,15 +277,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         editorComponent.setText(previousText);
     }
 
-    public int getRowSelected() {
-        int index = tableChuyenTau.getSelectedRow();
-        if (index == -1) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn phiếu nhập");
-        }
-        return index;
-    }
-
-    public void Fillter() throws ParseException {
+    public void filter() throws ParseException {
         int type = search.cbxChoose.getSelectedIndex();
         // int mancc = cbxGaDi.getSelectedIndex() == 0 ? 0
         // : nccBUS.getByIndex(cbxGaDi.getSelectedIndex() - 1).getMancc();
@@ -287,10 +286,8 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         String input = search.txtSearchForm.getText() != null ? search.txtSearchForm.getText() : "";
         Date ngayDi = dateNgayDi.getDate() != null ? dateNgayDi.getDate() : new Date(0);
         Date ngayVe = dateNgayVe.getDate() != null ? dateNgayVe.getDate() : new Date(System.currentTimeMillis());
-        // this.listPhieu = phieunhapBUS.fillerPhieuNhap(type, input, mancc, manv,
-        // ngayDi, ngayVe, min_price,
-        // max_price);
-        // loadDataTalbe();
+
+        loadDataTable();
     }
 
     public void resetForm() {
@@ -301,8 +298,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         soLuongHanhKhach.setValue(0);
         dateNgayDi.getDateChooser().setCalendar(null);
         dateNgayVe.getDateChooser().setCalendar(null);
-        // this.listPhieu = phieunhapBUS.getAllList();
-        // loadDataTalbe();
+        loadDataTable();
     }
 
     public boolean validateSelectDate() throws ParseException {
@@ -332,22 +328,26 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     }
 
     private boolean validation() {
-        if (this.cbxGaDi.getSelectedItem() == null) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn ga đi");
-            return false;
-        }
+       try {
+           if (this.cbxGaDi.getSelectedItem() == null) {
+               JOptionPane.showMessageDialog(null, "Vui lòng chọn ga đi");
+               return false;
+           }
 
-        if (this.cbxGaDen.getSelectedItem() == null) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn ga đến");
-            return false;
-        }
+           if (this.cbxGaDen.getSelectedItem() == null) {
+               JOptionPane.showMessageDialog(null, "Vui lòng chọn ga đến");
+               return false;
+           }
 
-        if (this.dateNgayDi == null) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày đi");
-            return false;
-        }
-
-        return true;
+           if (this.dateNgayDi == null) {
+               JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày đi");
+               return false;
+           }
+           return validateSelectDate();
+       } catch (Exception e) {
+           e.printStackTrace();
+           return false;
+       }
     }
 
     private List<Chuyen> timChuyen() {
@@ -379,41 +379,23 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-        if (source == mainFunction.btn.get("find")) {
-            loadDataTalbe();
-        } else if (source == mainFunction.btn.get("detail")) {
-            int index = getRowSelected();
-            if (index != -1) {
-                // nhapKho = new TaoPhieuNhap(nv, "view", listPhieu.get(index), m);
-                // m.setPanel(nhapKho);
-             //   ChiTietPhieuDialog ctsp = new ChiTietPhieuDialog(m, "Thông tin phiếu nhập", true, listPhieu.get(index));
-            }
-        } else if (source == mainFunction.btn.get("cancel")) {
-            int index = getRowSelected();
-            if (index != -1) {
-                int input = JOptionPane.showConfirmDialog(null,
-                        "Bạn có chắc chắn muốn huỷ phiếu ?\nThao tác này không thể hoàn tác nên hãy suy nghĩ kĩ !",
-                        "Huỷ phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                if (input == 0) {
-                   // PhieuNhapDTO pn = listPhieu.get(index);
-                  //  System.out.println(pn);
-                    // if (!phieunhapBUS.checkCancelPn(pn.getMaphieu())) {
-                    // JOptionPane.showMessageDialog(null,
-                    // "Sản phẩm trong phiếu này đã được xuất đi không thể hủy phiếu này!");
-                    // } else {
-                    // int c = phieunhapBUS.cancelPhieuNhap(pn.getMaphieu());
-                    // if (c == 0) {
-                    // JOptionPane.showMessageDialog(null, "Hủy phiếu không thành công!");
-                    // } else {
-                    // JOptionPane.showMessageDialog(null, "Hủy phiếu thành công!");
-                    // loadDataTalbe(phieunhapBUS.getAll());
-                    // }
-                    // }
-                }
-            }
-        } else if (source == search.btnReset) {
+        if (source.equals(mainFunction.btn.get("find"))) {
+            loadDataTable();
+        }
+
+        if (source.equals(mainFunction.btn.get("detail"))) {
+
+        }
+
+        if (source.equals(mainFunction.btn.get("cancel"))) {
+
+        }
+
+        if (source.equals(search.btnReset)) {
             resetForm();
-        } else if (source == mainFunction.btn.get("export")) {
+        }
+
+        if (source.equals(mainFunction.btn.get("export"))) {
             try {
                 JTableExporter.exportJTableToExcel(tableChuyenTau);
             } catch (IOException ex) {
@@ -424,20 +406,16 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
 
     @Override
     public void keyTyped(KeyEvent e) {
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         try {
-            Fillter();
+            filter();
         } catch (ParseException ex) {
             Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -446,7 +424,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         try {
-            Fillter();
+            filter();
         } catch (ParseException ex) {
             Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -455,7 +433,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     @Override
     public void itemStateChanged(ItemEvent e) {
         try {
-            Fillter();
+            filter();
         } catch (ParseException ex) {
             Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
         }
