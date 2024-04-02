@@ -6,10 +6,8 @@ package DTO.ThongKe;
 
 import java.util.Objects;
 
-/**
- *
- * @author Tran Nhat Sinh
- */
+
+
 public class ThongKeDoanhThuDTO {
     int thoigian; // nam, thang, ngay
     Long von;

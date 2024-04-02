@@ -1,6 +1,6 @@
 package GUI.Panel.ThongKe;
 
-import BUS.ThongKeBUS;
+
 import DTO.ThongKe.ThongKeTonKhoDTO;
 import DTO.ThongKe.ThongKeTungNgayTrongThangDTO;
 import GUI.Component.PanelBorderRadius;
@@ -32,16 +32,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author Tran Nhat Sinh
- */
 public final class ThongKeDoanhThuTuNgayDenNgay extends JPanel {
 
     PanelBorderRadius pnlChart;
     JPanel pnl_top;
     HashMap<Integer, ArrayList<ThongKeTonKhoDTO>> listSp;
-    ThongKeBUS thongkeBUS;
 
     Chart chart;
     private JDateChooser dateFrom;
@@ -51,9 +46,8 @@ public final class ThongKeDoanhThuTuNgayDenNgay extends JPanel {
     private JScrollPane scrollTableThongKe;
     private DefaultTableModel tblModel;
 
-    public ThongKeDoanhThuTuNgayDenNgay(ThongKeBUS thongkeBUS) {
-        this.thongkeBUS = thongkeBUS;
-        listSp = thongkeBUS.getTonKho();
+    public ThongKeDoanhThuTuNgayDenNgay() {
+
         initComponent();
 
     }
@@ -182,12 +176,12 @@ public final class ThongKeDoanhThuTuNgayDenNgay extends JPanel {
     }
 
     public void loadThongKeTungNgayTrongThang(String start, String end) {
-        ArrayList<ThongKeTungNgayTrongThangDTO> list = thongkeBUS.getThongKeTuNgayDenNgay(start, end);
-        tblModel.setRowCount(0);
-        for (int i = 0; i < list.size(); i++) {
-            tblModel.addRow(new Object[]{
-                list.get(i).getNgay(), Formater.FormatVND(list.get(i).getChiphi()), Formater.FormatVND(list.get(i).getDoanhthu()), Formater.FormatVND(list.get(i).getLoinhuan())
-            });
-        }
+//        ArrayList<ThongKeTungNgayTrongThangDTO> list = thongkeBUS.getThongKeTuNgayDenNgay(start, end);
+//        tblModel.setRowCount(0);
+//        for (int i = 0; i < list.size(); i++) {
+//            tblModel.addRow(new Object[]{
+//                list.get(i).getNgay(), Formater.FormatVND(list.get(i).getChiphi()), Formater.FormatVND(list.get(i).getDoanhthu()), Formater.FormatVND(list.get(i).getLoinhuan())
+//            });
+//        }
     }
 }

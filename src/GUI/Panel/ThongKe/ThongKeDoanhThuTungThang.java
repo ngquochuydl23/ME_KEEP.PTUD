@@ -1,6 +1,5 @@
 package GUI.Panel.ThongKe;
 
-import BUS.ThongKeBUS;
 import DTO.ThongKe.ThongKeTheoThangDTO;
 import GUI.Component.PanelBorderRadius;
 import GUI.Component.TableSorter;
@@ -31,15 +30,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author Tran Nhat Sinh
- */
+
 public final class ThongKeDoanhThuTungThang extends JPanel implements ActionListener{
 
     PanelBorderRadius pnlChart;
     JPanel pnl_top;
-    ThongKeBUS thongkeBUS;
     JYearChooser yearchooser;
     Chart chart;
     JButton export;
@@ -47,10 +42,9 @@ public final class ThongKeDoanhThuTungThang extends JPanel implements ActionList
     private JScrollPane scrollTableThongKe;
     private DefaultTableModel tblModel;
 
-    public ThongKeDoanhThuTungThang(ThongKeBUS thongkeBUS) {
-        this.thongkeBUS = thongkeBUS;
+    public ThongKeDoanhThuTungThang() {
         initComponent();
-        loadThongKeThang(yearchooser.getYear());
+       // loadThongKeThang(yearchooser.getYear());
     }
 
     public void initComponent() {
@@ -63,7 +57,7 @@ public final class ThongKeDoanhThuTungThang extends JPanel implements ActionList
         yearchooser = new JYearChooser();
         yearchooser.addPropertyChangeListener("year", (PropertyChangeEvent e) -> {
             int year = (Integer) e.getNewValue();
-            loadThongKeThang(year);
+          //  loadThongKeThang(year);
         });
 
         export = new JButton("Xuất Excel");
@@ -105,29 +99,29 @@ public final class ThongKeDoanhThuTungThang extends JPanel implements ActionList
         this.add(scrollTableThongKe, BorderLayout.SOUTH);
     }
 
-    public void loadThongKeThang(int nam) {
-        ArrayList<ThongKeTheoThangDTO> list = thongkeBUS.getThongKeTheoThang(nam);
-        pnlChart.remove(chart);
-        chart = new Chart();
-        chart.addLegend("Vốn", new Color(245, 189, 135));
-        chart.addLegend("Doanh thu", new Color(135, 189, 245));
-        chart.addLegend("Lợi nhuận", new Color(189, 135, 245));
-        for (int i = 0; i < list.size(); i++) {
-            chart.addData(new ModelChart("Tháng " + (i + 1), new double[]{list.get(i).getChiphi(), list.get(i).getDoanhthu(), list.get(i).getLoinhuan()}));
-        }
-        chart.repaint();
-        chart.validate();
-        pnlChart.add(chart);
-        pnlChart.repaint();
-        pnlChart.validate();
-        tblModel.setRowCount(0);
-        for (int i = 0; i < list.size(); i++) {
-            tblModel.addRow(new Object[]{
-                "Tháng " + (i + 1), Formater.FormatVND(list.get(i).getChiphi()), Formater.FormatVND(list.get(i).getDoanhthu()), Formater.FormatVND(list.get(i).getLoinhuan())
-            });
-        }
-
-    }
+//    public void loadThongKeThang(int nam) {
+//       // ArrayList<ThongKeTheoThangDTO> list = thongkeBUS.getThongKeTheoThang(nam);
+//        pnlChart.remove(chart);
+//        chart = new Chart();
+//        chart.addLegend("Vốn", new Color(245, 189, 135));
+//        chart.addLegend("Doanh thu", new Color(135, 189, 245));
+//        chart.addLegend("Lợi nhuận", new Color(189, 135, 245));
+//        for (int i = 0; i < list.size(); i++) {
+//            chart.addData(new ModelChart("Tháng " + (i + 1), new double[]{list.get(i).getChiphi(), list.get(i).getDoanhthu(), list.get(i).getLoinhuan()}));
+//        }
+//        chart.repaint();
+//        chart.validate();
+//        pnlChart.add(chart);
+//        pnlChart.repaint();
+//        pnlChart.validate();
+//        tblModel.setRowCount(0);
+//        for (int i = 0; i < list.size(); i++) {
+//            tblModel.addRow(new Object[]{
+//                "Tháng " + (i + 1), Formater.FormatVND(list.get(i).getChiphi()), Formater.FormatVND(list.get(i).getDoanhthu()), Formater.FormatVND(list.get(i).getLoinhuan())
+//            });
+//        }
+//
+//    }
 
     @Override
     public void actionPerformed(ActionEvent e) {

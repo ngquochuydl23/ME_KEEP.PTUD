@@ -11,10 +11,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JTextArea;
 
-/**
- *
- * @author robot
- */
+
 public final class CustomComboCheck extends JComboBox {
     private Object firstItem;
     JTextArea text;

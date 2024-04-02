@@ -1,6 +1,5 @@
 package GUI;
 
-import DTO.TaiKhoanDTO;
 import GUI.Panel.TrangChu;
 import java.awt.*;
 import javax.swing.*;
@@ -17,7 +16,6 @@ import javax.swing.border.EmptyBorder;
 public class Main extends JFrame {
 
     public JPanel MainContent;
-    public TaiKhoanDTO user;
     Color MainColor = new Color(250, 250, 250);
 
     private MenuTaskbar menuTaskbar;
@@ -46,7 +44,6 @@ public class Main extends JFrame {
     }
 
     public Main() throws UnsupportedLookAndFeelException {
-        this.user = new TaiKhoanDTO();
         initComponent();
         FlatRobotoFont.install();
         FlatLaf.setPreferredFontFamily(FlatRobotoFont.FAMILY);

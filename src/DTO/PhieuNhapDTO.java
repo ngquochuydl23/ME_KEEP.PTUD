@@ -6,11 +6,8 @@ package DTO;
 
 import java.sql.Timestamp;
 
-/**
- *
- * @author Tran Nhat Sinh
- */
-public class PhieuNhapDTO extends PhieuDTO{
+
+public class PhieuNhapDTO {
     private int manhacungcap;
 
     public PhieuNhapDTO(int manhacungcap) {
@@ -18,7 +15,7 @@ public class PhieuNhapDTO extends PhieuDTO{
     }
 
     public PhieuNhapDTO(int manhacungcap, int maphieu, int manguoitao, Timestamp thoigiantao, long tongTien, int trangthai) {
-        super(maphieu, manguoitao, thoigiantao, tongTien, trangthai);
+
         this.manhacungcap = manhacungcap;
     }
 

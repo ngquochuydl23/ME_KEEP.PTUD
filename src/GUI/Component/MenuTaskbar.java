@@ -1,9 +1,8 @@
 package GUI.Component;
 
 
-import DAO.NhanVienDAO;
-import DTO.TaiKhoanDTO;
 import GUI.DangNhapForm;
+import GUI.Dialog.TaiKhoanCuaToiPanel;
 import GUI.Main;
 import GUI.Panel.*;
 import java.awt.*;
@@ -34,7 +33,7 @@ public class MenuTaskbar extends JPanel {
     };
 
     Main main;
-    TaiKhoanDTO user;
+
     public itemTaskbar[] listitem;
     JScrollPane scrollPane;
 
@@ -161,7 +160,7 @@ public class MenuTaskbar extends JPanel {
         listitem[4].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                main.setPanel(new PhieuXuat(main, user));
+                main.setPanel(new LichSuTraVePanel());
             }
         });
         listitem[5].addMouseListener(new MouseAdapter() {
@@ -237,6 +236,7 @@ public class MenuTaskbar extends JPanel {
             @Override
             public void mousePressed(MouseEvent evt) {
                // MyAccount ma = new MyAccount(owner, MenuTaskbar.this, "Chỉnh sửa thông tin tài khoản", true);
+                new TaiKhoanCuaToiPanel().setVisible(true);
             }
         });
 

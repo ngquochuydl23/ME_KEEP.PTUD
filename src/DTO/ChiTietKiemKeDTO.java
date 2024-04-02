@@ -1,9 +1,6 @@
 package DTO;
 
-/**
- *
- * @author robot
- */
+
 public class ChiTietKiemKeDTO {
     private int maphieukiemke;
     private int maphienban;

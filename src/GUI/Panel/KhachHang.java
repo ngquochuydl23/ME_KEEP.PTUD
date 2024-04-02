@@ -1,9 +1,5 @@
 package GUI.Panel;
 
-import DTO.KhachHangDTO;
-import BUS.KhachHangBUS;
-import DAO.KhachHangDAO;
-import DTO.KhuVucKhoDTO;
 import GUI.Component.IntegratedSearch;
 import GUI.Component.MainFunction;
 import java.awt.*;
@@ -13,7 +9,6 @@ import GUI.Component.PanelBorderRadius;
 import GUI.Component.TableSorter;
 import GUI.Dialog.KhachHangDialog;
 import dao1.KhachHangDao;
-import event.KhachHangEvent;
 import GUI.Main;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -116,7 +111,7 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         String[] action = { "create", "update", "delete", "detail", "import", "export" };
-        mainFunction = new MainFunction(m.user.getManhomquyen(), "khachhang", action);
+        mainFunction = new MainFunction("khachhang", action);
         for (String ac : action) {
             mainFunction.btn.get(ac).addActionListener(this);
         }
@@ -258,7 +253,6 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
         FileInputStream excelFIS = null;
         BufferedInputStream excelBIS = null;
         XSSFWorkbook excelJTableImport = null;
-        ArrayList<KhachHangDTO> listExcel = new ArrayList<KhachHangDTO>();
         JFileChooser jf = new JFileChooser();
         int result = jf.showOpenDialog(null);
         jf.setDialogTitle("Open file");
@@ -274,7 +268,7 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
                 for (int row = 1; row <= excelSheet.getLastRowNum(); row++) {
                     int check = 1;
                     XSSFRow excelRow = excelSheet.getRow(row);
-                    int id = KhachHangDAO.getInstance().getAutoIncrement();
+
                     String tenkh = excelRow.getCell(0).getStringCellValue();
                     String sdt = excelRow.getCell(1).getStringCellValue();
                     String diachi = excelRow.getCell(2).getStringCellValue();

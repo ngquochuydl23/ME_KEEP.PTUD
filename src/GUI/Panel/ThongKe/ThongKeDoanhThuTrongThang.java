@@ -1,6 +1,5 @@
 package GUI.Panel.ThongKe;
 
-import BUS.ThongKeBUS;
 import DTO.ThongKe.ThongKeTungNgayTrongThangDTO;
 import GUI.Component.PanelBorderRadius;
 import GUI.Component.TableSorter;
@@ -37,7 +36,7 @@ public final class ThongKeDoanhThuTrongThang extends JPanel{
 
     PanelBorderRadius pnlChart;
     JPanel pnl_top;
-    ThongKeBUS thongkeBUS;
+
     JMonthChooser monthchooser;
     Chart chart;
     private JTable tableThongKe;
@@ -46,8 +45,7 @@ public final class ThongKeDoanhThuTrongThang extends JPanel{
     private JYearChooser yearchooser;
     private JButton btnThongKe, btnReset, btnExport;
 
-    public ThongKeDoanhThuTrongThang(ThongKeBUS thongkeBUS) {
-        this.thongkeBUS = thongkeBUS;
+    public ThongKeDoanhThuTrongThang() {
         initComponent();
         int thang = monthchooser.getMonth() + 1;
         int nam = yearchooser.getYear();
@@ -132,7 +130,7 @@ public final class ThongKeDoanhThuTrongThang extends JPanel{
     }
 
     public void loadThongKeTungNgayTrongThang(int thang, int nam) {
-        ArrayList<ThongKeTungNgayTrongThangDTO> list = thongkeBUS.getThongKeTungNgayTrongThang(thang, nam);
+
         pnlChart.remove(chart);
         chart = new Chart();
         chart.addLegend("Vốn", new Color(245, 189, 135));
@@ -141,28 +139,28 @@ public final class ThongKeDoanhThuTrongThang extends JPanel{
         int sum_chiphi = 0;
         int sum_doanhthu = 0;
         int sum_loinhuan = 0;
-        for (int i = 0; i < list.size(); i++) {
-            int index = i + 1;
-            sum_chiphi += list.get(i).getChiphi();
-            sum_doanhthu += list.get(i).getDoanhthu();
-            sum_loinhuan += list.get(i).getLoinhuan();
-            if (index % 3 == 0) {
-                chart.addData(new ModelChart("Ngày " + (index - 2) + "->" + (index), new double[]{sum_chiphi, sum_doanhthu, sum_loinhuan}));
-                sum_chiphi = 0;
-                sum_doanhthu = 0;
-                sum_loinhuan = 0;
-            }
-        }
+//        for (int i = 0; i < list.size(); i++) {
+//            int index = i + 1;
+//            sum_chiphi += list.get(i).getChiphi();
+//            sum_doanhthu += list.get(i).getDoanhthu();
+//            sum_loinhuan += list.get(i).getLoinhuan();
+//            if (index % 3 == 0) {
+//                chart.addData(new ModelChart("Ngày " + (index - 2) + "->" + (index), new double[]{sum_chiphi, sum_doanhthu, sum_loinhuan}));
+//                sum_chiphi = 0;
+//                sum_doanhthu = 0;
+//                sum_loinhuan = 0;
+//            }
+//        }
         chart.repaint();
         chart.validate();
         pnlChart.add(chart);
         pnlChart.repaint();
         pnlChart.validate();
         tblModel.setRowCount(0);
-        for (int i = 0; i < list.size(); i++) {
-            tblModel.addRow(new Object[]{
-                list.get(i).getNgay(), Formater.FormatVND(list.get(i).getChiphi()), Formater.FormatVND(list.get(i).getDoanhthu()), Formater.FormatVND(list.get(i).getLoinhuan())
-            });
-        }
+//        for (int i = 0; i < list.size(); i++) {
+//            tblModel.addRow(new Object[]{
+//                list.get(i).getNgay(), Formater.FormatVND(list.get(i).getChiphi()), Formater.FormatVND(list.get(i).getDoanhthu()), Formater.FormatVND(list.get(i).getLoinhuan())
+//            });
+//        }
     }
 }

@@ -1,6 +1,5 @@
 package GUI.Panel;
 
-import DTO.KhuVucKhoDTO;
 import DTO.SanPhamDTO;
 import java.awt.*;
 import javax.swing.*;
@@ -129,14 +128,7 @@ public class HoaDonPanelDrop extends JPanel implements ActionListener, ItemListe
         initComponent();
     }
 
-    public void loadDataTable(ArrayList<KhuVucKhoDTO> result) {
-        tblModel.setRowCount(0);
-        for (KhuVucKhoDTO kvk : result) {
-            tblModel.addRow(new Object[]{
-                kvk.getMakhuvuc(), kvk.getTenkhuvuc(), kvk.getGhichu()
-            });
-        }
-    }
+
 
 //    public void importExcel() {
 //        File excelFile;

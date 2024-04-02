@@ -4,8 +4,7 @@
  */
 package GUI.Panel.ThongKe;
 
-import BUS.ThongKeBUS;
-import DTO.ThongKe.ThongKeTonKhoDTO;
+
 import GUI.Component.ButtonCustom;
 import GUI.Component.InputDate;
 import GUI.Component.InputForm;
@@ -41,10 +40,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author Tran Nhat Sinh
- */
+
 public final class ThongKeTonKho extends JPanel implements ActionListener, KeyListener, PropertyChangeListener {
 
     PanelBorderRadius nhapxuat_left, nhapxuat_center;
@@ -54,14 +50,11 @@ public final class ThongKeTonKho extends JPanel implements ActionListener, KeyLi
     InputForm tensanpham;
     InputDate start_date, end_date;
     ButtonCustom export, reset;
-    HashMap<Integer, ArrayList<ThongKeTonKhoDTO>> listSp;
-    ThongKeBUS thongkeBUS;
+//    HashMap<Integer, ArrayList<ThongKeTonKhoDTO>> listSp;
+//    ThongKeBUS thongkeBUS;
 
-    public ThongKeTonKho(ThongKeBUS thongkeBUS) {
-        this.thongkeBUS = thongkeBUS;
-        listSp = thongkeBUS.getTonKho();
-        initComponent();
-        loadDataTalbe(listSp);
+    public ThongKeTonKho() {
+
     }
 
     public void initComponent() {
@@ -155,7 +148,7 @@ public final class ThongKeTonKho extends JPanel implements ActionListener, KeyLi
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm");
             } else {
                 int masp = (int) tblTonKho.getModel().getValueAt(tblTonKho.getSelectedRow(), 1);
-                ThongKePBSPTonKho sppp = new ThongKePBSPTonKho((JFrame) javax.swing.SwingUtilities.getWindowAncestor(this), "Chi tiết tồn kho từng cấu hình", true, listSp.get(masp));
+              //  ThongKePBSPTonKho sppp = new ThongKePBSPTonKho((JFrame) javax.swing.SwingUtilities.getWindowAncestor(this), "Chi tiết tồn kho từng cấu hình", true, listSp.get(masp));
             }
         }
     }
@@ -165,8 +158,8 @@ public final class ThongKeTonKho extends JPanel implements ActionListener, KeyLi
             String input = tensanpham.getText() != null ? tensanpham.getText() : "";
             Date time_start = start_date.getDate() != null ? start_date.getDate() : new Date(0);
             Date time_end = end_date.getDate() != null ? end_date.getDate() : new Date(System.currentTimeMillis());
-            this.listSp = thongkeBUS.filterTonKho(input, time_start, time_end);
-            loadDataTalbe(this.listSp);
+//            this.listSp = thongkeBUS.filterTonKho(input, time_start, time_end);
+//            loadDataTalbe(this.listSp);
         }
     }
 
@@ -200,18 +193,18 @@ public final class ThongKeTonKho extends JPanel implements ActionListener, KeyLi
         return true;
     }
 
-    private void loadDataTalbe(HashMap<Integer, ArrayList<ThongKeTonKhoDTO>> list) {
-        tblModel.setRowCount(0);
-        int size = list.size();
-        int index = 1;
-        for (int i : list.keySet()) {
-            int[] soluong = thongkeBUS.getSoluong(list.get(i));
-            tblModel.addRow(new Object[]{
-                index + 1, i, list.get(i).get(0).getTensanpham(), soluong[0], soluong[1], soluong[2], soluong[3]
-            });
-            index++;
-        }
-    }
+//    private void loadDataTalbe(HashMap<Integer, ArrayList<ThongKeTonKhoDTO>> list) {
+//        tblModel.setRowCount(0);
+//        int size = list.size();
+//        int index = 1;
+//        for (int i : list.keySet()) {
+//            int[] soluong = thongkeBUS.getSoluong(list.get(i));
+//            tblModel.addRow(new Object[]{
+//                index + 1, i, list.get(i).get(0).getTensanpham(), soluong[0], soluong[1], soluong[2], soluong[3]
+//            });
+//            index++;
+//        }
+//    }
 
     @Override
     public void actionPerformed(ActionEvent e) {

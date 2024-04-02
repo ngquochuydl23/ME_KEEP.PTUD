@@ -1,31 +1,19 @@
 package GUI.Panel;
 
 
-import BUS.NhomQuyenBUS;
-import DAO.TaiKhoanDAO;
-import DTO.NhomQuyenDTO;
-import DTO.TaiKhoanDTO;
 import GUI.Component.ChucNangChinh;
 import GUI.Component.IntegratedSearch;
-import GUI.Component.MainFunction;
-
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
 import GUI.Component.PanelBorderRadius;
 import GUI.Dialog.nhanVienDialog.NhanVienDialog;
 import GUI.Dialog.nhanVienDialog.SuaNhanVienListener;
 import GUI.Dialog.nhanVienDialog.TaoNhanVienListener;
-import GUI.Main;
-import com.kitfox.svg.A;
 import dao1.NhanVienDao;
 import entity.NhanVien;
-import helper.BCrypt;
 import helper.JTableExporter;
 import helper.Validation;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;

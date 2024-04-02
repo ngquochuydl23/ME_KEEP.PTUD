@@ -1,10 +1,5 @@
 package GUI.Panel;
 
-import BUS.SanPhamBUS;
-import DAO.HeDieuHanhDAO;
-import DAO.KhuVucKhoDAO;
-import DAO.ThuongHieuDAO;
-import DAO.XuatXuDAO;
 import GUI.Component.IntegratedSearch;
 import GUI.Component.MainFunction;
 import GUI.Main;
@@ -13,7 +8,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import GUI.Component.PanelBorderRadius;
 import GUI.Component.TableSorter;
-import GUI.Dialog.ChiTietSanPhamDialog;
 import GUI.Dialog.SanPhamDialog;
 import helper.JTableExporter;
 import java.awt.event.ActionEvent;
@@ -38,9 +32,7 @@ public final class SanPham extends JPanel implements ActionListener {
     IntegratedSearch search;
     DefaultTableModel tblModel;
     Main m;
-    public SanPhamBUS spBUS = new SanPhamBUS();
-    
-    public ArrayList<DTO.SanPhamDTO> listSP = spBUS.getAll();
+
 
     Color BackgroundColor = new Color(240, 247, 250);
 
@@ -82,7 +74,7 @@ public final class SanPham extends JPanel implements ActionListener {
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         String[] action = {"create", "update", "delete", "detail", "phone", "export"};
-        mainFunction = new MainFunction(m.user.getManhomquyen(), "sanpham", action);
+        mainFunction = new MainFunction("sanpham", action);
         for (String ac : action) {
             mainFunction.btn.get(ac).addActionListener(this);
         }
@@ -93,16 +85,16 @@ public final class SanPham extends JPanel implements ActionListener {
             @Override
             public void keyReleased(KeyEvent e) {
                 String txt = search.txtSearchForm.getText();
-                listSP = spBUS.search(txt);
-                loadDataTalbe(listSP);
+//                listSP = spBUS.search(txt);
+//                loadDataTalbe(listSP);
             }
 
         });
 
         search.btnReset.addActionListener((ActionEvent e) -> {
             search.txtSearchForm.setText("");
-            listSP = spBUS.getAll();
-            loadDataTalbe(listSP);
+//            listSP = spBUS.getAll();
+//            loadDataTalbe(listSP);
         });
         functionBar.add(search);
 
@@ -120,19 +112,17 @@ public final class SanPham extends JPanel implements ActionListener {
     public SanPham(Main m) {
         this.m = m;
         initComponent();
-        loadDataTalbe(listSP);
+        //loadDataTalbe(listSP);
     }
 
     public void loadDataTalbe(ArrayList<DTO.SanPhamDTO> result) {
         tblModel.setRowCount(0);
         for (DTO.SanPhamDTO sp : result) {
             tblModel.addRow(new Object[]{sp.getMasp(), sp.getTensp(), 
-                sp.getSoluongton(), ThuongHieuDAO.getInstance().selectById(sp.getThuonghieu()+"").getTenthuonghieu(), 
-                HeDieuHanhDAO.getInstance().selectById(sp.getHedieuhanh()+"").getTenhdh(),
-                sp.getKichthuocman() + " inch", 
+                sp.getKichthuocman() + " inch",
                 sp.getChipxuly(),sp.getDungluongpin() +"mAh",
-                XuatXuDAO.getInstance().selectById(sp.getXuatxu()+"").getTenxuatxu(), 
-                KhuVucKhoDAO.getInstance().selectById(sp.getKhuvuckho()+"").getTenkhuvuc()
+
+
             });
         }
     }
@@ -144,26 +134,26 @@ public final class SanPham extends JPanel implements ActionListener {
         } else if (e.getSource() == mainFunction.btn.get("update")) {
             int index = getRowSelected();
             if (index != -1) {
-                SanPhamDialog spDialog = new SanPhamDialog(this, owner, "Chỉnh sửa sản phẩm", true, "update", listSP.get(index));
+              //  SanPhamDialog spDialog = new SanPhamDialog(this, owner, "Chỉnh sửa sản phẩm", true, "update", listSP.get(index));
             }
         } else if (e.getSource() == mainFunction.btn.get("delete")) {
             int index = getRowSelected();
             if (index != -1) {
                 int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa Sản phẩm :)!", "Xóa sản phẩm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (input == 0) {
-                    spBUS.delete(listSP.get(index));
-                    loadDataTalbe(listSP);
+//                    spBUS.delete(listSP.get(index));
+//                    loadDataTalbe(listSP);
                 }
             }
         } else if (e.getSource() == mainFunction.btn.get("detail")) {
             int index = getRowSelected();
             if (index != -1) {
-                SanPhamDialog spDialog = new SanPhamDialog(this, owner, "Xem chi tiết sản phẩm", true, "view", listSP.get(index));
+            //    SanPhamDialog spDialog = new SanPhamDialog(this, owner, "Xem chi tiết sản phẩm", true, "view", listSP.get(index));
             }
         } else if (e.getSource() == mainFunction.btn.get("phone")) {
             int index = getRowSelected();
             if (index != -1) {
-                ChiTietSanPhamDialog ct = new ChiTietSanPhamDialog(owner, "Tất cả sản phẩm", true, listSP.get(index));
+              //  ChiTietSanPhamDialog ct = new ChiTietSanPhamDialog(owner, "Tất cả sản phẩm", true, listSP.get(index));
             }
         } else if (e.getSource() == mainFunction.btn.get("export")) {
             try {

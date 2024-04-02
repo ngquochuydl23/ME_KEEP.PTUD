@@ -8,7 +8,6 @@ import GUI.Main;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import GUI.Dialog.ChiTietPhieuDialog;
 import entity.*;
 import helper.JTableExporter;
 
@@ -278,7 +277,7 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
         try {
             Fillter();
         } catch (ParseException ex) {
-            Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -287,7 +286,7 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
         try {
             Fillter();
         } catch (ParseException ex) {
-            Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -296,7 +295,7 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
         try {
             Fillter();
         } catch (ParseException ex) {
-            Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -310,9 +309,9 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
     private void xuatLichSuTraVeExcel() {
         try {
             JTableExporter.exportJTableToExcel(tableLichSuTraVe);
-            Logger.getLogger(PhieuNhap.class.getName()).log(Level.INFO, "Xuất lịch sửa trả vé thành công");
+            Logger.getLogger(BanVe.class.getName()).log(Level.INFO, "Xuất lịch sửa trả vé thành công");
         } catch (IOException ex) {
-            Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

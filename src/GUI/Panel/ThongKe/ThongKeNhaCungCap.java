@@ -4,10 +4,8 @@
  */
 package GUI.Panel.ThongKe;
 
-import BUS.ThongKeBUS;
-import DAO.ThongKeDAO;
-import DTO.ThongKe.ThongKeKhachHangDTO;
-import DTO.ThongKe.ThongKeNhaCungCapDTO;
+
+
 import GUI.Component.ButtonCustom;
 import GUI.Component.InputDate;
 import GUI.Component.InputForm;
@@ -41,10 +39,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author andin
- */
+
 public class ThongKeNhaCungCap extends JPanel implements ActionListener, KeyListener, PropertyChangeListener {
 
     PanelBorderRadius nhapxuat_left, nhapxuat_center;
@@ -54,14 +49,12 @@ public class ThongKeNhaCungCap extends JPanel implements ActionListener, KeyList
     InputForm tenkhachhang;
     InputDate start_date, end_date;
     ButtonCustom export, reset;
-    ThongKeBUS thongkebus;
-    ArrayList<ThongKeNhaCungCapDTO> list;
 
-    public ThongKeNhaCungCap(ThongKeBUS thongkebus) {
-        this.thongkebus = thongkebus;
-        list = thongkebus.getAllNCC();
-        initComponent();
-        loadDataTable(list);
+    public ThongKeNhaCungCap() {
+//        this.thongkebus = thongkebus;
+//        list = thongkebus.getAllNCC();
+//        initComponent();
+//        loadDataTable(list);
     }
 
     public void initComponent() {
@@ -160,24 +153,24 @@ public class ThongKeNhaCungCap extends JPanel implements ActionListener, KeyList
     }
 
     public void Fillter() throws ParseException {
-        if (validateSelectDate()) {
-            String input = tenkhachhang.getText() != null ? tenkhachhang.getText() : "";
-            java.util.Date time_start = start_date.getDate() != null ? start_date.getDate() : new java.util.Date(0);
-            java.util.Date time_end = end_date.getDate() != null ? end_date.getDate() : new java.util.Date(System.currentTimeMillis());
-            this.list = thongkebus.FilterNCC(input, new Date(time_start.getTime()), new Date(time_end.getTime()));
-            loadDataTable(list);
-        }
+//        if (validateSelectDate()) {
+//            String input = tenkhachhang.getText() != null ? tenkhachhang.getText() : "";
+//            java.util.Date time_start = start_date.getDate() != null ? start_date.getDate() : new java.util.Date(0);
+//            java.util.Date time_end = end_date.getDate() != null ? end_date.getDate() : new java.util.Date(System.currentTimeMillis());
+//            this.list = thongkebus.FilterNCC(input, new Date(time_start.getTime()), new Date(time_end.getTime()));
+//            loadDataTable(list);
+//        }
     }
 
-    public void loadDataTable(ArrayList<ThongKeNhaCungCapDTO> result) {
-        tblModel.setRowCount(0);
-        int k = 1;
-        for (ThongKeNhaCungCapDTO i : result) {
-            tblModel.addRow(new Object[]{
-                k, i.getMancc(), i.getTenncc(), i.getSoluong(), Formater.FormatVND(i.getTongtien())
-            });
-            k++;
-        }
+    public void loadDataTable(ArrayList<Object> result) {
+//        tblModel.setRowCount(0);
+//        int k = 1;
+//        for (ThongKeNhaCungCapDTO i : result) {
+//            tblModel.addRow(new Object[]{
+//                k, i.getMancc(), i.getTenncc(), i.getSoluong(), Formater.FormatVND(i.getTongtien())
+//            });
+//            k++;
+//        }
     }
 
     public void resetForm() throws ParseException {

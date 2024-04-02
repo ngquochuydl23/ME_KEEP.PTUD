@@ -9,10 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-/**
- *
- * @author robot
- */
+
 public final class ComboRenderer implements ListCellRenderer {
 
     private JLabel label;

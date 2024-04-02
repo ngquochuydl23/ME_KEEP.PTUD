@@ -1,6 +1,6 @@
 package GUI.Panel.ThongKe;
 
-import BUS.ThongKeBUS;
+
 import java.awt.Color;
 import java.awt.GridLayout;
 import javax.swing.JPanel;
@@ -18,10 +18,10 @@ public class ThongKeDoanhThu extends JPanel {
     ThongKeDoanhThuTungThang thongkedoanhthutungthang;
     ThongKeDoanhThuTuNgayDenNgay thongkedoanhthutungaydenngay;
     Color BackgroundColor = new Color(240, 247, 250);
-    ThongKeBUS thongkeBUS;
 
-    public ThongKeDoanhThu(ThongKeBUS thongkeBUS) {
-        this.thongkeBUS = thongkeBUS;
+
+    public ThongKeDoanhThu() {
+
         initComponent();
     }
 
@@ -29,10 +29,10 @@ public class ThongKeDoanhThu extends JPanel {
         this.setLayout(new GridLayout(1, 1));
         this.setBackground(BackgroundColor);
 
-        thongketrongthang = new ThongKeDoanhThuTrongThang(thongkeBUS);
-        thongketungnam = new ThongKeDoanhThuTungNam(thongkeBUS);
-        thongkedoanhthutungthang = new ThongKeDoanhThuTungThang(thongkeBUS);
-        thongkedoanhthutungaydenngay = new ThongKeDoanhThuTuNgayDenNgay(thongkeBUS);
+//        thongketrongthang = new ThongKeDoanhThuTrongThang(thongkeBUS);
+//        thongketungnam = new ThongKeDoanhThuTungNam(thongkeBUS);
+//        thongkedoanhthutungthang = new ThongKeDoanhThuTungThang(thongkeBUS);
+//        thongkedoanhthutungaydenngay = new ThongKeDoanhThuTuNgayDenNgay(thongkeBUS);
 
         tabbedPane = new JTabbedPane();
         tabbedPane.setOpaque(false);

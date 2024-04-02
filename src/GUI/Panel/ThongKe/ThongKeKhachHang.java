@@ -1,11 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package GUI.Panel.ThongKe;
 
-import BUS.ThongKeBUS;
-import DAO.ThongKeDAO;
+
 import DTO.ThongKe.ThongKeKhachHangDTO;
 import GUI.Component.ButtonCustom;
 import GUI.Component.InputDate;
@@ -40,10 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author andin
- */
+
 public class ThongKeKhachHang extends JPanel implements ActionListener, KeyListener, PropertyChangeListener {
 
     PanelBorderRadius nhapxuat_left, nhapxuat_center;
@@ -53,14 +45,11 @@ public class ThongKeKhachHang extends JPanel implements ActionListener, KeyListe
     InputForm tenkhachhang;
     InputDate start_date, end_date;
     ButtonCustom export, reset;
-    ThongKeBUS thongkebus;
+
     ArrayList<ThongKeKhachHangDTO> list;
 
-    public ThongKeKhachHang(ThongKeBUS thongkebus) {
-        this.thongkebus = thongkebus;
-        list = thongkebus.getAllKhachHang();
-        initComponent();
-        loadDataTable(list);
+    public ThongKeKhachHang() {
+
     }
 
     public void initComponent() {
@@ -163,8 +152,8 @@ public class ThongKeKhachHang extends JPanel implements ActionListener, KeyListe
             String input = tenkhachhang.getText() != null ? tenkhachhang.getText() : "";
             java.util.Date time_start = start_date.getDate() != null ? start_date.getDate() : new java.util.Date(0);
             java.util.Date time_end = end_date.getDate() != null ? end_date.getDate() : new java.util.Date(System.currentTimeMillis());
-            this.list = thongkebus.FilterKhachHang(input, new Date(time_start.getTime()), new Date(time_end.getTime()));
-            loadDataTable(list);
+           // this.list = thongkebus.FilterKhachHang(input, new Date(time_start.getTime()), new Date(time_end.getTime()));
+           // loadDataTable(list);
         }
     }
 

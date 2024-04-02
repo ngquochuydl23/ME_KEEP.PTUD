@@ -13,7 +13,6 @@ import javax.swing.border.EmptyBorder;
 import GUI.Component.PanelBorderRadius;
 import GUI.Component.SelectForm;
 import GUI.Component.TableSorter;
-import GUI.Dialog.ChiTietPhieuDialog;
 import helper.JTableExporter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -137,7 +136,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         String[] action = { "create", "detail", "cancel", "export" };
-        mainFunction = new MainFunction(m.user.getManhomquyen(), "nhaphang", action);
+        mainFunction = new MainFunction("nhaphang", action);
 
         // Add Event MouseListener
         for (String ac : action) {
@@ -222,7 +221,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         int size = listphieunhap.size();
         for (int i = 0; i < size; i++) {
             tblModel.addRow(new Object[] {
-                    i + 1, (int) listphieunhap.get(i).getMaphieu(),
+
                     // nccBUS.getTenNhaCungCap(listphieunhap.get(i).getManhacungcap()),
                     // nvBUS.getNameById(listphieunhap.get(i).getManguoitao()),
                     // Formater.FormatTime(listphieunhap.get(i).getThoigiantao()),
@@ -307,7 +306,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
             if (index != -1) {
                 // nhapKho = new TaoPhieuNhap(nv, "view", listPhieu.get(index), m);
                 // m.setPanel(nhapKho);
-                ChiTietPhieuDialog ctsp = new ChiTietPhieuDialog(m, "Thông tin phiếu nhập", true, listPhieu.get(index));
+             //   ChiTietPhieuDialog ctsp = new ChiTietPhieuDialog(m, "Thông tin phiếu nhập", true, listPhieu.get(index));
             }
         } else if (source == mainFunction.btn.get("cancel")) {
             int index = getRowSelected();
@@ -338,7 +337,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
             try {
                 JTableExporter.exportJTableToExcel(tablePhieuNhap);
             } catch (IOException ex) {
-                Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -360,7 +359,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         try {
             Fillter();
         } catch (ParseException ex) {
-            Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -369,7 +368,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         try {
             Fillter();
         } catch (ParseException ex) {
-            Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -378,7 +377,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         try {
             Fillter();
         } catch (ParseException ex) {
-            Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

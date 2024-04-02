@@ -1,17 +1,7 @@
 package GUI.Panel;
 
-import BUS.PhienBanSanPhamBUS;
-import BUS.DungLuongRamBUS;
-import BUS.DungLuongRomBUS;
-import BUS.MauSacBUS;
-import BUS.NhaCungCapBUS;
-import BUS.PhieuNhapBUS;
-import BUS.SanPhamBUS;
-import DTO.PhienBanSanPhamDTO;
 import DTO.ChiTietPhieuNhapDTO;
 import DTO.ChiTietSanPhamDTO;
-import entity.NhanVien;
-import DTO.PhieuNhapDTO;
 import DTO.SanPhamDTO;
 import GUI.Component.ButtonCustom;
 import GUI.Component.InputForm;
@@ -21,12 +11,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import GUI.Component.PanelBorderRadius;
 import GUI.Component.SelectForm;
-import GUI.Dialog.QRCode_Dialog;
 import GUI.Main;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
-import helper.Formater;
-import DTO.NhanVienDTO;
 import helper.Validation;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,9 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -69,31 +54,16 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     Color BackgroundColor = new Color(240, 247, 250);
     JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
 
-    SanPhamBUS spBUS = new SanPhamBUS();
-    NhaCungCapBUS nccBus = new NhaCungCapBUS();
-    PhienBanSanPhamBUS phienbanBus = new PhienBanSanPhamBUS();
-    DungLuongRamBUS ramBus = new DungLuongRamBUS();
-    DungLuongRomBUS romBus = new DungLuongRomBUS();
-    PhieuNhapBUS phieunhapBus = new PhieuNhapBUS();
-    MauSacBUS mausacBus = new MauSacBUS();
-    //NhanVienDTO nvDto;
-
-    ArrayList<DTO.SanPhamDTO> listSP = spBUS.getAll();
-    ArrayList<PhienBanSanPhamDTO> ch = new ArrayList<>();
-    ArrayList<ChiTietPhieuNhapDTO> chitietphieu;
-    HashMap<Integer, ArrayList<ChiTietSanPhamDTO>> chitietsanpham = new HashMap<>();
     ArrayList<String> listmaimei = new ArrayList<>();
     int maphieunhap;
     int rowPhieuSelect = -1;
     private ButtonCustom scanImei, importImei;
 
-    public TaoPhieuNhap(NhanVienDTO nv, String type, Main m) {
+    public TaoPhieuNhap(String type, Main m) {
        // this.nvDto = nv;
         this.m = m;
-        maphieunhap = phieunhapBus.phieunhapDAO.getAutoIncrement();
-        chitietphieu = new ArrayList<>();
         initComponent(type);
-        loadDataTalbeSanPham(listSP);
+        //loadDataTalbeSanPham(listSP);
     }
 
     public void initPadding() {
@@ -149,7 +119,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
             public void mousePressed(MouseEvent e) {
                 int index = tablePhieuNhap.getSelectedRow();
                 if (index != -1) {
-                    setFormChiTietPhieu(chitietphieu.get(index));
+
                     rowPhieuSelect = index;
                     actionbtn("update");
                 }
@@ -176,7 +146,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
                 int index = tableSanPham.getSelectedRow();
                 if (index != -1) {
                     resetForm();
-                    setInfoSanPham(listSP.get(index));
+                 //   setInfoSanPham(listSP.get(index));
                     ChiTietPhieuNhapDTO ctp = checkTonTai();
                     if (ctp == null) {
                         actionbtn("add");
@@ -220,8 +190,8 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         txtTimKiem.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                ArrayList<SanPhamDTO> rs = spBUS.search(txtTimKiem.getText());
-                loadDataTalbeSanPham(rs);
+                //ArrayList<SanPhamDTO> rs = spBUS.search(txtTimKiem.getText());
+                //loadDataTalbeSanPham(rs);
             }
         });
         
@@ -361,7 +331,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         txtNhanVien = new InputForm("Nhân viên nhập");
         //txtNhanVien.setText(nvDto.getHoten());
         txtNhanVien.setEditable(false);
-        cbxNhaCungCap = new SelectForm("Nhà cung cấp", nccBus.getArrTenNhaCungCap());
+
         right_top.add(txtMaphieu);
         right_top.add(txtNhanVien);
         right_top.add(cbxNhaCungCap);
@@ -409,62 +379,62 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     public void loadDataTableChiTietPhieu(ArrayList<ChiTietPhieuNhapDTO> ctPhieu) {
         tblModel.setRowCount(0);
         int size = ctPhieu.size();
-        for (int i = 0; i < size; i++) {
-            PhienBanSanPhamDTO pb = phienbanBus.getByMaPhienBan(ctPhieu.get(i).getMaphienbansp());
-            tblModel.addRow(new Object[]{
-                i + 1, pb.getMasp(), spBUS.getByMaSP(pb.getMasp()).getTensp(), ramBus.getKichThuocById(pb.getRam()) + "GB",
-                romBus.getKichThuocById(pb.getRom()) + "GB", mausacBus.getTenMau(pb.getMausac()),
-                Formater.FormatVND(ctPhieu.get(i).getDongia()), ctPhieu.get(i).getSoluong()
-            });
-        }
-        lbltongtien.setText(Formater.FormatVND(phieunhapBus.getTongTien(ctPhieu)));
+//        for (int i = 0; i < size; i++) {
+//            PhienBanSanPhamDTO pb = phienbanBus.getByMaPhienBan(ctPhieu.get(i).getMaphienbansp());
+////            tblModel.addRow(new Object[]{
+////                i + 1, pb.getMasp(), spBUS.getByMaSP(pb.getMasp()).getTensp(), ramBus.getKichThuocById(pb.getRam()) + "GB",
+////                romBus.getKichThuocById(pb.getRom()) + "GB", mausacBus.getTenMau(pb.getMausac()),
+////                Formater.FormatVND(ctPhieu.get(i).getDongia()), ctPhieu.get(i).getSoluong()
+////            });
+//        }
+//        lbltongtien.setText(Formater.FormatVND(phieunhapBus.getTongTien(ctPhieu)));
     }
 
     public void setInfoSanPham(SanPhamDTO sp) {
         this.txtMaSp.setText(Integer.toString(sp.getMasp()));
         this.txtTenSp.setText(sp.getTensp());
-        ch = phienbanBus.getAll(sp.getMasp());
+       // ch = phienbanBus.getAll(sp.getMasp());
         cbxCauhinh.setArr(getCauHinhPhienBan(sp.getMasp()));
-        this.txtDongia.setText(Integer.toString(ch.get(0).getGianhap()));
+       // t/his.txtDongia.setText(Integer.toString(ch.get(0).getGianhap()));
     }
 
     public ChiTietPhieuNhapDTO getInfoChiTietPhieu() {
         
         int masp = Integer.parseInt(txtMaSp.getText());
-        int maphienbansp = ch.get(cbxCauhinh.cbb.getSelectedIndex()).getMaphienbansp();
+      //  int maphienbansp = ch.get(cbxCauhinh.cbb.getSelectedIndex()).getMaphienbansp();
         int gianhap = Integer.parseInt(txtDongia.getText());
         int phuongthucnhap = cbxPtNhap.getSelectedIndex();
         ArrayList<ChiTietSanPhamDTO> ctSP = getChiTietSanPham();
         int soluong = ctSP.size();
-        chitietsanpham.put(maphienbansp, getChiTietSanPham());
-        ChiTietPhieuNhapDTO ctphieu = new ChiTietPhieuNhapDTO(phuongthucnhap, maphieunhap, maphienbansp, soluong, gianhap);
-        return ctphieu;
+     //   chitietsanpham.put(maphienbansp, getChiTietSanPham());
+     //   ChiTietPhieuNhapDTO ctphieu = new ChiTietPhieuNhapDTO(phuongthucnhap, maphieunhap, maphienbansp, soluong, gianhap);
+        return null;
     }
     
     public boolean checkImeiExists(){
         ArrayList<ChiTietSanPhamDTO> ctSP = getChiTietSanPham();
         ArrayList<ChiTietSanPhamDTO> dsCheck = new ArrayList<>();
-        for (ArrayList<ChiTietSanPhamDTO> ctsp : chitietsanpham.values()) {
-            dsCheck.addAll(ctsp);
-        }
-        for (ChiTietSanPhamDTO chiTietSanPhamDTO : ctSP) {
-            for (ChiTietSanPhamDTO chiTietSanPhamDTO1 : dsCheck) {
-                if(chiTietSanPhamDTO.getImei().equals(chiTietSanPhamDTO1.getImei())){
-                    JOptionPane.showMessageDialog(this, "Có sự nhầm lẫn nào đó IMEI đã tồn tại trong phiếu");
-                    return false;
-                }
-            }
-        }
-        if(!phienbanBus.checkImeiExists(ctSP)){
-                JOptionPane.showMessageDialog(this, "Có IMEI trùng với imei trong kho có sự sai sót nào đó!");
-                return false;
-        }
+//        for (ArrayList<ChiTietSanPhamDTO> ctsp : chitietsanpham.values()) {
+//            dsCheck.addAll(ctsp);
+//        }
+//        for (ChiTietSanPhamDTO chiTietSanPhamDTO : ctSP) {
+//            for (ChiTietSanPhamDTO chiTietSanPhamDTO1 : dsCheck) {
+//                if(chiTietSanPhamDTO.getImei().equals(chiTietSanPhamDTO1.getImei())){
+//                    JOptionPane.showMessageDialog(this, "Có sự nhầm lẫn nào đó IMEI đã tồn tại trong phiếu");
+//                    return false;
+//                }
+//            }
+//        }
+//        if(!phienbanBus.checkImeiExists(ctSP)){
+//                JOptionPane.showMessageDialog(this, "Có IMEI trùng với imei trong kho có sự sai sót nào đó!");
+//                return false;
+//        }
         return true;
     }
 
     public ArrayList<ChiTietSanPhamDTO> getChiTietSanPham() {
         int hinhthuc = cbxPtNhap.getSelectedIndex();
-        int phienbansp = ch.get(cbxCauhinh.cbb.getSelectedIndex()).getMaphienbansp();
+        int phienbansp = 0;
         ArrayList<ChiTietSanPhamDTO> result = new ArrayList<>();
         if (hinhthuc == 1) {
             String[] arrimei = textAreaImei.getText().split("\n");
@@ -512,7 +482,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         Object source = e.getSource();
         if (source == cbxCauhinh.cbb) {
             int index = cbxCauhinh.cbb.getSelectedIndex();
-            this.txtDongia.setText(Integer.toString(ch.get(index).getGianhap()));
+          //  this.txtDongia.setText(Integer.toString(ch.get(index).getGianhap()));
             ChiTietPhieuNhapDTO ctp = checkTonTai();
             if (ctp == null) {
                 actionbtn("add");
@@ -538,24 +508,23 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     }
 
     public void addCtPhieu() {
-        ChiTietPhieuNhapDTO ctphieu = getInfoChiTietPhieu();
-        ChiTietPhieuNhapDTO p = phieunhapBus.findCT(chitietphieu, ctphieu.getMaphienbansp());
-        if (p == null) {
-            chitietphieu.add(ctphieu);
-            loadDataTableChiTietPhieu(chitietphieu);
-            resetForm();
-        } else {
-            int input = JOptionPane.showConfirmDialog(this, "Sản phẩm đã tồn tại trong phiếu !\nBạn có muốn chỉnh sửa không ?", "Sản phẩm đã tồn tại !", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-            if (input == 0) {
-//                setFormChiTietPhieu(ctphieu.getMaphienbansp());
-            }
-        }
+//        ChiTietPhieuNhapDTO ctphieu = getInfoChiTietPhieu();
+//        ChiTietPhieuNhapDTO p = phieunhapBus.findCT(chitietphieu, ctphieu.getMaphienbansp());
+//        if (p == null) {
+//            chitietphieu.add(ctphieu);
+//            loadDataTableChiTietPhieu(chitietphieu);
+//            resetForm();
+//        } else {
+//            int input = JOptionPane.showConfirmDialog(this, "Sản phẩm đã tồn tại trong phiếu !\nBạn có muốn chỉnh sửa không ?", "Sản phẩm đã tồn tại !", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+//            if (input == 0) {
+////                setFormChiTietPhieu(ctphieu.getMaphienbansp());
+//            }
+//        }
     }
 
     public ChiTietPhieuNhapDTO checkTonTai() {
-        int mapb = ch.get(cbxCauhinh.cbb.getSelectedIndex()).getMaphienbansp();
-        ChiTietPhieuNhapDTO p = phieunhapBus.findCT(chitietphieu, mapb);
-        return p;
+
+        return null;
     }
 
     public void actionbtn(String type) {
@@ -583,17 +552,17 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     }
 
     public void setFormChiTietPhieu(ChiTietPhieuNhapDTO phieu) {
-        PhienBanSanPhamDTO pb = phienbanBus.getByMaPhienBan(phieu.getMaphienbansp());
-        this.txtMaSp.setText(Integer.toString(pb.getMasp()));
-        this.txtTenSp.setText(spBUS.getByMaSP(pb.getMasp()).getTensp());
-        this.cbxCauhinh.setArr(getCauHinhPhienBan(pb.getMasp()));
-        this.cbxCauhinh.setSelectedIndex(phienbanBus.getIndexByMaPhienBan(ch, phieu.getMaphienbansp()));
-        this.txtDongia.setText(Integer.toString(phieu.getDongia()));
-        setImei(phieu);
+//        PhienBanSanPhamDTO pb = phienbanBus.getByMaPhienBan(phieu.getMaphienbansp());
+//        this.txtMaSp.setText(Integer.toString(pb.getMasp()));
+//
+//        this.cbxCauhinh.setArr(getCauHinhPhienBan(pb.getMasp()));
+//        this.cbxCauhinh.setSelectedIndex(phienbanBus.getIndexByMaPhienBan(ch, phieu.getMaphienbansp()));
+//        this.txtDongia.setText(Integer.toString(phieu.getDongia()));
+//        setImei(phieu);
     }
 
     public ArrayList<ChiTietSanPhamDTO> findMaPhienBan(int mapb) {
-        return chitietsanpham.get(mapb);
+        return null;
     }
 
     public String getStringListImei(ArrayList<ChiTietSanPhamDTO> ctsp) {
@@ -605,13 +574,13 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     }
 
     public String[] getCauHinhPhienBan(int masp) {
-        ch = phienbanBus.getAll(masp);
-        int size = ch.size();
-        String[] arr = new String[size];
-        for (int i = 0; i < size; i++) {
-            arr[i] = romBus.getKichThuocById(ch.get(i).getRom()) + "GB - "
-                    + ramBus.getKichThuocById(ch.get(i).getRam()) + "GB - " + mausacBus.getTenMau(ch.get(i).getMausac());
-        }
+//        ch = phienbanBus.getAll(masp);
+//        int size = ch.size();
+        String[] arr = new String[0];
+//        for (int i = 0; i < size; i++) {
+//            arr[i] = romBus.getKichThuocById(ch.get(i).getRom()) + "GB - "
+//                    + ramBus.getKichThuocById(ch.get(i).getRam()) + "GB - " + mausacBus.getTenMau(ch.get(i).getMausac());
+//        }
         return arr;
     }
 
@@ -635,28 +604,28 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
             } 
             
         } else if (source == btnDelete) {
-            int index = tablePhieuNhap.getSelectedRow();
-            chitietphieu.remove(index);
-            actionbtn("add");
-            loadDataTableChiTietPhieu(chitietphieu);
-            resetForm();
+//            int index = tablePhieuNhap.getSelectedRow();
+//            chitietphieu.remove(index);
+//            actionbtn("add");
+//            loadDataTableChiTietPhieu(chitietphieu);
+//            resetForm();
         } else if (source == btnEditSP) {
-            int mapb = ch.get(cbxCauhinh.cbb.getSelectedIndex()).getMaphienbansp();
-            chitietsanpham.remove(mapb);
-            ArrayList<ChiTietSanPhamDTO> ctsp = getChiTietSanPham();
-            chitietsanpham.put(mapb, ctsp);
-            int ptnhap = cbxPtNhap.getSelectedIndex();
-            chitietphieu.get(rowPhieuSelect).setPhuongthucnnhap(ptnhap);
-            chitietphieu.get(rowPhieuSelect).setSoluong(ctsp.size());
-            loadDataTableChiTietPhieu(chitietphieu);
+//            int mapb = ch.get(cbxCauhinh.cbb.getSelectedIndex()).getMaphienbansp();
+//            chitietsanpham.remove(mapb);
+//            ArrayList<ChiTietSanPhamDTO> ctsp = getChiTietSanPham();
+//            chitietsanpham.put(mapb, ctsp);
+//            int ptnhap = cbxPtNhap.getSelectedIndex();
+//            chitietphieu.get(rowPhieuSelect).setPhuongthucnnhap(ptnhap);
+//            chitietphieu.get(rowPhieuSelect).setSoluong(ctsp.size());
+//            loadDataTableChiTietPhieu(chitietphieu);
         } else if (source == btnNhapHang) {
             eventBtnNhapHang();
         } else if (source == scanImei) {
-            if (ch.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm để quét mã!");
-            } else {
-                QRCode_Dialog qr = new QRCode_Dialog(owner, "Scan", true, textAreaImei);
-            }
+//            if (ch.isEmpty()) {
+//                JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm để quét mã!");
+//            } else {
+//                QRCode_Dialog qr = new QRCode_Dialog(owner, "Scan", true, textAreaImei);
+//            }
         } else if (source == importImei) {
             getImeifromFile();
             for (String i : listmaimei) {
@@ -668,14 +637,14 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     }
 
     public void eventBtnNhapHang() {
-        if (chitietphieu.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Chưa có sản phẩm nào trong phiếu !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
-        } else {
-            int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn tạo phiếu nhập !", "Xác nhận tạo phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-            if (input == 0) {
-                int mancc = nccBus.getByIndex(cbxNhaCungCap.getSelectedIndex()).getMancc();
-                long now = System.currentTimeMillis();
-                Timestamp currenTime = new Timestamp(now);
+//        if (chitietphieu.isEmpty()) {
+//            JOptionPane.showMessageDialog(this, "Chưa có sản phẩm nào trong phiếu !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
+//        } else {
+//            int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn tạo phiếu nhập !", "Xác nhận tạo phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+//            if (input == 0) {
+//                int mancc = nccBus.getByIndex(cbxNhaCungCap.getSelectedIndex()).getMancc();
+//                long now = System.currentTimeMillis();
+//                Timestamp currenTime = new Timestamp(now);
               //  PhieuNhapDTO pn = new PhieuNhapDTO(mancc, maphieunhap, nvDto.getManv(), currenTime, phieunhapBus.getTongTien(chitietphieu), 1);
               //  boolean result = phieunhapBus.add(pn, chitietphieu, chitietsanpham);
 //                if (result) {
@@ -684,9 +653,9 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
 //                    m.setPanel(pnlPhieu);
 //                } else {
 //                    JOptionPane.showMessageDialog(this, "Nhập hàng không thành công !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
-//                }
-            }
-        }
+////                }
+//            }
+//        }
     }
 
     public void getImeifromFile() {

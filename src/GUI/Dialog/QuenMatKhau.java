@@ -1,9 +1,6 @@
 package GUI.Dialog;
 
-import DAO.TaiKhoanDAO;
-import DTO.TaiKhoanDTO;
 import helper.SendEmailSMTP;
-import com.formdev.flatlaf.FlatLightLaf;
 import helper.BCrypt;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -24,8 +21,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -142,17 +137,17 @@ public class QuenMatKhau extends JDialog implements ActionListener {
                 if (matcher.matches() == false) {
                     JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng email");
                 } else {
-                    TaiKhoanDTO tk = TaiKhoanDAO.getInstance().selectByEmail(email);
-                    if (tk == null) {
-                        JOptionPane.showMessageDialog(this, "Tài khoản của email này không tồn tại trên hệ thống");
-                    } else {
-                        CardLayout c = (CardLayout) jpMain.getLayout();
-                        c.next(jpMain);
-                        this.emailCheck = email;
-                        String opt = SendEmailSMTP.getOTP();
-                        SendEmailSMTP.sendOTP(email, opt);
-                        TaiKhoanDAO.getInstance().sendOpt(email, opt);
-                    }
+//                    TaiKhoanDTO tk = TaiKhoanDAO.getInstance().selectByEmail(email);
+//                    if (tk == null) {
+//                        JOptionPane.showMessageDialog(this, "Tài khoản của email này không tồn tại trên hệ thống");
+//                    } else {
+//                        CardLayout c = (CardLayout) jpMain.getLayout();
+//                        c.next(jpMain);
+//                        this.emailCheck = email;
+//                        String opt = SendEmailSMTP.getOTP();
+//                        SendEmailSMTP.sendOTP(email, opt);
+//                    //    TaiKhoanDAO.getInstance().sendOpt(email, opt);
+//                    }
                 }
             }
         } else if(e.getSource() == btnConfirmOTP){
@@ -165,13 +160,13 @@ public class QuenMatKhau extends JDialog implements ActionListener {
                 if(matcher.matches() == false){
                     JOptionPane.showMessageDialog(this, "Vui lòng nhập mã OTP có 6 chữ số!");
                 } else {
-                    boolean check = TaiKhoanDAO.getInstance().checkOtp(this.emailCheck, otp);
-                   if(check){
+/*//                    boolean check = TaiKhoanDAO.getInstance().checkOtp(this.emailCheck, otp);
+//                   if(check){
                        CardLayout c = (CardLayout) jpMain.getLayout();
                        c.next(jpMain);
                    } else{
                        JOptionPane.showMessageDialog(this, "Mã OTP không khớp");
-                   }
+                   }*/
                 }
             }
         } else if (e.getSource() == btnChangePass){
@@ -180,8 +175,8 @@ public class QuenMatKhau extends JDialog implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu");
             } else {
                 String password = BCrypt.hashpw(pass, BCrypt.gensalt(12));
-                TaiKhoanDAO.getInstance().updatePass(this.emailCheck, password);
-                TaiKhoanDAO.getInstance().sendOpt(emailCheck, "null");
+               // TaiKhoanDAO.getInstance().updatePass(this.emailCheck, password);
+               // TaiKhoanDAO.getInstance().sendOpt(emailCheck, "null");
                JOptionPane.showMessageDialog(this, "Thay đổi mật khẩu thành công");
                this.dispose();
             }

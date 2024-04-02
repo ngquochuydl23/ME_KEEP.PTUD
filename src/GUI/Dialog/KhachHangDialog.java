@@ -3,18 +3,14 @@ package GUI.Dialog;
 import GUI.Component.HeaderTitle;
 import GUI.Component.InputForm;
 import GUI.Component.ButtonCustom;
-import DAO.KhachHangDAO;
 import GUI.Panel.KhachHang;
 import dao1.KhachHangDao;
 import GUI.Component.NumericDocumentFilter;
 import helper.Validation;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

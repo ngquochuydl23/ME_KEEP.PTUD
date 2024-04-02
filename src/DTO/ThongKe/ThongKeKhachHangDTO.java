@@ -3,9 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package DTO.ThongKe;
-import DTO.PhieuXuatDTO;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Objects;
 
 /**

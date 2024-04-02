@@ -1,6 +1,5 @@
 package GUI.Panel.ThongKe;
 
-import BUS.ThongKeBUS;
 import DTO.ThongKe.ThongKeDoanhThuDTO;
 import GUI.Component.NumericDocumentFilter;
 import GUI.Component.PanelBorderRadius;
@@ -34,15 +33,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.PlainDocument;
 
-/**
- *
- * @author Tran Nhat Sinh
- */
+
 public final class ThongKeDoanhThuTungNam extends JPanel implements ActionListener {
 
     PanelBorderRadius pnlChart;
     JPanel pnl_top;
-    ThongKeBUS thongkeBUS;
+
     JTextField yearchooser_start, yearchooser_end;
     Chart chart;
     JButton btnreset, btnthongke, btnexport;
@@ -53,12 +49,12 @@ public final class ThongKeDoanhThuTungNam extends JPanel implements ActionListen
     private ArrayList<ThongKeDoanhThuDTO> dataset;
     private int current_year;
 
-    public ThongKeDoanhThuTungNam(ThongKeBUS thongkeBUS) {
-        this.thongkeBUS = thongkeBUS;
-        this.current_year = LocalDate.now().getYear();
-        this.dataset = this.thongkeBUS.getDoanhThuTheoTungNam(current_year - 5, current_year);
-        initComponent();
-        loadDataTalbe(dataset);
+    public ThongKeDoanhThuTungNam() {
+//        this.thongkeBUS = thongkeBUS;
+//        this.current_year = LocalDate.now().getYear();
+//        this.dataset = this.thongkeBUS.getDoanhThuTheoTungNam(current_year - 5, current_year);
+//        initComponent();
+//        loadDataTalbe(dataset);
     }
 
     public void loadDataTalbe(ArrayList<ThongKeDoanhThuDTO> list) {
@@ -167,7 +163,7 @@ public final class ThongKeDoanhThuTungNam extends JPanel implements ActionListen
                     if (namkt < nambd || namkt <= 2015 || nambd <= 2015) {
                         JOptionPane.showMessageDialog(this, "Năm kết thúc không được bé hơn năm bắt đầu và phải lớn hơn 2015");
                     } else {
-                        this.dataset = this.thongkeBUS.getDoanhThuTheoTungNam(nambd, namkt);
+                    //    this.dataset = this.thongkeBUS.getDoanhThuTheoTungNam(nambd, namkt);
                         loadDataChart(dataset);
                         loadDataTalbe(dataset);
                     }
@@ -179,7 +175,7 @@ public final class ThongKeDoanhThuTungNam extends JPanel implements ActionListen
         } else if (source == btnreset) {
             yearchooser_start.setText("");
             yearchooser_end.setText("");
-            this.dataset = this.thongkeBUS.getDoanhThuTheoTungNam(current_year - 5, current_year);
+         //   this.dataset = this.thongkeBUS.getDoanhThuTheoTungNam(current_year - 5, current_year);
             loadDataChart(dataset);
             loadDataTalbe(dataset);
         } else if (source == btnexport) {

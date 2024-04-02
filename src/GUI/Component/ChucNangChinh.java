@@ -1,6 +1,5 @@
 package GUI.Component;
 
-import BUS.NhomQuyenBUS;
 import entity.NhanVien;
 import singleton.NhanVienSuDungSingleton;
 

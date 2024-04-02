@@ -32,11 +32,7 @@ public class PhieuNhapDAO implements DAOinterface<PhieuNhapDTO> {
             Connection con = (Connection) JDBCUtil.getConnection();
             String sql = "INSERT INTO `phieunhap`(`maphieunhap`, `thoigian`, `manhacungcap`, `nguoitao`, `tongtien`) VALUES (?,?,?,?,?)";
             PreparedStatement pst = con.prepareStatement(sql);
-            pst.setInt(1, t.getMaphieu());
-            pst.setTimestamp(2, t.getThoigiantao());
-            pst.setInt(3, t.getManhacungcap());
-            pst.setInt(4, t.getManguoitao());
-            pst.setDouble(5, t.getTongTien());
+
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         } catch (SQLException ex) {
@@ -52,11 +48,7 @@ public class PhieuNhapDAO implements DAOinterface<PhieuNhapDTO> {
             Connection con = (Connection) JDBCUtil.getConnection();
             String sql = "UPDATE `phieunhap` SET `thoigian`=?,`manhacungcap`=?,`tongtien`=?,`trangthai`=? WHERE `maphieunhap`=?";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setTimestamp(1, t.getThoigiantao());
-            pst.setInt(2, t.getManhacungcap());
-            pst.setLong(3, t.getTongTien());
-            pst.setInt(4, t.getTrangthai());
-            pst.setInt(5, t.getMaphieu());
+
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         } catch (SQLException ex) {
@@ -186,7 +178,6 @@ public class PhieuNhapDAO implements DAOinterface<PhieuNhapDTO> {
     
     public int cancelPhieuNhap(int maphieu){
         int result = 0;
-        ChiTietSanPhamDAO.getInstance().deletePn(maphieu);
         ArrayList<ChiTietPhieuNhapDTO> arrCt = ChiTietPhieuNhapDAO.getInstance().selectAll(Integer.toString(maphieu));
         for (ChiTietPhieuNhapDTO chiTietPhieuNhapDTO : arrCt) {
             PhienBanSanPhamDAO.getInstance().updateSoLuongTon(chiTietPhieuNhapDTO.getMaphienbansp(), -(chiTietPhieuNhapDTO.getSoluong()));

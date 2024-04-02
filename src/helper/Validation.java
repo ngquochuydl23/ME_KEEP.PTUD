@@ -13,6 +13,10 @@ public class Validation {
     }
 
     public static Boolean isEmail(String email) {
+        if (email.isEmpty()) {
+            return false;
+        }
+
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." + "[a-zA-Z0-9_+&*-]+)*@" + "(?:[a-zA-Z0-9-]+\\.)+[a-z" + "A-Z]{2,7}$";
         Pattern pat = Pattern.compile(emailRegex);
         if (email == null) {
@@ -45,7 +49,7 @@ public class Validation {
         if (num == null) return false;
         try {
             long k = Long.parseLong(num);
-            if(k < 0) {
+            if (k < 0) {
                 result = false;
             }
         } catch (NumberFormatException e) {

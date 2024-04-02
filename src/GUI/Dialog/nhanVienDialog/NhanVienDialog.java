@@ -1,9 +1,5 @@
 package GUI.Dialog.nhanVienDialog;
 
-import DAO.NhanVienDAO;
-import DTO.NhanVienDTO;
-import com.toedter.calendar.JCalendar;
-import com.toedter.calendar.JDateChooser;
 import GUI.Component.ButtonCustom;
 import GUI.Component.HeaderTitle;
 import GUI.Component.InputDate;
@@ -23,8 +19,6 @@ import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;

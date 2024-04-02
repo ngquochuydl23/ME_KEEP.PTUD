@@ -1,10 +1,7 @@
 package GUI.Panel.ThongKe;
 
-import BUS.ThongKeBUS;
-import DAO.KhachHangDAO;
-import DAO.NhanVienDAO;
+
 import DAO.SanPhamDAO;
-import DTO.ThongKe.ThongKeDoanhThuDTO;
 import DTO.ThongKe.ThongKeTungNgayTrongThangDTO;
 import GUI.Component.TableSorter;
 import GUI.Component.itemTaskbar;
@@ -25,13 +22,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author Tran Nhat Sinh
- */
+
 public class ThongKeTongQuan extends JPanel {
 
-    ThongKeBUS thongkebus;
+
     JPanel jp_top, jp_center, pnlChart;
     itemTaskbar[] listitem;
     CurveChart chart;
@@ -41,15 +35,15 @@ public class ThongKeTongQuan extends JPanel {
     ArrayList<ThongKeTungNgayTrongThangDTO> dataset;
     String[][] getSt = {
         {"Sản phẩm hiện có trong kho", "productt.svg", Integer.toString(SanPhamDAO.getInstance().selectAll().size())},
-        {"Khách từ trước đến nay", "stafff.svg", Integer.toString(KhachHangDAO.getInstance().selectAll().size())},
-        {"Nhân viên đang hoạt động", "customerr.svg", Integer.toString(NhanVienDAO.getInstance().selectAll().size())}};
+        {"Khách từ trước đến nay", "stafff.svg", Integer.toString(0)},
+        {"Nhân viên đang hoạt động", "customerr.svg", Integer.toString(0)}};
 
-    public ThongKeTongQuan(ThongKeBUS thongkebus) {
-        this.thongkebus = thongkebus;
-        this.dataset = thongkebus.getThongKe7NgayGanNhat();
-        initComponent();
-        loadDataTalbe(this.dataset);
-    }
+//    public ThongKeTongQuan(ThongKeBUS thongkebus) {
+//        this.thongkebus = thongkebus;
+//        this.dataset = thongkebus.getThongKe7NgayGanNhat();
+//        initComponent();
+//        loadDataTalbe(this.dataset);
+//    }
 
     public void loadDataChart() {
         for (ThongKeTungNgayTrongThangDTO i : dataset) {

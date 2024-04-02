@@ -1,6 +1,6 @@
 package GUI.Component;
 
-import BUS.NhomQuyenBUS;
+
 import java.awt.*;
 import java.util.HashMap;
 import javax.swing.*;
@@ -10,11 +10,10 @@ public final class MainFunction extends JToolBar {
     public ButtonToolBar btnAdd, btnDelete, btnEdit, btnDetail, btnNhapExcel, btnXuatExcel, btnHuyPhieu;
     public JSeparator separator1;
     public HashMap<String, ButtonToolBar> btn = new HashMap<>();
-    private final NhomQuyenBUS nhomquyenBus = new NhomQuyenBUS();
 
-    public MainFunction(int manhomquyen, String chucnang, String[] listBtn) {
+    public MainFunction(String chucnang, String[] listBtn) {
         initData();
-        initComponent(manhomquyen, chucnang, listBtn);
+        initComponent(chucnang, listBtn);
     }
 
     public void initData() {
@@ -28,7 +27,7 @@ public final class MainFunction extends JToolBar {
         btn.put("phone", new ButtonToolBar("XEM DS", "phone.svg", "view"));
     }
 
-    private void initComponent(int manhomquyen, String chucnang, String[] listBtn) {
+    private void initComponent(String chucnang, String[] listBtn) {
         this.setBackground(Color.WHITE);
         this.setRollover(true);
         initData();

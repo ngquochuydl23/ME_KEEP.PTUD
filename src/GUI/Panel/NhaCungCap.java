@@ -1,9 +1,5 @@
 package GUI.Panel;
 
-import GUI.Dialog.NhaCungCapDialog;
-import BUS.NhaCungCapBUS;
-import DAO.NhaCungCapDAO;
-import DTO.NhaCungCapDTO;
 import GUI.Component.IntegratedSearch;
 import GUI.Component.MainFunction;
 import java.awt.*;
@@ -26,14 +22,11 @@ import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -50,9 +43,6 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
     JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
     Color BackgroundColor = new Color(240, 247, 250);
     DefaultTableModel tblModel;
-    Main m;
-    public NhaCungCapBUS nccBUS = new NhaCungCapBUS();
-    public ArrayList<NhaCungCapDTO> listncc = nccBUS.getAll();
 
     private void initComponent() {
         //Set model table
@@ -110,7 +100,7 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         String[] action = {"create", "update", "delete", "detail", "import", "export"};
-        mainFunction = new MainFunction(m.user.getManhomquyen(), "nhacungcap", action);
+        mainFunction = new MainFunction( "nhacungcap", action);
         for (String ac : action) {
             mainFunction.btn.get(ac).addActionListener(this);
         }
@@ -123,8 +113,7 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
             public void keyReleased(KeyEvent e) {
                 String type = (String) search.cbxChoose.getSelectedItem();
                 String txt = search.txtSearchForm.getText();
-                listncc = nccBUS.search(txt, type);
-                loadDataTable(listncc);
+
             }
         });
 
@@ -141,20 +130,12 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
     }
 
     public NhaCungCap(Main m) {
-        this.m = m;
+
         initComponent();
         tableNhaCungCap.setDefaultEditor(Object.class, null);
-        loadDataTable(listncc);
     }
 
-    public void loadDataTable(ArrayList<NhaCungCapDTO> result) {
-        tblModel.setRowCount(0);
-        for (NhaCungCapDTO ncc : result) {
-            tblModel.addRow(new Object[]{
-                ncc.getMancc(), ncc.getTenncc(), ncc.getDiachi(), ncc.getEmail(), ncc.getSdt()
-            });
-        }
-    }
+
 
     public void openFile(String file) {
         try {
@@ -170,7 +151,6 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
         FileInputStream excelFIS = null;
         BufferedInputStream excelBIS = null;
         XSSFWorkbook excelJTableImport = null;
-        ArrayList<DTO.NhaCungCapDTO> listExcel = new ArrayList<DTO.NhaCungCapDTO>();
         JFileChooser jf = new JFileChooser();
         int result = jf.showOpenDialog(null);
         jf.setDialogTitle("Open file");
@@ -186,7 +166,7 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
                 for (int row = 1; row <= excelSheet.getLastRowNum(); row++) {
                     int check = 1;
                     XSSFRow excelRow = excelSheet.getRow(row);
-                    int id = NhaCungCapDAO.getInstance().getAutoIncrement();
+
                     String tenNCC = excelRow.getCell(0).getStringCellValue();
                     String diachi = excelRow.getCell(1).getStringCellValue();
                     String email = excelRow.getCell(2).getStringCellValue();
@@ -199,7 +179,7 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
                     if (check == 0) {
                         k += 1;
                     } else {
-                        nccBUS.add(new NhaCungCapDTO(id, tenNCC, diachi, email, sdt));
+
                     }
                 }
                 if (k != 0) {
@@ -214,7 +194,7 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
             }
         }
 
-        loadDataTable(listncc);
+
     }
 
     public int getRowSelected() {
@@ -228,11 +208,11 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == mainFunction.btn.get("create")) {
-            NhaCungCapDialog dvtDialog = new NhaCungCapDialog(this, owner, "Thêm nhà cung cấp", true, "create");
+
         } else if (e.getSource() == mainFunction.btn.get("update")) {
             int index = getRowSelected();
             if (index != -1) {
-                NhaCungCapDialog nccDialog = new NhaCungCapDialog(this, owner, "Chỉnh sửa nhà cung cấp", true, "update", listncc.get(index));
+//                NhaCungCapDialog nccDialog = new NhaCungCapDialog(this, owner, "Chỉnh sửa nhà cung cấp", true, "update", listncc.get(index));
             }
         } else if (e.getSource() == mainFunction.btn.get("delete")) {
             int index = getRowSelected();
@@ -241,19 +221,17 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
                         "Bạn có chắc chắn muốn xóa nhà cung cấp!", "Xóa nhà cung cấp",
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (input == 0) {
-                    nccBUS.delete(listncc.get(index), index);
-                    loadDataTable(listncc);
+
                 }
             }
         } else if (e.getSource() == mainFunction.btn.get("detail")) {
             int index = getRowSelected();
             if (index != -1) {
-                NhaCungCapDialog nccDialog = new NhaCungCapDialog(this, owner, "Chi tiết nhà cung cấp", true, "view", listncc.get(index));
+//                NhaCungCapDialog nccDialog = new NhaCungCapDialog(this, owner, "Chi tiết nhà cung cấp", true, "view", listncc.get(index));
             }
         } else if (e.getSource() == search.btnReset) {
             search.txtSearchForm.setText("");
-            listncc = nccBUS.getAll();
-            loadDataTable(listncc);
+
         } else if (e.getSource() == mainFunction.btn.get("import")) {
             importExcel();
         } else if (e.getSource() == mainFunction.btn.get("export")) {
@@ -285,7 +263,5 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
     public void itemStateChanged(ItemEvent e) {
         String type = (String) search.cbxChoose.getSelectedItem();
         String txt = search.txtSearchForm.getText();
-        listncc = nccBUS.search(txt, type);
-        loadDataTable(listncc);
     }
 }
