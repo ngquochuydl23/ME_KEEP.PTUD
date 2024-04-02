@@ -7,7 +7,8 @@ public class Ve {
     private int choNgoi;
     private double giaVe;
     private String moTa;
-    private String tinhTrangVe;
+    private int tinhTrangVe;
+
     private LoaiVe loaiVe;
     private Chuyen chuyen;
 
@@ -18,7 +19,7 @@ public class Ve {
         this.maVe = maVe;
     }
 
-    public Ve(String maVe, int choNgoi, double giaVe, String moTa, String tinhTrangVe, LoaiVe loaiVe,Chuyen chuyen) {
+    public Ve(String maVe, int choNgoi, double giaVe, String moTa, int tinhTrangVe, LoaiVe loaiVe,Chuyen chuyen) {
         this.maVe = maVe;
         this.choNgoi = choNgoi;
         this.giaVe = giaVe;
@@ -67,11 +68,11 @@ public class Ve {
         this.moTa = moTa;
     }
 
-    public String getTinhTrangVe() {
+    public int getTinhTrangVe() {
         return tinhTrangVe;
     }
 
-    public void setTinhTrangVe(String tinhTrangVe) {
+    public void setTinhTrangVe(int tinhTrangVe) {
         this.tinhTrangVe = tinhTrangVe;
     }
 

@@ -31,7 +31,7 @@ public class VeDao implements IDao<Ve, String> {
                 int choNgoi = rs.getInt("choNgoi");
                 double giaVe = rs.getDouble("giaVe");
                 String moTa = rs.getString("moTa");
-                String tinhTrangVe = rs.getString("tinhTrangVe");
+                int tinhTrangVe = rs.getInt("tinhTrangVe");
                 String maLoaiVe = rs.getString("maLoaiVe");
                 String maChuyen = rs.getString("maChuyen");
 
@@ -56,7 +56,7 @@ public class VeDao implements IDao<Ve, String> {
                 int choNgoi = rs.getInt("choNgoi");
                 double giaVe = rs.getDouble("giaVe");
                 String moTa = rs.getString("moTa");
-                String tinhTrangVe = rs.getString("tinhTrangVe");
+                int tinhTrangVe = rs.getInt("tinhTrangVe");
                 String maLoaiVe = rs.getString("maLoaiVe");
                 String maChuyen = rs.getString("maChuyen");
 
@@ -78,7 +78,7 @@ public class VeDao implements IDao<Ve, String> {
             statement.setInt(2, entity.getChoNgoi());
             statement.setDouble(3, entity.getGiaVe());
             statement.setString(4, entity.getMoTa());
-            statement.setString(5, entity.getTinhTrangVe());
+            statement.setInt(5, entity.getTinhTrangVe());
             statement.setString(6, entity.getLoaiVe().getMaLoaiVe());
             statement.setString(7, entity.getChuyen().getMaChuyen());
 
@@ -111,7 +111,7 @@ public class VeDao implements IDao<Ve, String> {
             pst.setInt(1, entity.getChoNgoi());
             pst.setDouble(2, entity.getGiaVe());
             pst.setString(3, entity.getMoTa());
-            pst.setString(4, entity.getTinhTrangVe());
+            pst.setInt(4, entity.getTinhTrangVe());
             pst.setString(5, entity.getLoaiVe().getMaLoaiVe());
             pst.setString(6, entity.getChuyen().getMaChuyen());
 

@@ -81,7 +81,7 @@ public class NhanVienDao implements IDao<NhanVien, Integer> {
             String sql = "INSERT INTO `NhanVien`(`HoTen`, `Gioitinh`, `SoDienThoai`, `NgaySinh`,`Trangthai`, `MatKhau`, `Email`, `VaiTro`) VALUES (?,?,?,?,?,?,?,?)";
             PreparedStatement statement = con.prepareStatement(sql);
 
-            for (NhanVien entity: entities) {
+            for (NhanVien entity : entities) {
                 statement.setString(1, entity.getHoTen());
                 statement.setInt(2, entity.getGioitinh());
                 statement.setString(3, entity.getSoDienThoai());
@@ -93,7 +93,7 @@ public class NhanVienDao implements IDao<NhanVien, Integer> {
 
                 statement.addBatch();
             }
-            
+
 
             return statement.executeBatch().length > 0;
         } catch (SQLException ex) {
@@ -128,7 +128,7 @@ public class NhanVienDao implements IDao<NhanVien, Integer> {
             pst.setString(4, entity.getMatKhau());
             pst.setInt(5, entity.getGioitinh());
             pst.setDate(6, Date.valueOf(entity.getNgaysinh()));
-            pst.setString(7,entity.getVaiTro());
+            pst.setString(7, entity.getVaiTro());
 
             // set where
             pst.setInt(8, entity.getMaNhanVien());
@@ -179,12 +179,13 @@ public class NhanVienDao implements IDao<NhanVien, Integer> {
 
                 int gioiTinh = rs.getInt("GioiTinh");
                 String soDienThoai = rs.getString("SoDienThoai");
-                LocalDate ngayDangKy = rs.getDate("NgayDangKy").toLocalDate();
-                LocalDate ngaySinh = rs.getDate("NgaySinh").toLocalDate();
+                LocalDate ngaySinh = rs.getDate("ngaySinh").toLocalDate();
                 int trangThai = rs.getInt("TrangThai");
+                String matKhau = rs.getString("MatKhau");
                 String email = rs.getString("Email");
+                String vaiTro = rs.getString("VaiTro");
 
-                return new NhanVien(maNhanVien, hoTen, gioiTinh, soDienThoai, ngayDangKy, ngaySinh, trangThai, email);
+                return new NhanVien(maNhanVien, hoTen, gioiTinh, soDienThoai, ngaySinh, trangThai, matKhau, email, vaiTro);
             }
         } catch (Exception e) {
             Logger.getLogger(NhanVienDao.class.getName()).log(Level.SEVERE, null, e);

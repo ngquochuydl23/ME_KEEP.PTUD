@@ -23,7 +23,17 @@ public class SelectForm extends JPanel {
 
         lblTitle = new JLabel(title);
         cbb = new JComboBox<String>(obj);
-        cbb.setSelectedIndex(-1);
+
+        this.add(lblTitle);
+        this.add(cbb);
+    }
+
+    public SelectForm(String title) {
+        this.setLayout(new GridLayout(2, 1));
+        this.setBackground(Color.white);
+        this.setBorder(new EmptyBorder(0, 10, 5, 10));
+
+        lblTitle = new JLabel(title);
 
         this.add(lblTitle);
         this.add(cbb);

@@ -30,12 +30,7 @@ public class Main extends JFrame {
         this.setTitle("Hệ thống quản lý kho hàng ");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        if (user != null) {
-           menuTaskbar = new MenuTaskbar(this, user);
-        } else {
-            menuTaskbar = new MenuTaskbar(this);
-        }
-
+        menuTaskbar = new MenuTaskbar(this);
         menuTaskbar.setPreferredSize(new Dimension(250, 1400));
 
         this.add(menuTaskbar, BorderLayout.WEST);

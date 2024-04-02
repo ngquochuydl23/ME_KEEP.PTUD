@@ -40,4 +40,29 @@ public class Ga {
         return "Ga [maGa=" + maGa + ", tenGa=" + tenGa + ", vungMien=" + vungMien + "]";
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((maGa == null) ? 0 : maGa.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Ga other = (Ga) obj;
+        if (maGa == null) {
+            if (other.maGa != null)
+                return false;
+        } else if (!maGa.equals(other.maGa))
+            return false;
+        return true;
+    }
+
 }
