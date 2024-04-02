@@ -1,4 +1,4 @@
-import GUI.DangNhapForm;
+import ui.DangNhapForm;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;

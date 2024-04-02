@@ -1,24 +1,18 @@
 package entity;
 
-import java.util.Objects;
-
 public class Ga {
-
-
-    // ga-song-than
-    // Ga Sóng Thần
     private String maGa;
     private String tenGa;
-
     private String vungMien;
 
-    public  Ga() {
-
-    }
     public Ga(String maGa, String tenGa, String vungMien) {
         this.maGa = maGa;
         this.tenGa = tenGa;
         this.vungMien = vungMien;
+    }
+
+    public Ga(String maGa) {
+        this.maGa = maGa;
     }
 
     public String getMaGa() {
@@ -46,24 +40,33 @@ public class Ga {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Ga ga = (Ga) o;
-        return Objects.equals(maGa, ga.maGa);
+    public String toString() {
+        return "Ga [maGa=" + maGa + ", tenGa=" + tenGa + ", vungMien=" + vungMien + "]";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(maGa);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((maGa == null) ? 0 : maGa.hashCode());
+        return result;
     }
 
     @Override
-    public String toString() {
-        return "Ga{" +
-                "maGa='" + maGa + '\'' +
-                ", tenGa='" + tenGa + '\'' +
-                ", vungMien='" + vungMien + '\'' +
-                '}';
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Ga other = (Ga) obj;
+        if (maGa == null) {
+            if (other.maGa != null)
+                return false;
+        } else if (!maGa.equals(other.maGa))
+            return false;
+        return true;
     }
+
 }
