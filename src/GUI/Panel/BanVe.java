@@ -15,9 +15,15 @@ import GUI.Component.SelectForm;
 import GUI.Component.SpinnerForm;
 import GUI.Component.TableSorter;
 import GUI.Dialog.ChiTietPhieuDialog;
+import dao1.ChuyenDao;
 import dao1.GaDao;
 import dao1.KhachHangDao;
+import dao1.TauDao;
+import dao1.TuyenDao;
+import entity.Chuyen;
 import entity.Ga;
+import entity.Tau;
+import entity.Tuyen;
 import helper.JTableExporter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,20 +48,19 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import javax.swing.text.PlainDocument;
 
 public final class BanVe extends JPanel implements ActionListener, KeyListener, PropertyChangeListener, ItemListener {
 
     PanelBorderRadius main, functionBar, box;
     JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
-    JTable tablePhieuNhap;
-    JScrollPane scrollTablePhieuNhap;
+    JTable tableChuyenTau;
+    JScrollPane scrollTableChuyenTau;
     MainFunction mainFunction;
     IntegratedSearch search;
     DefaultTableModel tblModel;
     SelectForm cbxGaDi, cbxGaDen;
     JCheckBox checkBoxKhuHoi;
-    InputDate dateStart, dateEnd;
+    InputDate dateNgayDi, dateNgayVe;
     SpinnerForm soLuongHanhKhach;
 
     TaoPhieuNhap nhapKho;
@@ -64,7 +69,11 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
 
     ArrayList<PhieuNhapDTO> listPhieu;
     private GaDao gaDao = new GaDao();
+    private TuyenDao tuyenDao;
+    private ChuyenDao chuyenDao;
+    private TauDao tauDao;
     private java.util.List<Ga> gaList = gaDao.layHet();
+    private List<Chuyen> chuyenList;
     private String[] listTenGa;
 
     Color BackgroundColor = new Color(240, 247, 250);
@@ -72,10 +81,11 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     public BanVe(Main m) {
         this.m = m;
         // this.nv = nv;
+        this.tuyenDao = new TuyenDao();
+        this.chuyenDao = new ChuyenDao();
+        this.tauDao = new TauDao();
+
         initComponent();
-        listPhieu = new ArrayList<>();
-        listPhieu.add(new PhieuNhapDTO(1));
-        loadDataTalbe(listPhieu);
     }
 
     public void initPadding() {
@@ -105,27 +115,24 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         this.setLayout(new BorderLayout(0, 0));
         this.setOpaque(true);
 
-        tablePhieuNhap = new JTable();
-        scrollTablePhieuNhap = new JScrollPane();
+        tableChuyenTau = new JTable();
+        scrollTableChuyenTau = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[] { "STT", "Mã phiếu nhập", "Nhà cung cấp", "Nhân viên nhập", "Thời gian",
-                "Tổng tiền" };
+        String[] header = new String[] { "Mã chuyến", "Tuyến", "Tàu", "Thời gian khởi hành", "Thời gian đến dự kiến" };
         tblModel.setColumnIdentifiers(header);
-        tablePhieuNhap.setModel(tblModel);
-        tablePhieuNhap.setDefaultEditor(Object.class, null);
-        scrollTablePhieuNhap.setViewportView(tablePhieuNhap);
+        tableChuyenTau.setModel(tblModel);
+        tableChuyenTau.setDefaultEditor(Object.class, null);
+        scrollTableChuyenTau.setViewportView(tableChuyenTau);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        tablePhieuNhap.setDefaultRenderer(Object.class, centerRenderer);
-        tablePhieuNhap.setFocusable(false);
-        tablePhieuNhap.getColumnModel().getColumn(0).setPreferredWidth(10);
-        tablePhieuNhap.getColumnModel().getColumn(1).setPreferredWidth(10);
-        tablePhieuNhap.getColumnModel().getColumn(2).setPreferredWidth(200);
+        tableChuyenTau.setDefaultRenderer(Object.class, centerRenderer);
+        tableChuyenTau.setFocusable(false);
+        tableChuyenTau.getColumnModel().getColumn(0).setPreferredWidth(10);
+        tableChuyenTau.getColumnModel().getColumn(1).setPreferredWidth(10);
 
-        tablePhieuNhap.setAutoCreateRowSorter(true);
-        TableSorter.configureTableColumnSorter(tablePhieuNhap, 0, TableSorter.INTEGER_COMPARATOR);
-        TableSorter.configureTableColumnSorter(tablePhieuNhap, 1, TableSorter.INTEGER_COMPARATOR);
-        TableSorter.configureTableColumnSorter(tablePhieuNhap, 5, TableSorter.VND_CURRENCY_COMPARATOR);
+        tableChuyenTau.setAutoCreateRowSorter(true);
+        TableSorter.configureTableColumnSorter(tableChuyenTau, 0, TableSorter.INTEGER_COMPARATOR);
+        TableSorter.configureTableColumnSorter(tableChuyenTau, 4, TableSorter.DATE_COMPARATOR);
 
         this.setBackground(BackgroundColor);
         this.setLayout(new BorderLayout(0, 0));
@@ -171,24 +178,22 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
 
         // Handle
         listTenGa = loadDataGaVaoComboBox(this.gaList);
-        // listTenGa = Stream.concat(Stream.of(""),
-        // Arrays.stream(listTenGa)).toArray(String[]::new);
         // init
         cbxGaDi = new SelectForm("Ga đi", listTenGa);
         cbxGaDi.cbb.setEditable(true);
         cbxGaDen = new SelectForm("Ga đến", listTenGa);
         cbxGaDen.cbb.setEditable(true);
-        dateStart = new InputDate("Ngày đi");
+        dateNgayDi = new InputDate("Ngày đi");
         checkBoxKhuHoi = new JCheckBox("Khứ hồi");
-        dateEnd = new InputDate("Ngày về");
-        dateEnd.setVisible(false);
+        dateNgayVe = new InputDate("Ngày về");
+        dateNgayVe.setVisible(false);
         soLuongHanhKhach = new SpinnerForm("Số lượng hành khách");
 
         // add listener
         cbxGaDi.getCbb().addItemListener(this);
         cbxGaDen.getCbb().addItemListener(this);
-        dateStart.getDateChooser().addPropertyChangeListener(this);
-        dateEnd.getDateChooser().addPropertyChangeListener(this);
+        dateNgayDi.getDateChooser().addPropertyChangeListener(this);
+        dateNgayVe.getDateChooser().addPropertyChangeListener(this);
 
         cbxGaDi.getCbb().getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             @Override
@@ -211,32 +216,43 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
             boolean isKhuHoi = checkBoxKhuHoi.isSelected();
             isKhuHoi = !isKhuHoi;
 
-            dateEnd.setVisible(!isKhuHoi);
+            dateNgayVe.setVisible(!isKhuHoi);
         });
 
         box.add(cbxGaDi);
         box.add(cbxGaDen);
         Box box1 = Box.createHorizontalBox();
         box.add(soLuongHanhKhach);
-        box1.add(dateStart);
+        box1.add(dateNgayDi);
         box1.add(checkBoxKhuHoi);
         box.add(box1);
-        box.add(dateEnd);
+        box.add(dateNgayVe);
 
         main = new PanelBorderRadius();
         BoxLayout boxly = new BoxLayout(main, BoxLayout.Y_AXIS);
         main.setLayout(boxly);
         main.setBorder(new EmptyBorder(0, 0, 0, 0));
         contentCenter.add(main, BorderLayout.CENTER);
-        main.add(scrollTablePhieuNhap);
+        main.add(scrollTableChuyenTau);
     }
 
-    public void loadDataTalbe(ArrayList<PhieuNhapDTO> listphieunhap) {
+    public void loadDataTalbe() {
         tblModel.setRowCount(0);
-        int size = listphieunhap.size();
-        for (int i = 0; i < size; i++) {
-            tblModel.addRow(new Object[] {
-                    i + 1, (int) listphieunhap.get(i).getMaphieu(),
+        tableChuyenTau.repaint();
+        tableChuyenTau.revalidate();
+
+        this.chuyenList = this.timChuyen();
+        for (Chuyen chuyen : chuyenList) {
+            Tuyen tuyen = this.tuyenDao.layTheoMa(chuyen.getTuyen().getMaTuyen());
+            Ga gaDi = this.gaDao.layTheoMa(tuyen.getGaDi().getMaGa());
+            Ga gaDen = this.gaDao.layTheoMa(tuyen.getGaDen().getMaGa());
+            Tau tau = this.tauDao.layTheoMa(chuyen.getTau().getMaTau());
+            this.tblModel.addRow(new Object[] {
+                    chuyen.getMaChuyen(),
+                    gaDi.getTenGa() + "-" + gaDen.getTenGa(),
+                    tau.getTenTau(),
+                    chuyen.getThoiGianKhoiHanh(),
+                    chuyen.getThoiGianDen()
             });
         }
     }
@@ -283,7 +299,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     }
 
     public int getRowSelected() {
-        int index = tablePhieuNhap.getSelectedRow();
+        int index = tableChuyenTau.getSelectedRow();
         if (index == -1) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn phiếu nhập");
         }
@@ -291,20 +307,18 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     }
 
     public void Fillter() throws ParseException {
-        if (validateSelectDate()) {
-            int type = search.cbxChoose.getSelectedIndex();
-            // int mancc = cbxGaDi.getSelectedIndex() == 0 ? 0
-            // : nccBUS.getByIndex(cbxGaDi.getSelectedIndex() - 1).getMancc();
-            // int manv = cbxGaDen.getSelectedIndex() == 0 ? 0
-            // : nvBUS.getByIndex(cbxGaDen.getSelectedIndex() - 1).getManv();
-            String input = search.txtSearchForm.getText() != null ? search.txtSearchForm.getText() : "";
-            Date time_start = dateStart.getDate() != null ? dateStart.getDate() : new Date(0);
-            Date time_end = dateEnd.getDate() != null ? dateEnd.getDate() : new Date(System.currentTimeMillis());
-            // this.listPhieu = phieunhapBUS.fillerPhieuNhap(type, input, mancc, manv,
-            // time_start, time_end, min_price,
-            // max_price);
-            loadDataTalbe(listPhieu);
-        }
+        int type = search.cbxChoose.getSelectedIndex();
+        // int mancc = cbxGaDi.getSelectedIndex() == 0 ? 0
+        // : nccBUS.getByIndex(cbxGaDi.getSelectedIndex() - 1).getMancc();
+        // int manv = cbxGaDen.getSelectedIndex() == 0 ? 0
+        // : nvBUS.getByIndex(cbxGaDen.getSelectedIndex() - 1).getManv();
+        String input = search.txtSearchForm.getText() != null ? search.txtSearchForm.getText() : "";
+        Date ngayDi = dateNgayDi.getDate() != null ? dateNgayDi.getDate() : new Date(0);
+        Date ngayVe = dateNgayVe.getDate() != null ? dateNgayVe.getDate() : new Date(System.currentTimeMillis());
+        // this.listPhieu = phieunhapBUS.fillerPhieuNhap(type, input, mancc, manv,
+        // ngayDi, ngayVe, min_price,
+        // max_price);
+        // loadDataTalbe();
     }
 
     public void resetForm() {
@@ -313,44 +327,88 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         search.cbxChoose.setSelectedIndex(0);
         search.txtSearchForm.setText("");
         soLuongHanhKhach.setValue(0);
-        dateStart.getDateChooser().setCalendar(null);
-        dateEnd.getDateChooser().setCalendar(null);
+        dateNgayDi.getDateChooser().setCalendar(null);
+        dateNgayVe.getDateChooser().setCalendar(null);
         // this.listPhieu = phieunhapBUS.getAllList();
-        loadDataTalbe(listPhieu);
+        // loadDataTalbe();
     }
 
     public boolean validateSelectDate() throws ParseException {
-        Date time_start = dateStart.getDate();
-        Date time_end = dateEnd.getDate();
+        Date ngayDi = dateNgayDi.getDate();
+        Date ngayVe = dateNgayVe.getDate();
 
         Date current_date = new Date();
-        if (time_start != null && time_start.after(current_date)) {
-            JOptionPane.showMessageDialog(this, "Ngày bắt đầu không được lớn hơn ngày hiện tại", "Lỗi !",
+        if (ngayDi != null && ngayDi.before(current_date)) {
+            JOptionPane.showMessageDialog(this, "Ngày bắt đầu không được nhỏ hơn ngày hiện tại", "Lỗi !",
                     JOptionPane.ERROR_MESSAGE);
-            dateStart.getDateChooser().setCalendar(null);
+            dateNgayDi.getDateChooser().setCalendar(null);
             return false;
         }
-        if (time_end != null && time_end.after(current_date)) {
-            JOptionPane.showMessageDialog(this, "Ngày kết thúc không được lớn hơn ngày hiện tại", "Lỗi !",
+        if (ngayVe != null && ngayVe.before(ngayDi)) {
+            JOptionPane.showMessageDialog(this, "Ngày về không được nhỏ hơn ngày ngày đi", "Lỗi !",
                     JOptionPane.ERROR_MESSAGE);
-            dateEnd.getDateChooser().setCalendar(null);
+            dateNgayVe.getDateChooser().setCalendar(null);
             return false;
         }
-        if (time_start != null && time_end != null && time_start.after(time_end)) {
+        if (ngayDi != null && ngayVe != null && ngayDi.after(ngayVe)) {
             JOptionPane.showMessageDialog(this, "Ngày kết thúc phải lớn hơn ngày bắt đầu", "Lỗi !",
                     JOptionPane.ERROR_MESSAGE);
-            dateEnd.getDateChooser().setCalendar(null);
+            dateNgayVe.getDateChooser().setCalendar(null);
             return false;
         }
         return true;
     }
 
+    private boolean validation() {
+        if (this.cbxGaDi.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn ga đi");
+            return false;
+        }
+
+        if (this.cbxGaDen.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn ga đến");
+            return false;
+        }
+
+        if (this.dateNgayDi == null) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày đi");
+            return false;
+        }
+
+        return true;
+    }
+
+    private List<Chuyen> timChuyen() {
+        Tuyen tuyen = null;
+        List<Chuyen> chuyens = new ArrayList<>();
+        if (this.validation()) {
+            String maGaDi = this.cbxGaDi.getSelectedItem().toString();
+            String maGaDen = this.cbxGaDen.getSelectedItem().toString();
+
+            try {
+                Ga gaDi = this.gaDao.layTheoTen(maGaDi);
+                Ga gaDen = this.gaDao.layTheoTen(maGaDen);
+
+                tuyen = this.tuyenDao.timTuyen(gaDi.getMaGa(), gaDen.getMaGa());
+
+                if (tuyen == null) {
+                    JOptionPane.showMessageDialog(null, "Không tìm thấy tuyến");
+                }
+
+                chuyens = this.chuyenDao.timChuyenTheoTuyen(tuyen.getMaTuyen(), dateNgayDi.getDate());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return chuyens;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-        if (source == mainFunction.btn.get("create")) {
-            // nhapKho = new TaoPhieuNhap(nv, "create", m);
-            m.setPanel(nhapKho);
+        if (source == mainFunction.btn.get("find")) {
+            loadDataTalbe();
         } else if (source == mainFunction.btn.get("detail")) {
             int index = getRowSelected();
             if (index != -1) {
@@ -385,7 +443,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
             resetForm();
         } else if (source == mainFunction.btn.get("export")) {
             try {
-                JTableExporter.exportJTableToExcel(tablePhieuNhap);
+                JTableExporter.exportJTableToExcel(tableChuyenTau);
             } catch (IOException ex) {
                 Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
             }

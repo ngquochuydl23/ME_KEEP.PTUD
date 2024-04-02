@@ -6,7 +6,6 @@ import java.util.HashMap;
 import javax.swing.*;
 
 public final class MainFunction extends JToolBar {
-
     public ButtonToolBar btnAdd, btnDelete, btnEdit, btnDetail, btnNhapExcel, btnXuatExcel, btnHuyPhieu;
     public JSeparator separator1;
     public HashMap<String, ButtonToolBar> btn = new HashMap<>();

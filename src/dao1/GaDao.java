@@ -24,8 +24,23 @@ public class GaDao implements IDao<Ga, String> {
 
     @Override
     public Ga layTheoMa(String id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'layTheoMa'");
+        try {
+            String sql = "SELECT * FROM Ga WHERE maGa=?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, id);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                String maGa = rs.getString("MaGa");
+                String tenGa = rs.getString("TenGa");
+                String vungMien = rs.getString("VungMien");
+
+                return new Ga(maGa, tenGa, vungMien);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(ChuyenDao.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return null;
     }
 
     @Override
@@ -68,4 +83,23 @@ public class GaDao implements IDao<Ga, String> {
         throw new UnsupportedOperationException("Unimplemented method 'sua'");
     }
 
+    public Ga layTheoTen(String name) {
+        try {
+            String sql = "SELECT * FROM Ga WHERE TenGa=?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, name);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                String maGa = rs.getString("MaGa");
+                String tenGa = rs.getString("TenGa");
+                String vungMien = rs.getString("VungMien");
+
+                return new Ga(maGa, tenGa, vungMien);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(ChuyenDao.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return null;
+    }
 }

@@ -7,6 +7,7 @@ import entity.Tuyen;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +16,7 @@ public class ChuyenDao implements IDao<Chuyen, String> {
 
     private Connection con;
 
-    private ChuyenDao() {
+    public ChuyenDao() {
         con = DatabaseUtil.getConnection();
     }
 
@@ -120,9 +121,29 @@ public class ChuyenDao implements IDao<Chuyen, String> {
         }
     }
 
-    public List<Chuyen> timChuyenTheoTuyen() {
+    public List<Chuyen> timChuyenTheoTuyen(String idTuyen, Date ngayDi) {
         List<Chuyen> list = new ArrayList<>();
-        
+        try {
+            String sql = "SELECT * FROM Chuyen WHERE MaTuyen=? AND DATE(ThoiGianKhoiHanh)=?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, idTuyen);
+            pst.setDate(2, new java.sql.Date(ngayDi.getTime()));
+
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                String maChuyen = rs.getString("MaChuyen");
+
+                LocalDateTime thoiGianKhoiHanh = rs.getTimestamp("ThoiGianKhoiHanh").toLocalDateTime();
+                LocalDateTime thoiGianDen = rs.getTimestamp("ThoiGianDen").toLocalDateTime();
+
+                String maTuyen = rs.getString("MaTuyen");
+                String maTau = rs.getString("MaTau");
+                list.add(new Chuyen(maChuyen, thoiGianKhoiHanh, thoiGianDen, new Tuyen(maTuyen), new Tau(maTau)));
+            }
+        } catch (Exception e) {
+            Logger.getLogger(ChuyenDao.class.getName()).log(Level.SEVERE, null, e);
+        }
         return list;
     }
 }

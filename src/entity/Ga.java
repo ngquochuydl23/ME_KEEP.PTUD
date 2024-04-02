@@ -11,6 +11,10 @@ public class Ga {
         this.vungMien = vungMien;
     }
 
+    public Ga(String maGa) {
+        this.maGa = maGa;
+    }
+
     public String getMaGa() {
         return maGa;
     }
