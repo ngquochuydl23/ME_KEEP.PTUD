@@ -2,7 +2,6 @@ package dao1;
 
 
 import config.DatabaseUtil;
-import config.JDBCUtil;
 import entity.LoaiVe;
 
 import java.sql.*;

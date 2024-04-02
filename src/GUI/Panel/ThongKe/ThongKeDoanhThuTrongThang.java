@@ -1,6 +1,5 @@
 package GUI.Panel.ThongKe;
 
-import DTO.ThongKe.ThongKeTungNgayTrongThangDTO;
 import GUI.Component.PanelBorderRadius;
 import GUI.Component.TableSorter;
 import GUI.Component.Chart.BarChart.Chart;
@@ -28,10 +27,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author Tran Nhat Sinh
- */
+
 public final class ThongKeDoanhThuTrongThang extends JPanel{
 
     PanelBorderRadius pnlChart;
