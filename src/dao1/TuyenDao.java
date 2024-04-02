@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TuyenDao implements IDao<Tuyen, String>{
+public class TuyenDao implements IDao<Tuyen, String> {
     private Connection con;
 
     public TuyenDao() {
@@ -95,7 +95,7 @@ public class TuyenDao implements IDao<Tuyen, String>{
     public boolean sua(Tuyen entity) {
         try {
             String sql = "UPDATE `Tuyen` SET `diemDi`=?,`diemDen`=?,`thoiGianTaoTuyen`=? WHERE maTuyen=?";
-            PreparedStatement pst =  con.prepareStatement(sql);
+            PreparedStatement pst = con.prepareStatement(sql);
 
             pst.setString(1, entity.getDiemDi());
             pst.setString(2, entity.getDiemDen());
@@ -108,5 +108,28 @@ public class TuyenDao implements IDao<Tuyen, String>{
             Logger.getLogger(TuyenDao.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
+    }
+
+    public Tuyen timTuyen(String maGaDi, String maGaDen) {
+        Tuyen tuyen = null;
+        try {
+            String sql = "SELECT * FROM Tuyen WHERE maGaDi=? AND maGaDen=? ";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, maGaDi);
+            pst.setString(2, maGaDen);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                String maTuyen = rs.getString("maTuyen");
+                String diemDi = rs.getString("diemDi");
+                String diemDen = rs.getString("diemDen");
+                LocalDateTime thoiGianTaoTuyen = rs.getTimestamp("thoiGianTaoTuyen").toLocalDateTime();
+
+                return new Tuyen(maTuyen, diemDi, diemDen, thoiGianTaoTuyen);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(TuyenDao.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return tuyen;
     }
 }

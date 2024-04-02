@@ -41,16 +41,16 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class KhachHang extends JPanel implements ActionListener, ItemListener {
 
-    protected PanelBorderRadius main, functionBar;
-    protected JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
-    protected JTable tableKhachHang;
-    protected JScrollPane scrollTableKhachHang;
-    protected MainFunction mainFunction;
-    protected JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
-    protected IntegratedSearch search;
-    protected DefaultTableModel tblModel;
-    protected KhachHangDao khachHangDAO = new KhachHangDao();
-    protected List<entity.KhachHang> listkh = khachHangDAO.layHet();
+    private PanelBorderRadius main, functionBar;
+    private JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
+    private JTable tableKhachHang;
+    private JScrollPane scrollTableKhachHang;
+    private MainFunction mainFunction;
+    private JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
+    private IntegratedSearch search;
+    private DefaultTableModel tblModel;
+    private KhachHangDao khachHangDAO = new KhachHangDao();
+    private List<entity.KhachHang> listkh = khachHangDAO.layHet();
 
     Main m;
     Color BackgroundColor = new Color(240, 247, 250);

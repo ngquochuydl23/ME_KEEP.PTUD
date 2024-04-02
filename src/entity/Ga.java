@@ -35,4 +35,9 @@ public class Ga {
         this.vungMien = vungMien;
     }
 
+    @Override
+    public String toString() {
+        return "Ga [maGa=" + maGa + ", tenGa=" + tenGa + ", vungMien=" + vungMien + "]";
+    }
+
 }

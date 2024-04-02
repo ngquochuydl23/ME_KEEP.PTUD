@@ -18,6 +18,7 @@ public class ChuyenDao implements IDao<Chuyen, String> {
     private ChuyenDao() {
         con = DatabaseUtil.getConnection();
     }
+
     @Override
     public Chuyen layTheoMa(String id) {
         try {
@@ -35,7 +36,7 @@ public class ChuyenDao implements IDao<Chuyen, String> {
                 String maTuyen = rs.getString("maTuyen");
                 String maTau = rs.getString("maTau");
 
-                return new Chuyen(maChuyen, thoiGianKhoiHanh,thoiGianDen, new Tuyen(maTuyen), new Tau(maTau));
+                return new Chuyen(maChuyen, thoiGianKhoiHanh, thoiGianDen, new Tuyen(maTuyen), new Tau(maTau));
             }
         } catch (Exception e) {
             Logger.getLogger(ChuyenDao.class.getName()).log(Level.SEVERE, null, e);
@@ -60,7 +61,7 @@ public class ChuyenDao implements IDao<Chuyen, String> {
                 String maTuyen = rs.getString("maTuyen");
                 String maTau = rs.getString("maTau");
 
-                dsChuyen.add(new Chuyen(maChuyen, thoiGianKhoiHanh,thoiGianDen, new Tuyen(maTuyen), new Tau(maTau)));
+                dsChuyen.add(new Chuyen(maChuyen, thoiGianKhoiHanh, thoiGianDen, new Tuyen(maTuyen), new Tau(maTau)));
             }
         } catch (Exception e) {
             Logger.getLogger(ChuyenDao.class.getName()).log(Level.SEVERE, e.getMessage(), e);
@@ -103,7 +104,7 @@ public class ChuyenDao implements IDao<Chuyen, String> {
     public boolean sua(Chuyen entity) {
         try {
             String sql = "UPDATE `Quyen` SET `thoiGianKhoiHanh`=?, `thoiGianDen`=?, `maTuyen`=?, `maTau`=?  WHERE maChuyen=?";
-            PreparedStatement pst =  con.prepareStatement(sql);
+            PreparedStatement pst = con.prepareStatement(sql);
 
             pst.setTimestamp(1, Timestamp.valueOf(entity.getThoiGianKhoiHanh()));
             pst.setTimestamp(2, Timestamp.valueOf(entity.getThoiGianDen()));
@@ -117,5 +118,11 @@ public class ChuyenDao implements IDao<Chuyen, String> {
             Logger.getLogger(ChuyenDao.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
+    }
+
+    public List<Chuyen> timChuyenTheoTuyen() {
+        List<Chuyen> list = new ArrayList<>();
+        
+        return list;
     }
 }

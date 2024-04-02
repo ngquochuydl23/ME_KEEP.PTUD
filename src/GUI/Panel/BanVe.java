@@ -12,12 +12,17 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import GUI.Component.PanelBorderRadius;
 import GUI.Component.SelectForm;
+import GUI.Component.SpinnerForm;
 import GUI.Component.TableSorter;
 import GUI.Dialog.ChiTietPhieuDialog;
+import dao1.GaDao;
+import dao1.KhachHangDao;
 import entity.Ga;
 import helper.JTableExporter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
@@ -48,17 +53,19 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     MainFunction mainFunction;
     IntegratedSearch search;
     DefaultTableModel tblModel;
-    SelectForm cbxGaDi, cbxNhanVien;
+    SelectForm cbxGaDi, cbxGaDen;
     JCheckBox checkBoxKhuHoi;
     InputDate dateStart, dateEnd;
-    InputForm moneyMin, moneyMax;
+    SpinnerForm soLuongHanhKhach;
 
     TaoPhieuNhap nhapKho;
     Main m;
     entity.NhanVien nv;
 
     ArrayList<PhieuNhapDTO> listPhieu;
-    java.util.List<Ga> gaList;
+    private GaDao gaDao = new GaDao();
+    private java.util.List<Ga> gaList = gaDao.layHet();
+    private String[] listTenGa;
 
     Color BackgroundColor = new Color(240, 247, 250);
 
@@ -137,7 +144,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        String[] action = { "create", "detail", "cancel", "export" };
+        String[] action = { "find", "detail", "cancel", "export" };
         mainFunction = new MainFunction(m.user.getManhomquyen(), "nhaphang", action);
 
         // Add Event MouseListener
@@ -163,43 +170,40 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         contentCenter.add(box, BorderLayout.WEST);
 
         // Handle
-        String[] listTenGa = { "Sài Gòn", "Biên Hòa", "Thanh Hóa" };
-
+        listTenGa = loadDataGaVaoComboBox(this.gaList);
+        // listTenGa = Stream.concat(Stream.of(""),
+        // Arrays.stream(listTenGa)).toArray(String[]::new);
         // init
         cbxGaDi = new SelectForm("Ga đi", listTenGa);
         cbxGaDi.cbb.setEditable(true);
-        cbxNhanVien = new SelectForm("Ga đến", listTenGa);
-        cbxNhanVien.cbb.setEditable(true);
+        cbxGaDen = new SelectForm("Ga đến", listTenGa);
+        cbxGaDen.cbb.setEditable(true);
         dateStart = new InputDate("Ngày đi");
         checkBoxKhuHoi = new JCheckBox("Khứ hồi");
         dateEnd = new InputDate("Ngày về");
         dateEnd.setVisible(false);
-        moneyMin = new InputForm("Số lượng hành khách");
-        moneyMin.setEditable(false);
-
-        PlainDocument doc_min = (PlainDocument) moneyMin.getTxtForm().getDocument();
-        doc_min.setDocumentFilter(new NumericDocumentFilter());
+        soLuongHanhKhach = new SpinnerForm("Số lượng hành khách");
 
         // add listener
         cbxGaDi.getCbb().addItemListener(this);
-        cbxNhanVien.getCbb().addItemListener(this);
+        cbxGaDen.getCbb().addItemListener(this);
         dateStart.getDateChooser().addPropertyChangeListener(this);
         dateEnd.getDateChooser().addPropertyChangeListener(this);
-        moneyMin.getTxtForm().addKeyListener(this);
 
-        cbxGaDi.addKeyListener(new KeyAdapter() {
+        cbxGaDi.getCbb().getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                String text = cbxGaDi.getCbb().getEditor().getItem().toString();
-                gaList = searchGa(text);
-
+                searchGa(cbxGaDi);
+                cbxGaDi.getCbb().showPopup();
             }
+
         });
 
-        moneyMin.getTxtForm().addMouseListener(new MouseAdapter() {
+        cbxGaDen.getCbb().getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                System.out.println("TextField được click");
+            public void keyReleased(KeyEvent e) {
+                searchGa(cbxGaDen);
+                cbxGaDen.getCbb().showPopup();
             }
         });
 
@@ -211,9 +215,9 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         });
 
         box.add(cbxGaDi);
-        box.add(cbxNhanVien);
+        box.add(cbxGaDen);
         Box box1 = Box.createHorizontalBox();
-        box.add(moneyMin);
+        box.add(soLuongHanhKhach);
         box1.add(dateStart);
         box1.add(checkBoxKhuHoi);
         box.add(box1);
@@ -237,7 +241,18 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         }
     }
 
-    private List<Ga> searchGa(String text) {
+    public String[] loadDataGaVaoComboBox(List<Ga> gaList) {
+        listTenGa = new String[gaList.size()];
+
+        for (int i = 0; i < gaList.size(); i++) {
+            Ga ga = gaList.get(i);
+            listTenGa[i] = ga.getTenGa();
+        }
+
+        return listTenGa;
+    }
+
+    private List<Ga> getListGaTheoTen(String text) {
         List<Ga> result = new ArrayList<>();
         text = text.toLowerCase();
 
@@ -246,8 +261,25 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
                 result.add(ga);
             }
         }
-
         return result;
+    }
+
+    private void searchGa(SelectForm selectForm) {
+        JTextField editorComponent = (JTextField) selectForm.getCbb().getEditor().getEditorComponent();
+        String previousText = editorComponent.getText();
+        String text = previousText.trim();
+
+        if (text.isEmpty()) {
+            gaList = gaDao.layHet();
+            listTenGa = loadDataGaVaoComboBox(gaList);
+            selectForm.setArr(listTenGa);
+        }
+
+        gaList = getListGaTheoTen(text);
+        listTenGa = loadDataGaVaoComboBox(gaList);
+        selectForm.setArr(listTenGa);
+
+        editorComponent.setText(previousText);
     }
 
     public int getRowSelected() {
@@ -263,12 +295,11 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
             int type = search.cbxChoose.getSelectedIndex();
             // int mancc = cbxGaDi.getSelectedIndex() == 0 ? 0
             // : nccBUS.getByIndex(cbxGaDi.getSelectedIndex() - 1).getMancc();
-            // int manv = cbxNhanVien.getSelectedIndex() == 0 ? 0
-            // : nvBUS.getByIndex(cbxNhanVien.getSelectedIndex() - 1).getManv();
+            // int manv = cbxGaDen.getSelectedIndex() == 0 ? 0
+            // : nvBUS.getByIndex(cbxGaDen.getSelectedIndex() - 1).getManv();
             String input = search.txtSearchForm.getText() != null ? search.txtSearchForm.getText() : "";
             Date time_start = dateStart.getDate() != null ? dateStart.getDate() : new Date(0);
             Date time_end = dateEnd.getDate() != null ? dateEnd.getDate() : new Date(System.currentTimeMillis());
-            String min_price = moneyMin.getText();
             // this.listPhieu = phieunhapBUS.fillerPhieuNhap(type, input, mancc, manv,
             // time_start, time_end, min_price,
             // max_price);
@@ -278,11 +309,10 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
 
     public void resetForm() {
         cbxGaDi.setSelectedIndex(0);
-        cbxNhanVien.setSelectedIndex(0);
+        cbxGaDen.setSelectedIndex(0);
         search.cbxChoose.setSelectedIndex(0);
         search.txtSearchForm.setText("");
-        moneyMin.setText("");
-        moneyMax.setText("");
+        soLuongHanhKhach.setValue(0);
         dateStart.getDateChooser().setCalendar(null);
         dateEnd.getDateChooser().setCalendar(null);
         // this.listPhieu = phieunhapBUS.getAllList();
