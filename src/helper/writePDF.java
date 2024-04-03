@@ -1,14 +1,5 @@
 package helper;
 
-import DAO.ChiTietPhieuNhapDAO;
-import DAO.ChiTietPhieuXuatDAO;
-import DAO.PhienBanSanPhamDAO;
-import DAO.PhieuNhapDAO;
-import DAO.SanPhamDAO;
-import DTO.ChiTietPhieuDTO;
-import DTO.PhienBanSanPhamDTO;
-import DTO.PhieuNhapDTO;
-import DTO.SanPhamDTO;
 import com.itextpdf.text.Chunk;
 import java.awt.Desktop;
 import java.awt.FileDialog;
@@ -310,16 +301,16 @@ public class writePDF {
             }
 
             //Truyen thong tin tung chi tiet vao table
-            for (ChiTietPhieuDTO ctp : ChiTietPhieuXuatDAO.getInstance().selectAll(maphieu + "")) {
-                SanPhamDTO sp = new SanPhamDAO().selectByPhienBan(ctp.getMaphienbansp() + "");
-                table.addCell(new PdfPCell(new Phrase(sp.getTensp(), fontNormal10)));
-                PhienBanSanPhamDTO pbsp = new PhienBanSanPhamDAO().selectById(ctp.getMaphienbansp());
-//                table.addCell(new PdfPCell(new Phrase(romBus.getKichThuocById(pbsp.getRom()) + "GB - "
-//                        + ramBus.getKichThuocById(pbsp.getRam()) + "GB - " + mausacBus.getTenMau(pbsp.getMausac()), fontNormal10)));
-//                table.addCell(new PdfPCell(new Phrase(formatter.format(ctp.getDongia()) + "đ", fontNormal10)));
-                table.addCell(new PdfPCell(new Phrase(String.valueOf(ctp.getSoluong()), fontNormal10)));
-                table.addCell(new PdfPCell(new Phrase(formatter.format(ctp.getSoluong() * ctp.getDongia()) + "đ", fontNormal10)));
-            }
+//            for (ChiTietPhieuDTO ctp : ChiTietPhieuXuatDAO.getInstance().selectAll(maphieu + "")) {
+//                SanPhamDTO sp = new SanPhamDAO().selectByPhienBan(ctp.getMaphienbansp() + "");
+//                table.addCell(new PdfPCell(new Phrase(sp.getTensp(), fontNormal10)));
+//                PhienBanSanPhamDTO pbsp = new PhienBanSanPhamDAO().selectById(ctp.getMaphienbansp());
+////                table.addCell(new PdfPCell(new Phrase(romBus.getKichThuocById(pbsp.getRom()) + "GB - "
+////                        + ramBus.getKichThuocById(pbsp.getRam()) + "GB - " + mausacBus.getTenMau(pbsp.getMausac()), fontNormal10)));
+////                table.addCell(new PdfPCell(new Phrase(formatter.format(ctp.getDongia()) + "đ", fontNormal10)));
+//                table.addCell(new PdfPCell(new Phrase(String.valueOf(ctp.getSoluong()), fontNormal10)));
+//                table.addCell(new PdfPCell(new Phrase(formatter.format(ctp.getSoluong() * ctp.getDongia()) + "đ", fontNormal10)));
+//            }
 
             document.add(table);
             document.add(Chunk.NEWLINE);

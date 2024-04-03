@@ -4,10 +4,7 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 
-/**
- *
- * @author Tran Nhat Sinh
- */
+
 public class Formater {
 
     public static String FormatVND(double vnd) {
