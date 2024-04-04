@@ -1,20 +1,19 @@
 package ui.panel;
 
-import ui.component.InputDate;
-import ui.component.IntegratedSearch;
-import ui.component.MainFunction;
-
+import ui.Main;
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import ui.component.PanelBorderRadius;
-import ui.component.SelectForm;
-import ui.component.SpinnerForm;
-import ui.component.TableSorter;
-import dao.*;
-import entity.*;
+import ui.component.*;
+import dao.ChuyenDao;
+import dao.GaDao;
+import dao.TauDao;
+import dao.TuyenDao;
+import entity.Chuyen;
+import entity.Ga;
+import entity.Tau;
+import entity.Tuyen;
 import helper.JTableExporter;
-
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -48,6 +47,9 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     InputDate dateNgayDi, dateNgayVe;
     SpinnerForm soLuongHanhKhach;
 
+    TaoPhieuNhap nhapKho;
+    Main m;
+    entity.NhanVien nv;
 
     private GaDao gaDao = new GaDao();
     private TuyenDao tuyenDao;
@@ -59,7 +61,9 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
 
     Color BackgroundColor = new Color(240, 247, 250);
 
-    public BanVe() {
+    public BanVe(Main m) {
+        this.m = m;
+        // this.nv = nv;
         this.tuyenDao = new TuyenDao();
         this.chuyenDao = new ChuyenDao();
         this.tauDao = new TauDao();
@@ -215,7 +219,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         main.add(scrollTableChuyenTau);
     }
 
-    public void loadDataTable() {
+    public void loadDataTalbe() {
         tblModel.setRowCount(0);
         tableChuyenTau.repaint();
         tableChuyenTau.revalidate();
@@ -277,7 +281,15 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         editorComponent.setText(previousText);
     }
 
-    public void filter() throws ParseException {
+    public int getRowSelected() {
+        int index = tableChuyenTau.getSelectedRow();
+        if (index == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn phiếu nhập");
+        }
+        return index;
+    }
+
+    public void Fillter() throws ParseException {
         int type = search.cbxChoose.getSelectedIndex();
         // int mancc = cbxGaDi.getSelectedIndex() == 0 ? 0
         // : nccBUS.getByIndex(cbxGaDi.getSelectedIndex() - 1).getMancc();
@@ -286,8 +298,10 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         String input = search.txtSearchForm.getText() != null ? search.txtSearchForm.getText() : "";
         Date ngayDi = dateNgayDi.getDate() != null ? dateNgayDi.getDate() : new Date(0);
         Date ngayVe = dateNgayVe.getDate() != null ? dateNgayVe.getDate() : new Date(System.currentTimeMillis());
-
-        loadDataTable();
+        // this.listPhieu = phieunhapBUS.fillerPhieuNhap(type, input, mancc, manv,
+        // ngayDi, ngayVe, min_price,
+        // max_price);
+        // loadDataTalbe();
     }
 
     public void resetForm() {
@@ -298,7 +312,8 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         soLuongHanhKhach.setValue(0);
         dateNgayDi.getDateChooser().setCalendar(null);
         dateNgayVe.getDateChooser().setCalendar(null);
-        loadDataTable();
+        // this.listPhieu = phieunhapBUS.getAllList();
+        // loadDataTalbe();
     }
 
     public boolean validateSelectDate() throws ParseException {
@@ -328,26 +343,22 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     }
 
     private boolean validation() {
-       try {
-           if (this.cbxGaDi.getSelectedItem() == null) {
-               JOptionPane.showMessageDialog(null, "Vui lòng chọn ga đi");
-               return false;
-           }
+        if (this.cbxGaDi.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn ga đi");
+            return false;
+        }
 
-           if (this.cbxGaDen.getSelectedItem() == null) {
-               JOptionPane.showMessageDialog(null, "Vui lòng chọn ga đến");
-               return false;
-           }
+        if (this.cbxGaDen.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn ga đến");
+            return false;
+        }
 
-           if (this.dateNgayDi == null) {
-               JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày đi");
-               return false;
-           }
-           return validateSelectDate();
-       } catch (Exception e) {
-           e.printStackTrace();
-           return false;
-       }
+        if (this.dateNgayDi == null) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày đi");
+            return false;
+        }
+
+        return true;
     }
 
     private List<Chuyen> timChuyen() {
@@ -379,63 +390,82 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-        if (source.equals(mainFunction.btn.get("find"))) {
-            loadDataTable();
-        }
-
-        if (source.equals(mainFunction.btn.get("detail"))) {
-
-        }
-
-        if (source.equals(mainFunction.btn.get("cancel"))) {
-
-        }
-
-        if (source.equals(search.btnReset)) {
+        if (source == mainFunction.btn.get("find")) {
+            loadDataTalbe();
+        } else if (source == mainFunction.btn.get("detail")) {
+            int index = getRowSelected();
+            if (index != -1) {
+                // nhapKho = new TaoPhieuNhap(nv, "view", listPhieu.get(index), m);
+                // m.setPanel(nhapKho);
+            }
+        } else if (source == mainFunction.btn.get("cancel")) {
+            int index = getRowSelected();
+            if (index != -1) {
+                int input = JOptionPane.showConfirmDialog(null,
+                        "Bạn có chắc chắn muốn huỷ phiếu ?\nThao tác này không thể hoàn tác nên hãy suy nghĩ kĩ !",
+                        "Huỷ phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                if (input == 0) {
+                    // if (!phieunhapBUS.checkCancelPn(pn.getMaphieu())) {
+                    // JOptionPane.showMessageDialog(null,
+                    // "Sản phẩm trong phiếu này đã được xuất đi không thể hủy phiếu này!");
+                    // } else {
+                    // int c = phieunhapBUS.cancelPhieuNhap(pn.getMaphieu());
+                    // if (c == 0) {
+                    // JOptionPane.showMessageDialog(null, "Hủy phiếu không thành công!");
+                    // } else {
+                    // JOptionPane.showMessageDialog(null, "Hủy phiếu thành công!");
+                    // loadDataTalbe(phieunhapBUS.getAll());
+                    // }
+                    // }
+                }
+            }
+        } else if (source == search.btnReset) {
             resetForm();
-        }
-
-        if (source.equals(mainFunction.btn.get("export"))) {
+        } else if (source == mainFunction.btn.get("export")) {
             try {
                 JTableExporter.exportJTableToExcel(tableChuyenTau);
             } catch (IOException ex) {
-                Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Chuyen.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
+
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         try {
-            filter();
+            Fillter();
         } catch (ParseException ex) {
-            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Chuyen.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         try {
-            filter();
+            Fillter();
         } catch (ParseException ex) {
-            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Chuyen.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
     public void itemStateChanged(ItemEvent e) {
         try {
-            filter();
+            Fillter();
         } catch (ParseException ex) {
-            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Chuyen.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
