@@ -1,7 +1,5 @@
 package ui.dialog;
 
-import DTO.ChiTietSanPhamDTO;
-import DTO.SanPhamDTO;
 import ui.component.HeaderTitle;
 import ui.component.InputForm;
 import ui.component.SelectForm;
@@ -37,7 +35,7 @@ public class ChiTietSanPhamDialog extends JDialog implements KeyListener, ItemLi
     HeaderTitle titlePage;
     JPanel pnmain, pnmain_top, pnmain_bottom, pnmain_top_left, pnmain_top_right;
     SelectForm cbxPhienBan, cbxTinhTrang;
-    InputForm txtSearch,txtSoluong;
+    InputForm txtSearch, txtSoluong;
     DefaultTableModel tblModel;
     JTable table;
     JScrollPane scrollTable;
@@ -61,18 +59,18 @@ public class ChiTietSanPhamDialog extends JDialog implements KeyListener, ItemLi
 
         pnmain_top = new JPanel(new BorderLayout());
         pnmain_top_left = new JPanel(new GridLayout(1, 3));
-        String[] arrPb = {"Tất cả"};
+        String[] arrPb = { "Tất cả" };
         cbxPhienBan = new SelectForm("Phiên bản", arrPb);
         cbxPhienBan.cbb.addItemListener(this);
         cbxPhienBan.setArr(getCauHinhPhienBan(spdto.getMasp()));
 
-        String[] arrTinhTrang = {"Tất cả", "Đã bán", "Tồn kho"};
+        String[] arrTinhTrang = { "Tất cả", "Đã bán", "Tồn kho" };
         cbxTinhTrang = new SelectForm("Tình trạng", arrTinhTrang);
         cbxTinhTrang.cbb.addItemListener(this);
-        
+
         txtSoluong = new InputForm("Số lượng");
         txtSoluong.setEditable(false);
-        
+
         pnmain_top_left.add(cbxPhienBan);
         pnmain_top_left.add(cbxTinhTrang);
         pnmain_top_left.add(txtSoluong);
@@ -91,7 +89,7 @@ public class ChiTietSanPhamDialog extends JDialog implements KeyListener, ItemLi
         table = new JTable();
         scrollTable = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"Imei", "Mã phiếu nhập", "Mã phiếu xuất", "Tình trạng"};
+        String[] header = new String[] { "Imei", "Mã phiếu nhập", "Mã phiếu xuất", "Tình trạng" };
         tblModel.setColumnIdentifiers(header);
         table.setModel(tblModel);
         scrollTable.setViewportView(table);
@@ -115,11 +113,13 @@ public class ChiTietSanPhamDialog extends JDialog implements KeyListener, ItemLi
     public void loadDataTable(ArrayList<ChiTietSanPhamDTO> result) {
         tblModel.setRowCount(0);
         for (ChiTietSanPhamDTO ctsp : result) {
-            tblModel.addRow(new Object[]{
-                ctsp.getImei(), ctsp.getMaphieunhap(), ctsp.getMaphieuxuat() == 0 ? "Chưa xuất kho" : ctsp.getMaphieuxuat(), ctsp.getTinhtrang() == 1 ? "Tồn kho" : "Đã bán"
+            tblModel.addRow(new Object[] {
+                    ctsp.getImei(), ctsp.getMaphieunhap(),
+                    ctsp.getMaphieuxuat() == 0 ? "Chưa xuất kho" : ctsp.getMaphieuxuat(),
+                    ctsp.getTinhtrang() == 1 ? "Tồn kho" : "Đã bán"
             });
         }
-        this.txtSoluong.setText(result.size()+"");
+        this.txtSoluong.setText(result.size() + "");
     }
 
     public String[] getCauHinhPhienBan(int masp) {
@@ -129,9 +129,7 @@ public class ChiTietSanPhamDialog extends JDialog implements KeyListener, ItemLi
         return arr;
     }
 
-
-
-    public void Filter() throws ParseException{
+    public void Filter() throws ParseException {
 
     }
 
@@ -147,12 +145,16 @@ public class ChiTietSanPhamDialog extends JDialog implements KeyListener, ItemLi
 
     @Override
     public void keyTyped(KeyEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override

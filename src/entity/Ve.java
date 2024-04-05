@@ -7,8 +7,11 @@ public class Ve {
     private int choNgoi;
     private double giaVe;
     private String moTa;
+    /*
+     * 0: Chua dat
+     * 1: Da dat
+     */
     private int tinhTrangVe;
-
     private LoaiVe loaiVe;
     private Chuyen chuyen;
 
