@@ -143,10 +143,6 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
                 .addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-
-
-
-
                         layDuLieu();
                     }
                 });
