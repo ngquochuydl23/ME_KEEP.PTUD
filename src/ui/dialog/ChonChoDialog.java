@@ -12,13 +12,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class ChonChoDialog extends JDialog {
+public class ChonChoDialog extends JFrame {
     private Carriages selectedCarriage;
     private JComboBox<String> carriageTypeComboBox;
     private JPanel seatPanel;
 
+
+    public ChonChoDialog(Tau tau) {
+        initializeComponents();
+        setResizable(false);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        pack();
+        setLocationRelativeTo(null);
+    }
+
     public ChonChoDialog(Frame parent, Tau tau) {
-        super(parent, "Chọn Chỗ", true);
+
         initializeComponents();
         setResizable(false);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -45,7 +54,6 @@ public class ChonChoDialog extends JDialog {
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
-        // Panel chọn chỗ
         seatPanel = new JPanel(); // Panel chứa các chỗ ngồi
         seatPanel.setLayout(new GridLayout(0, 4)); // GridLayout với số hàng là 0 để tự động điều chỉnh số hàng
         selectedCarriage = Carriages.createFourSeaterCarriage(); // Mặc định là 4 giường nằm
