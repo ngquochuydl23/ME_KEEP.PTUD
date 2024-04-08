@@ -12,8 +12,7 @@ public class Ve {
      * 1: Da dat
      */
     private int tinhTrangVe;
-    private LoaiVe loaiVe;
-    private Chuyen chuyen;
+    private Khoang khoang;
 
     public Ve() {
     }
@@ -22,23 +21,15 @@ public class Ve {
         this.maVe = maVe;
     }
 
-    public Ve(String maVe, int choNgoi, double giaVe, String moTa, int tinhTrangVe, LoaiVe loaiVe,Chuyen chuyen) {
+    public Ve(String maVe, int choNgoi, double giaVe, String moTa, int tinhTrangVe, Khoang khoang) {
         this.maVe = maVe;
         this.choNgoi = choNgoi;
         this.giaVe = giaVe;
         this.moTa = moTa;
         this.tinhTrangVe = tinhTrangVe;
-        this.loaiVe = loaiVe;
-        this.chuyen = chuyen;
+        this.khoang = khoang;
     }
 
-    public Chuyen getChuyen() {
-        return chuyen;
-    }
-
-    public void setChuyen(Chuyen chuyen) {
-        this.chuyen = chuyen;
-    }
     public String getMaVe() {
         return maVe;
     }
@@ -79,14 +70,6 @@ public class Ve {
         this.tinhTrangVe = tinhTrangVe;
     }
 
-    public LoaiVe getLoaiVe() {
-        return loaiVe;
-    }
-
-    public void setLoaiVe(LoaiVe loaiVe) {
-        this.loaiVe = loaiVe;
-    }
-
     @Override
     public String toString() {
         return "Ve{" +
@@ -95,15 +78,16 @@ public class Ve {
                 ", giaVe=" + giaVe +
                 ", moTa='" + moTa + '\'' +
                 ", tinhTrangVe='" + tinhTrangVe + '\'' +
-                ", loaiVe=" + loaiVe +
-                ", chuyen=" + chuyen +
+                ", khoang=" + khoang +
                 '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Ve ve = (Ve) o;
         return Objects.equals(maVe, ve.maVe);
     }
@@ -111,5 +95,13 @@ public class Ve {
     @Override
     public int hashCode() {
         return Objects.hash(maVe);
+    }
+
+    public Khoang getKhoang() {
+        return khoang;
+    }
+
+    public void setKhoang(Khoang khoang) {
+        this.khoang = khoang;
     }
 }

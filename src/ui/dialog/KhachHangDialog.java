@@ -3,8 +3,9 @@ package ui.dialog;
 import ui.component.HeaderTitle;
 import ui.component.InputForm;
 import ui.component.ButtonCustom;
-import ui.panel.KhachHang;
+import ui.panel.KhachHangPanel;
 import dao.KhachHangDao;
+import entity.KhachHang;
 import ui.component.NumericDocumentFilter;
 import helper.Validation;
 import java.awt.*;
@@ -18,18 +19,22 @@ import javax.swing.text.PlainDocument;
 
 public class KhachHangDialog extends JDialog implements MouseListener {
 
-    KhachHang jpKH;
+    private KhachHangPanel jpKH;
+    private JFrame owner;
     private HeaderTitle titlePage;
     private JPanel pnlMain, pnlButtom;
-    private ButtonCustom btnThem, btnCapNhat, btnHuyBo;
+    private ButtonCustom btnThem, btnCapNhat, btnHuyBo, btnKhMoi, btnTim;
     private InputForm tenKH, sdtKH;
     private JTextField maKH;
     private KhachHangDao khachHangDao = new KhachHangDao();
-    entity.KhachHang kh;
+    private entity.KhachHang kh;
+    private static KhachHang khResult;
 
-    public KhachHangDialog(KhachHang jpKH, JFrame owner, String title, boolean modal, String type) {
+    public KhachHangDialog(KhachHangPanel jpKH, JFrame owner, String title, boolean modal, String type) {
         super(owner, title, modal);
         this.jpKH = jpKH;
+        // khResult = null;
+        this.owner = (JFrame) SwingUtilities.getWindowAncestor(jpKH);
         tenKH = new InputForm("Tên khách hàng");
         sdtKH = new InputForm("Số điện thoại");
         PlainDocument phonex = (PlainDocument) sdtKH.getTxtForm().getDocument();
@@ -37,7 +42,7 @@ public class KhachHangDialog extends JDialog implements MouseListener {
         initComponents(title, type);
     }
 
-    public KhachHangDialog(KhachHang jpKH, JFrame owner, String title, boolean modal, String type,
+    public KhachHangDialog(KhachHangPanel jpKH, JFrame owner, String title, boolean modal, String type,
             entity.KhachHang kh) {
         super(owner, title, modal);
         this.kh = kh;
@@ -58,8 +63,8 @@ public class KhachHangDialog extends JDialog implements MouseListener {
         pnlMain = new JPanel(new GridLayout(3, 1, 20, 0));
         pnlMain.setBackground(Color.white);
 
-        pnlMain.add(tenKH);
         pnlMain.add(sdtKH);
+        pnlMain.add(tenKH);
 
         pnlButtom = new JPanel(new FlowLayout());
         pnlButtom.setBorder(new EmptyBorder(10, 0, 10, 0));
@@ -67,11 +72,15 @@ public class KhachHangDialog extends JDialog implements MouseListener {
         btnThem = new ButtonCustom("Thêm khách hàng", "success", 14);
         btnCapNhat = new ButtonCustom("Lưu thông tin", "success", 14);
         btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
+        btnKhMoi = new ButtonCustom("Khách hàng mới", "success", 14);
+        btnTim = new ButtonCustom("Tìm", "excel", 14);
 
         // Add MouseListener btn
         btnThem.addMouseListener(this);
         btnCapNhat.addMouseListener(this);
         btnHuyBo.addMouseListener(this);
+        btnKhMoi.addMouseListener(this);
+        btnTim.addMouseListener(this);
 
         switch (type) {
             case "create":
@@ -83,6 +92,16 @@ public class KhachHangDialog extends JDialog implements MouseListener {
             case "view":
                 tenKH.setDisable();
                 sdtKH.setDisable();
+                break;
+            case "find":
+                tenKH.setDisable();
+                if (khResult != null) {
+                    setTenKH(khResult.getHoTen());
+                    setSdtKH(khResult.getSoDienThoai());
+                }
+
+                pnlButtom.add(btnTim);
+                pnlButtom.add(btnKhMoi);
                 break;
         }
         pnlButtom.add(btnHuyBo);
@@ -118,6 +137,14 @@ public class KhachHangDialog extends JDialog implements MouseListener {
         this.sdtKH.setText(id);
     }
 
+    public static KhachHang getKhResult() {
+        return khResult;
+    }
+
+    public static void setKhResult(KhachHang khResult) {
+        KhachHangDialog.khResult = khResult;
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         // throw new UnsupportedOperationException("Not supported yet."); // Generated
@@ -126,13 +153,13 @@ public class KhachHangDialog extends JDialog implements MouseListener {
     }
 
     boolean Validation() {
-        if (Validation.isEmpty(tenKH.getText())) {
-            JOptionPane.showMessageDialog(this, "Tên khách hàng không được rỗng", "Cảnh báo !",
-                    JOptionPane.WARNING_MESSAGE);
-            return false;
-        } else if (Validation.isEmpty(sdtKH.getText())
+        if (Validation.isEmpty(sdtKH.getText())
                 || !Validation.isNumber(sdtKH.getText()) && sdtKH.getText().length() != 10) {
             JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng và phải là 10 ký tự số", "Cảnh báo !",
+                    JOptionPane.WARNING_MESSAGE);
+            return false;
+        } else if (Validation.isEmpty(tenKH.getText())) {
+            JOptionPane.showMessageDialog(this, "Tên khách hàng không được rỗng", "Cảnh báo !",
                     JOptionPane.WARNING_MESSAGE);
             return false;
         }
@@ -145,6 +172,7 @@ public class KhachHangDialog extends JDialog implements MouseListener {
         if (e.getSource() == btnThem && Validation()) {
             entity.KhachHang khachHang = new entity.KhachHang(getTenKH(), getSdtKH(), LocalDateTime.now(), false);
             this.khachHangDao.them(khachHang);
+            setKhResult(this.khachHangDao.timTheoSDT(getSdtKH()));
             jpKH.loadDataTable();
             dispose();
         } else if (e.getSource() == btnHuyBo) {
@@ -156,6 +184,14 @@ public class KhachHangDialog extends JDialog implements MouseListener {
             this.khachHangDao.sua(this.kh);
             jpKH.loadDataTable();
             dispose();
+        } else if (e.getSource() == btnKhMoi) {
+            dispose();
+            new KhachHangDialog(jpKH, owner, "Thêm khách hàng", true, "create");
+        } else if (e.getSource() == btnTim & !this.sdtKH.getText().isEmpty()) {
+            setKhResult(this.khachHangDao.timTheoSDT(getSdtKH()));
+
+            if (khResult != null)
+                this.setTenKH(getKhResult().getHoTen());
         }
     }
 
