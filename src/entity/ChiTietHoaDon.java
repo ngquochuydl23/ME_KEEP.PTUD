@@ -3,34 +3,14 @@ package entity;
 import java.util.Objects;
 
 public class ChiTietHoaDon {
-
-    private int maChiTietHoaDon;
     private double donGia;
-    private int soLuongVe;
 
+    private Ve ve;
     private HoaDon hoaDon;
 
-    public ChiTietHoaDon() {
-
-    }
-
-    public ChiTietHoaDon(int maChiTietHoaDon) {
-        this.maChiTietHoaDon = maChiTietHoaDon;
-    }
-
-    public ChiTietHoaDon(int maChiTietHoaDon, double donGia, int soLuongVe, HoaDon hoaDon) {
-        this.maChiTietHoaDon = maChiTietHoaDon;
-        this.donGia = donGia;
-        this.soLuongVe = soLuongVe;
+    public ChiTietHoaDon(HoaDon hoaDon, Ve ve) {
         this.hoaDon = hoaDon;
-    }
-
-    public int getMaChiTietHoaDon() {
-        return maChiTietHoaDon;
-    }
-
-    public void setMaChiTietHoaDon(int maChiTietHoaDon) {
-        this.maChiTietHoaDon = maChiTietHoaDon;
+        this.ve = ve;
     }
 
     public double getDonGia() {
@@ -41,12 +21,12 @@ public class ChiTietHoaDon {
         this.donGia = donGia;
     }
 
-    public int getSoLuongVe() {
-        return soLuongVe;
+    public Ve getVe() {
+        return ve;
     }
 
-    public void setSoLuongVe(int soLuongVe) {
-        this.soLuongVe = soLuongVe;
+    public void setVe(Ve ve) {
+        this.ve = ve;
     }
 
     public HoaDon getHoaDon() {
@@ -58,25 +38,24 @@ public class ChiTietHoaDon {
     }
 
     @Override
-    public String toString() {
-        return "ChiTietHoaDon{" +
-                "maChiTietHoaDon=" + maChiTietHoaDon +
-                ", donGia=" + donGia +
-                ", soLuongVe=" + soLuongVe +
-                ", hoaDon=" + hoaDon +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChiTietHoaDon that = (ChiTietHoaDon) o;
-        return maChiTietHoaDon == that.maChiTietHoaDon;
+        return Double.compare(donGia, that.donGia) == 0 && Objects.equals(ve, that.ve) && Objects.equals(hoaDon, that.hoaDon);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(maChiTietHoaDon);
+        return Objects.hash(donGia, ve, hoaDon);
+    }
+
+    @Override
+    public String toString() {
+        return "ChiTietHoaDon{" +
+                "donGia=" + donGia +
+                ", ve=" + ve +
+                ", hoaDon=" + hoaDon +
+                '}';
     }
 }
