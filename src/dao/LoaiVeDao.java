@@ -2,7 +2,7 @@ package dao;
 
 
 import config.DatabaseUtil;
-import entity.LoaiVe;
+import entity.LoaiKhoang;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class LoaiVeDao implements IDao<LoaiVe, String> {
+public class LoaiVeDao implements IDao<LoaiKhoang, String> {
     private Connection con;
 
     public LoaiVeDao() {
@@ -18,7 +18,7 @@ public class LoaiVeDao implements IDao<LoaiVe, String> {
     }
 
     @Override
-    public LoaiVe layTheoMa(String id) {
+    public LoaiKhoang layTheoMa(String id) {
         try {
             String sql = "SELECT * FROM LoaiVe WHERE maLoaiVe=?";
             PreparedStatement pst = con.prepareStatement(sql);
@@ -30,7 +30,7 @@ public class LoaiVeDao implements IDao<LoaiVe, String> {
                 String tenLoaiVe = rs.getString("tenLoaiVe");
                 String loaiKhoang = rs.getString("loaiKhoang");
 
-                return new LoaiVe(maLoaiVe, tenLoaiVe, loaiKhoang);
+                return new LoaiKhoang(maLoaiVe, tenLoaiVe, loaiKhoang);
             }
         } catch (Exception e) {
             Logger.getLogger(LoaiVeDao.class.getName()).log(Level.SEVERE, null, e);
@@ -39,8 +39,8 @@ public class LoaiVeDao implements IDao<LoaiVe, String> {
     }
 
     @Override
-    public List<LoaiVe> layHet() {
-        List<LoaiVe> dsLoaiVe = new ArrayList<>();
+    public List<LoaiKhoang> layHet() {
+        List<LoaiKhoang> dsLoaiVe = new ArrayList<>();
         try {
             String sql = "SELECT * FROM LoaiVe";
             PreparedStatement statement = con.prepareStatement(sql);
@@ -51,7 +51,7 @@ public class LoaiVeDao implements IDao<LoaiVe, String> {
                 String tenLoaiVe = rs.getString("tenLoaiVe");
                 String loaiKhoang = rs.getString("loaiKhoang");
 
-                dsLoaiVe.add(new LoaiVe(maLoaiVe, tenLoaiVe, loaiKhoang));
+                dsLoaiVe.add(new LoaiKhoang(maLoaiVe, tenLoaiVe, loaiKhoang));
             }
         } catch (Exception e) {
             Logger.getLogger(LoaiVeDao.class.getName()).log(Level.SEVERE, e.getMessage(), e);
@@ -60,7 +60,7 @@ public class LoaiVeDao implements IDao<LoaiVe, String> {
     }
 
     @Override
-    public boolean them(LoaiVe entity) {
+    public boolean them(LoaiKhoang entity) {
         try {
             String sql = "INSERT INTO `LoaiVe`(`maLoaiVe`, `tenLoaiVe`, `loaiKhoang`) VALUES (?,?,?)";
             PreparedStatement statement = con.prepareStatement(sql);
@@ -89,7 +89,7 @@ public class LoaiVeDao implements IDao<LoaiVe, String> {
     }
 
     @Override
-    public boolean sua(LoaiVe entity) {
+    public boolean sua(LoaiKhoang entity) {
         try {
             String sql = "UPDATE `LoaiVe` SET `tenLoaiVe`=?,`loaiKhoang`=? WHERE maLoaiVe=?";
             PreparedStatement pst =  con.prepareStatement(sql);

@@ -2,7 +2,7 @@ package ui.panel;
 
 import ui.component.*;
 import entity.LichSuTraVe;
-import entity.LoaiVe;
+import entity.LoaiKhoang;
 import entity.Ve;
 import helper.JTableExporter;
 
@@ -308,7 +308,7 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
 
     private void layDanhSachLichSu() {
         danhSachLichSuTraVe = new ArrayList<>();
-        Ve ve = new Ve( "tphcm-quynhon",  20,  1000000,  null,  1,  new LoaiVe("giuong-nam-khoang-4"), null);
+        Ve ve = new Ve( "tphcm-quynhon",  20,  1000000,  null,  1,  new LoaiKhoang("giuong-nam-khoang-4"), null);
         entity.KhachHang kh = new entity.KhachHang(1, "Owen Shaw", "0868684961", LocalDateTime.now(), false);
         LichSuTraVe ls = new LichSuTraVe(1, LocalDateTime.of(2023, 03, 23, 12, 30, 50), "Khong co", kh, ve);
         danhSachLichSuTraVe.add(ls);

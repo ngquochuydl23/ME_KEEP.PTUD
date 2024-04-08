@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import ui.component.*;
+import ui.dialog.KhachHangDialog;
 import dao.ChuyenDao;
 import dao.GaDao;
 import dao.TauDao;
@@ -37,10 +38,11 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
 
     PanelBorderRadius main, functionBar, box;
     JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
+    private JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
     JTable tableChuyenTau;
     JScrollPane scrollTableChuyenTau;
-    MainFunction mainFunction;
-    IntegratedSearch search;
+    ChucNangChinh mainFunction;
+    // Integr atedSearch search;
     DefaultTableModel tblModel;
     SelectForm cbxGaDi, cbxGaDen;
     JCheckBox checkBoxKhuHoi;
@@ -134,8 +136,8 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        String[] action = { "find", "detail", "cancel", "export" };
-        mainFunction = new MainFunction("nhaphang", action);
+        String[] action = { "find", "find-customer", "chi-tiet", "huy-ve", "xuat-excel" };
+        mainFunction = new ChucNangChinh("nhaphang", action);
 
         // Add Event MouseListener
         for (String ac : action) {
@@ -144,12 +146,13 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
 
         functionBar.add(mainFunction);
 
-        String[] objToSearch = { "Tất cả", "Mã phiếu nhập", "Nhà cung cấp", "Nhân viên nhập" };
-        search = new IntegratedSearch(objToSearch);
-        search.cbxChoose.addItemListener(this);
-        search.txtSearchForm.addKeyListener(this);
-        search.btnReset.addActionListener(this);
-        functionBar.add(search);
+        // String[] objToSearch = { "Tất cả", "Mã phiếu nhập", "Nhà cung cấp", "Nhân
+        // viên nhập" };
+        // search = new IntegratedSearch(objToSearch);
+        // search.cbxChoose.addItemListener(this);
+        // search.txtSearchForm.addKeyListener(this);
+        // search.btnReset.addActionListener(this);
+        // functionBar.add(search);
 
         contentCenter.add(functionBar, BorderLayout.NORTH);
 
@@ -169,8 +172,10 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         dateNgayDi = new InputDate("Ngày đi");
         checkBoxKhuHoi = new JCheckBox("Khứ hồi");
         dateNgayVe = new InputDate("Ngày về");
-        dateNgayVe.setVisible(false);
+        dateNgayVe.getDateChooser().setEnabled(false);
         soLuongHanhKhach = new SpinnerForm("Số lượng hành khách");
+        soLuongHanhKhach.getSpinnerForm().setEnabled(false);
+        ;
 
         // add listener
         cbxGaDi.getCbb().addItemListener(this);
@@ -199,7 +204,7 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
             boolean isKhuHoi = checkBoxKhuHoi.isSelected();
             isKhuHoi = !isKhuHoi;
 
-            dateNgayVe.setVisible(!isKhuHoi);
+            dateNgayVe.getDateChooser().setEnabled(!isKhuHoi);
         });
 
         box.add(cbxGaDi);
@@ -290,12 +295,13 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     }
 
     public void Fillter() throws ParseException {
-        int type = search.cbxChoose.getSelectedIndex();
+        // int type = search.cbxChoose.getSelectedIndex();
         // int mancc = cbxGaDi.getSelectedIndex() == 0 ? 0
         // : nccBUS.getByIndex(cbxGaDi.getSelectedIndex() - 1).getMancc();
         // int manv = cbxGaDen.getSelectedIndex() == 0 ? 0
         // : nvBUS.getByIndex(cbxGaDen.getSelectedIndex() - 1).getManv();
-        String input = search.txtSearchForm.getText() != null ? search.txtSearchForm.getText() : "";
+        // String input = search.txtSearchForm.getText() != null ?
+        // search.txtSearchForm.getText() : "";
         Date ngayDi = dateNgayDi.getDate() != null ? dateNgayDi.getDate() : new Date(0);
         Date ngayVe = dateNgayVe.getDate() != null ? dateNgayVe.getDate() : new Date(System.currentTimeMillis());
         // this.listPhieu = phieunhapBUS.fillerPhieuNhap(type, input, mancc, manv,
@@ -307,8 +313,8 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
     public void resetForm() {
         cbxGaDi.setSelectedIndex(0);
         cbxGaDen.setSelectedIndex(0);
-        search.cbxChoose.setSelectedIndex(0);
-        search.txtSearchForm.setText("");
+        // search.cbxChoose.setSelectedIndex(0);
+        // search.txtSearchForm.setText("");
         soLuongHanhKhach.setValue(0);
         dateNgayDi.getDateChooser().setCalendar(null);
         dateNgayVe.getDateChooser().setCalendar(null);
@@ -376,9 +382,9 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
 
                 if (tuyen == null) {
                     JOptionPane.showMessageDialog(null, "Không tìm thấy tuyến");
+                } else {
+                    chuyens = this.chuyenDao.timChuyenTheoTuyen(tuyen.getMaTuyen(), dateNgayDi.getDate());
                 }
-
-                chuyens = this.chuyenDao.timChuyenTheoTuyen(tuyen.getMaTuyen(), dateNgayDi.getDate());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -392,12 +398,9 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
         Object source = e.getSource();
         if (source == mainFunction.btn.get("find")) {
             loadDataTalbe();
-        } else if (source == mainFunction.btn.get("detail")) {
-            int index = getRowSelected();
-            if (index != -1) {
-                // nhapKho = new TaoPhieuNhap(nv, "view", listPhieu.get(index), m);
-                // m.setPanel(nhapKho);
-            }
+        } else if (source == mainFunction.btn.get("find-customer")) {
+            new KhachHangDialog(new KhachHangPanel(m), owner, "Thêm khách hàng", true, "find");
+            System.out.println(KhachHangDialog.getKhResult().getMaKhachHang());
         } else if (source == mainFunction.btn.get("cancel")) {
             int index = getRowSelected();
             if (index != -1) {
@@ -419,9 +422,11 @@ public final class BanVe extends JPanel implements ActionListener, KeyListener, 
                     // }
                 }
             }
-        } else if (source == search.btnReset) {
-            resetForm();
-        } else if (source == mainFunction.btn.get("export")) {
+        }
+        // else if (source == search.btnReset) {
+        // resetForm();
+        // }
+        else if (source == mainFunction.btn.get("export")) {
             try {
                 JTableExporter.exportJTableToExcel(tableChuyenTau);
             } catch (IOException ex) {

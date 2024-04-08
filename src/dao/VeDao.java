@@ -2,7 +2,7 @@ package dao;
 
 import config.DatabaseUtil;
 import entity.Chuyen;
-import entity.LoaiVe;
+import entity.LoaiKhoang;
 import entity.Ve;
 import java.sql.*;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class VeDao implements IDao<Ve, String> {
                 String maLoaiVe = rs.getString("maLoaiVe");
                 String maChuyen = rs.getString("maChuyen");
 
-                return new Ve(maVe, choNgoi, giaVe, moTa, tinhTrangVe, new LoaiVe(maLoaiVe), new Chuyen(maChuyen));
+                return new Ve(maVe, choNgoi, giaVe, moTa, tinhTrangVe, new LoaiKhoang(maLoaiVe), new Chuyen(maChuyen));
             }
         } catch (Exception e) {
             Logger.getLogger(VeDao.class.getName()).log(Level.SEVERE, null, e);
@@ -60,7 +60,7 @@ public class VeDao implements IDao<Ve, String> {
                 String maLoaiVe = rs.getString("maLoaiVe");
                 String maChuyen = rs.getString("maChuyen");
 
-                dsVe.add(new Ve(maVe, choNgoi, giaVe, moTa, tinhTrangVe, new LoaiVe(maLoaiVe), new Chuyen(maChuyen)));
+                dsVe.add(new Ve(maVe, choNgoi, giaVe, moTa, tinhTrangVe, new LoaiKhoang(maLoaiVe), new Chuyen(maChuyen)));
             }
         } catch (Exception e) {
             Logger.getLogger(VeDao.class.getName()).log(Level.SEVERE, e.getMessage(), e);

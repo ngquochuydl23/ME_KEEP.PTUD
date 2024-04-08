@@ -35,7 +35,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class KhachHang extends JPanel implements ActionListener, ItemListener {
+public class KhachHangPanel extends JPanel implements ActionListener, ItemListener {
 
     private PanelBorderRadius main, functionBar;
     private JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
@@ -170,7 +170,7 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
 
     }
 
-    public KhachHang(Main m) {
+    public KhachHangPanel(Main m) {
         this.m = m;
         initComponent();
         tableKhachHang.setDefaultEditor(Object.class, null);
@@ -346,7 +346,7 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
             try {
                 JTableExporter.exportJTableToExcel(tableKhachHang);
             } catch (IOException ex) {
-                Logger.getLogger(KhachHang.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(KhachHangPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

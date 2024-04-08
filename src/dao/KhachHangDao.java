@@ -113,4 +113,26 @@ public class KhachHangDao implements IDao<KhachHang, Integer> {
             return false;
         }
     }
+
+    public KhachHang timTheoSDT(String sdt) {
+        try {
+            String sql = "SELECT * FROM KhachHang WHERE soDienThoai=?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, sdt);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                int maKhachHang = rs.getInt("maKhachHang");
+                String hoTen = rs.getString("hoTen");
+                String soDienThoai = rs.getString("soDienThoai");
+                LocalDateTime thoiGianDangKy = rs.getTimestamp("thoiGianDangKy").toLocalDateTime();
+                boolean laKhachHangThanThiet = rs.getBoolean("laKhachHangThanThiet");
+
+                return new KhachHang(maKhachHang, hoTen, soDienThoai, thoiGianDangKy, laKhachHangThanThiet);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(KhachHangDao.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return null;
+    }
 }
