@@ -71,9 +71,9 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         tenGaList = gaDao.layHetTenGa();
 
         cbxGaDi.setCbItems(tenGaList);
-        cbxGaDi.setSelectedItem(null);
         cbxGaDen.setCbItems(tenGaList);
-        cbxGaDen.setSelectedItem(null);
+
+        resetForm();
     }
 
     public void initPadding() {
@@ -258,6 +258,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
     }
 
     public void layDuLieu() {
+        resetForm();
         try {
             tblModel.setRowCount(0);
             tableChuyenTau.repaint();
@@ -312,15 +313,11 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
     }
 
     public void resetForm() {
-        cbxGaDi.setSelectedIndex(0);
-        cbxGaDen.setSelectedIndex(0);
-        // search.cbxChoose.setSelectedIndex(0);
-        // search.txtSearchForm.setText("");
+        cbxGaDi.setSelectedItem(null);
+        cbxGaDen.setSelectedItem(null);
         soLuongHanhKhach.setValue(0);
         dateNgayDi.getDateChooser().setCalendar(null);
         dateNgayVe.getDateChooser().setCalendar(null);
-        // this.listPhieu = phieunhapBUS.getAllList();
-        // loadDataTalbe();
     }
 
     public boolean validateSelectDate() {
@@ -349,7 +346,6 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
             }
             return true;
         } catch (ParseException e) {
-
             e.printStackTrace();
             return false;
         }
@@ -370,7 +366,6 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
             JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày đi");
             return false;
         }
-
         return true;
     }
 
