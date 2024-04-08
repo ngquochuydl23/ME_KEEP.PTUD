@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import ui.component.*;
+import ui.dialog.ChonChoDialog;
 import dao.ChuyenDao;
 import dao.GaDao;
 import dao.TauDao;
@@ -21,7 +22,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -35,7 +37,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public final class BanVe extends JPanel implements KeyListener, PropertyChangeListener, ItemListener {
+public final class BanVe extends JPanel implements PropertyChangeListener, ItemListener, MouseListener {
 
     private PanelBorderRadius main, functionBar, box;
     private JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
@@ -209,7 +211,7 @@ public final class BanVe extends JPanel implements KeyListener, PropertyChangeLi
         dateNgayDi = new InputDate("Ngày đi");
         checkBoxKhuHoi = new JCheckBox("Khứ hồi");
         dateNgayVe = new InputDate("Ngày về");
-        dateNgayVe.getDateChooser().setEnabled(false);
+        dateNgayVe.getDateChooser().setVisible(false);
         soLuongHanhKhach = new SpinnerForm("Số lượng hành khách");
         soLuongHanhKhach.getSpinnerForm().setEnabled(false);
 
@@ -239,7 +241,7 @@ public final class BanVe extends JPanel implements KeyListener, PropertyChangeLi
             boolean isKhuHoi = checkBoxKhuHoi.isSelected();
             isKhuHoi = !isKhuHoi;
 
-            dateNgayVe.getDateChooser().setEnabled(!isKhuHoi);
+            dateNgayVe.getDateChooser().setVisible(!isKhuHoi);
         });
 
 
@@ -322,22 +324,6 @@ public final class BanVe extends JPanel implements KeyListener, PropertyChangeLi
         return index;
     }
 
-    public void Fillter() throws ParseException {
-        // int type = search.cbxChoose.getSelectedIndex();
-        // int mancc = cbxGaDi.getSelectedIndex() == 0 ? 0
-        // : nccBUS.getByIndex(cbxGaDi.getSelectedIndex() - 1).getMancc();
-        // int manv = cbxGaDen.getSelectedIndex() == 0 ? 0
-        // : nvBUS.getByIndex(cbxGaDen.getSelectedIndex() - 1).getManv();
-        // String input = search.txtSearchForm.getText() != null ?
-        // search.txtSearchForm.getText() : "";
-        Date ngayDi = dateNgayDi.getDate() != null ? dateNgayDi.getDate() : new Date(0);
-        Date ngayVe = dateNgayVe.getDate() != null ? dateNgayVe.getDate() : new Date(System.currentTimeMillis());
-        // this.listPhieu = phieunhapBUS.fillerPhieuNhap(type, input, mancc, manv,
-        // ngayDi, ngayVe, min_price,
-        // max_price);
-        // loadDataTalbe();
-    }
-
     public void resetForm() {
         cbxGaDi.setSelectedIndex(0);
         cbxGaDen.setSelectedIndex(0);
@@ -396,38 +382,44 @@ public final class BanVe extends JPanel implements KeyListener, PropertyChangeLi
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        try {
-            Fillter();
-        } catch (ParseException ex) {
-            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        try {
-            Fillter();
-        } catch (ParseException ex) {
-            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     @Override
     public void itemStateChanged(ItemEvent e) {
-        try {
-            Fillter();
-        } catch (ParseException ex) {
-            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        int row = this.tableChuyenTau.getSelectedRow();
+        if (row != -1) { // Đảm bảo rằng có hàng được chọn
+            String tenTau = this.tableChuyenTau.getValueAt(row, 2).toString();
+            System.out.println(tenTau);
+            Tau tau = this.tauDao.layTheoTenTau(tenTau);
+            if (tau != null) { // Đảm bảo rằng tauDao trả về đối tượng tau hợp lệ
+              //  new ChonChoDialog(owner, tau); // Hiển thị dialog
+            } else {
+                System.out.println("Không thể tìm thấy thông tin về tàu " + tenTau);
+            }
+        } else {
+            System.out.println("Vui lòng chọn một hàng trong bảng chuyến tàu.");
         }
     }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+    }
+
 }

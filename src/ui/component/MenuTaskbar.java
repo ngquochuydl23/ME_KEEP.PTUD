@@ -12,7 +12,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import ui.panel.thongKe.ThongKe;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import entity.NhanVien;
 import singleton.NhanVienSuDungSingleton;
@@ -185,7 +184,7 @@ public class MenuTaskbar extends JPanel {
         listitem[8].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                main.setPanel(new ThongKe());
+                //main.setPanel(new ThongKe());
             }
         });
         listitem[9].addMouseListener(new MouseAdapter() {

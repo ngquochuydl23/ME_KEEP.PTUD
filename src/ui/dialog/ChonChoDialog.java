@@ -4,6 +4,9 @@ import ui.component.Carriages;
 import ui.component.Seat;
 
 import javax.swing.*;
+
+import entity.Tau;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,7 +17,7 @@ public class ChonChoDialog extends JDialog {
     private JComboBox<String> carriageTypeComboBox;
     private JPanel seatPanel;
 
-    public ChonChoDialog(Frame parent) {
+    public ChonChoDialog(Frame parent, Tau tau) {
         super(parent, "Chọn Chỗ", true);
         initializeComponents();
         setResizable(false);
@@ -29,7 +32,7 @@ public class ChonChoDialog extends JDialog {
         // Panel chọn loại khoang
         JPanel topPanel = new JPanel();
         JLabel label = new JLabel("Chọn loại khoang:");
-        String[] carriageTypes = {"4 giường nằm", "6 giường nằm", "Chỗ ngồi"};
+        String[] carriageTypes = { "4 giường nằm", "6 giường nằm", "Chỗ ngồi" };
         carriageTypeComboBox = new JComboBox<>(carriageTypes);
         carriageTypeComboBox.addActionListener(new ActionListener() {
             @Override
@@ -51,6 +54,10 @@ public class ChonChoDialog extends JDialog {
         mainPanel.add(seatPanel, BorderLayout.CENTER);
         mainPanel.setPreferredSize(new Dimension(1000, 800)); // Đặt kích thước ưu tiên cho panel chọn chỗ
         add(mainPanel);
+
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
+
     }
 
     // Cập nhật panel chọn chỗ dựa trên loại khoang đã chọn
@@ -93,7 +100,7 @@ public class ChonChoDialog extends JDialog {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         SwingUtilities.invokeLater(() -> {
-            ChonChoDialog dialog = new ChonChoDialog(frame);
+            ChonChoDialog dialog = new ChonChoDialog(frame, new Tau());
             dialog.setVisible(true);
         });
     }

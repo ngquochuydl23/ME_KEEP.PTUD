@@ -101,4 +101,23 @@ public class TauDao implements IDao<Tau, String>{
             return false;
         }
     }
+
+    public Tau layTheoTenTau(String ten) {
+        try {
+            String sql = "SELECT * FROM Tau WHERE tenTau=?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, ten);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                String maTau = rs.getString("maTau");
+                String tenTau = rs.getString("tenTau");
+
+                return new Tau(maTau, tenTau);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(TauDao.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return null;
+    }
 }
