@@ -6,6 +6,7 @@ package ui.component;
 
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -17,31 +18,37 @@ public class SelectForm extends JPanel {
     public JComboBox<String> cbb;
 
     public SelectForm(String title, String[] obj) {
-        this.setLayout(new GridLayout(2, 1));
-        this.setBackground(Color.white);
-        this.setBorder(new EmptyBorder(0, 10, 5, 10));
+        setLayout(new GridLayout(2, 1));
+        setBackground(Color.white);
+        setBorder(new EmptyBorder(0, 10, 5, 10));
 
         lblTitle = new JLabel(title);
         cbb = new JComboBox<String>(obj);
         cbb.setSelectedItem(null);
 
-        this.add(lblTitle);
-        this.add(cbb);
+        add(lblTitle);
+        add(cbb);
     }
 
     public SelectForm(String title) {
-        this.setLayout(new GridLayout(2, 1));
-        this.setBackground(Color.white);
-        this.setBorder(new EmptyBorder(0, 10, 5, 10));
+        setLayout(new GridLayout(2, 1));
+        setBackground(Color.white);
+        setBorder(new EmptyBorder(0, 10, 5, 10));
 
         lblTitle = new JLabel(title);
         cbb = new JComboBox<String>();
-        this.add(lblTitle);
-        this.add(cbb);
+        add(lblTitle);
+        add(cbb);
     }
 
     public void setArr(String[] obj) {
         this.cbb.setModel(new DefaultComboBoxModel<String>(obj));
+    }
+
+    public void setCbItems(List<String> items) {
+        String[] arrItems = new String[items.size()];
+        items.toArray(arrItems);
+        cbb.setModel(new DefaultComboBoxModel(arrItems));
     }
 
     public String getValue() {

@@ -5,6 +5,7 @@ import ui.DangNhapForm;
 import ui.dialog.TaiKhoanCuaToiPanel;
 import ui.Main;
 import ui.panel.*;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -19,17 +20,17 @@ import singleton.NhanVienSuDungSingleton;
 public class MenuTaskbar extends JPanel {
 
     String[][] getSt = {
-            { "Trang chủ", "home.svg", "trangchu" },
-            { "Hóa đơn", "product.svg", "sanpham" },
-            { "Khu vực kho", "area.svg", "khuvuckho" },
-            { "Lịch sử trả vé", "import.svg", "nhaphang" },
-            { "Phiếu xuất", "export.svg", "xuathang" },
-            { "Khách hàng", "customer.svg", "khachhang" },
-            { "Yêu cầu đổi vé", "supplier.svg", "nhacungcap" },
-            { "Nhân viên", "staff.svg", "nhanvien" },
-            { "Thống kê", "statistical.svg", "thongke" },
-            { "Đăng xuất", "log_out.svg", "dangxuat" },
-            { "Bán vé", "import.svg", "banve" }
+            {"Trang chủ", "home.svg", "trangchu"},
+            {"Hóa đơn", "product.svg", "sanpham"},
+            {"Khu vực kho", "area.svg", "khuvuckho"},
+            {"Lịch sử trả vé", "import.svg", "nhaphang"},
+            {"Phiếu xuất", "export.svg", "xuathang"},
+            {"Khách hàng", "customer.svg", "khachhang"},
+            {"Yêu cầu đổi vé", "supplier.svg", "nhacungcap"},
+            {"Nhân viên", "staff.svg", "nhanvien"},
+            {"Thống kê", "statistical.svg", "thongke"},
+            {"Đăng xuất", "log_out.svg", "dangxuat"},
+            {"Bán vé", "import.svg", "banve"}
     };
 
     Main main;
@@ -166,7 +167,7 @@ public class MenuTaskbar extends JPanel {
         listitem[5].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                main.setPanel(new KhachHangPanel(main));
+                main.setPanel(new KhachHangPanel());
             }
         });
         listitem[6].addMouseListener(new MouseAdapter() {
@@ -190,9 +191,11 @@ public class MenuTaskbar extends JPanel {
         listitem[9].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                if (JOptionPane.showConfirmDialog(null,
+                if (JOptionPane.showConfirmDialog(
+                        null,
                         "Bạn có chắc chắn muốn đăng xuất?", "Đăng xuất",
-                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE) == 0) {
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.INFORMATION_MESSAGE) == 0) {
                     NhanVienSuDungSingleton.setThongTinNhanVienHienTai(null);
                     main.dispose();
                     new DangNhapForm().setVisible(true);
@@ -203,10 +206,11 @@ public class MenuTaskbar extends JPanel {
 
             @Override
             public void mousePressed(MouseEvent evt) {
-                main.setPanel(new BanVe(main));
+                main.setPanel(new BanVe());
             }
         });
     }
+
     public void pnlMenuTaskbarMousePress(MouseEvent evt) {
 
         for (int i = 0; i < getSt.length; i++) {
@@ -231,11 +235,11 @@ public class MenuTaskbar extends JPanel {
 
         JLabel lblIcon = new JLabel();
         lblIcon.setPreferredSize(new Dimension(50, 70));
-        lblIcon.setIcon(new FlatSVGIcon(nhanVien.getGioitinh() == 1 ?"./icon/man_50px.svg":"./icon/women_50px.svg" ));
+        lblIcon.setIcon(new FlatSVGIcon(nhanVien.getGioitinh() == 1 ? "./icon/man_50px.svg" : "./icon/women_50px.svg"));
         lblIcon.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-               // MyAccount ma = new MyAccount(owner, MenuTaskbar.this, "Chỉnh sửa thông tin tài khoản", true);
+                // MyAccount ma = new MyAccount(owner, MenuTaskbar.this, "Chỉnh sửa thông tin tài khoản", true);
                 new TaiKhoanCuaToiPanel().setVisible(true);
             }
         });

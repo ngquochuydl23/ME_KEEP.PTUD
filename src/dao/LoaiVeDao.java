@@ -62,10 +62,10 @@ public class LoaiVeDao implements IDao<LoaiKhoang, String> {
     @Override
     public boolean them(LoaiKhoang entity) {
         try {
-            String sql = "INSERT INTO `LoaiVe`(`maLoaiVe`, `tenLoaiVe`, `loaiKhoang`) VALUES (?,?,?)";
+            String sql = "INSERT INTO `LoaiKhoang`(`maLoaiKhoang`, `tenLoaiKhoang`, `loaiKhoang`) VALUES (?,?,?)";
             PreparedStatement statement = con.prepareStatement(sql);
-            statement.setString(1, entity.getMaLoaiVe());
-            statement.setString(2, entity.getTenLoaiVe());
+            statement.setString(1, entity.getLoaiKhoang());
+            statement.setString(2, entity.getTenLoaiKhoang());
             statement.setString(3, entity.getLoaiKhoang());
 
             return statement.executeUpdate() > 0;
@@ -91,13 +91,13 @@ public class LoaiVeDao implements IDao<LoaiKhoang, String> {
     @Override
     public boolean sua(LoaiKhoang entity) {
         try {
-            String sql = "UPDATE `LoaiVe` SET `tenLoaiVe`=?,`loaiKhoang`=? WHERE maLoaiVe=?";
+            String sql = "UPDATE `LoaiKhoang` SET `tenLoaiKhoang`=?,`loaiKhoang`=? WHERE maLoaiKhoang=?";
             PreparedStatement pst =  con.prepareStatement(sql);
-            pst.setString(1, entity.getTenLoaiVe());
+            pst.setString(1, entity.getTenLoaiKhoang());
             pst.setString(2, entity.getLoaiKhoang());
 
             // set where
-            pst.setString(3, entity.getMaLoaiVe());
+            pst.setString(3, entity.getMaLoaiKhoang());
 
             return pst.executeUpdate() > 0;
         } catch (SQLException ex) {

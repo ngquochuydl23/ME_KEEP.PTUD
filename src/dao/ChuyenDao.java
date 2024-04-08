@@ -2,9 +2,11 @@ package dao;
 
 import config.DatabaseUtil;
 import entity.Chuyen;
+import entity.Ga;
 import entity.Tau;
 import entity.Tuyen;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -145,5 +147,60 @@ public class ChuyenDao implements IDao<Chuyen, String> {
             Logger.getLogger(ChuyenDao.class.getName()).log(Level.SEVERE, null, e);
         }
         return list;
+    }
+
+    public List<Chuyen> timChuyenTheoGa(String maGaDiParam, String maGaDenParam, LocalDate ngayDiParam) {
+        List<Chuyen> dsChuyen = new ArrayList<>();
+        try {
+            String sql =
+                    "SELECT * FROM Chuyen\n" +
+                            "LEFT JOIN Tuyen t ON t.MaTuyen = Chuyen.MaTuyen\n" +
+                            "LEFT JOIN Ga gaDi ON gaDi.MaGa = t.MaGaDi \n" +
+                            "LEFT JOIN Ga gaDen ON gaDen.MaGa = t.MaGaDen\n" +
+                            "LEFT JOIN Tau tau ON tau.MaTau  = Chuyen.MaTau\n" +
+                            "WHERE gaDi.TenGa =? AND gaDen.TenGa =? AND Chuyen.ThoiGianKhoiHanh = ?";
+
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, maGaDiParam);
+            pst.setString(2, maGaDenParam);
+            pst.setDate(3, java.sql.Date.valueOf(ngayDiParam));
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                // Ga Đi
+                String maGaDi = rs.getString("gaDi.MaGa");
+                String tenGaDi = rs.getString("gaDi.TenGa");
+                String vungMienGaDi = rs.getString("gaDi.VungMien");
+                Ga gaDi = new Ga(maGaDi, tenGaDi, vungMienGaDi);
+
+                // Ga Đến
+                String maGaDen = rs.getString("gaDen.MaGa");
+                String tenGaDen = rs.getString("gaDen.TenGa");
+                String vungMienGaDen = rs.getString("gaDen.VungMien");
+                Ga gaDen = new Ga(maGaDen, tenGaDen, vungMienGaDen);
+
+                // Tuyến
+                String maTuyen = rs.getString("t.MaTuyen");
+                LocalDateTime ngayTaoTuyen = rs.getTimestamp("t.NgayTaoTuyen").toLocalDateTime();
+                Tuyen tuyen = new Tuyen(maTuyen, gaDi, gaDen, ngayTaoTuyen);
+
+                // Chuyến
+                String maChuyen = rs.getString("Chuyen.MaChuyen");
+                LocalDateTime thoiGianKhoiHanh = rs.getTimestamp("Chuyen.ThoiGianKhoiHanh").toLocalDateTime();
+                LocalDateTime thoiGianDen = rs.getTimestamp("Chuyen.ThoiGianDen").toLocalDateTime();
+
+
+                // Tàu
+                String maTau = rs.getString("tau.MaTau");
+                String tenTau = rs.getString("tau.TenTau");
+                Tau tau = new Tau(maTau, tenTau);
+
+
+                dsChuyen.add(new Chuyen(maChuyen, thoiGianKhoiHanh, thoiGianDen, tuyen, tau));
+            }
+        } catch (Exception e) {
+            Logger.getLogger(ChuyenDao.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return dsChuyen;
     }
 }

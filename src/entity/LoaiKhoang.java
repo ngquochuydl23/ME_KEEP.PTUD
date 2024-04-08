@@ -8,6 +8,10 @@ public class LoaiKhoang {
     public LoaiKhoang() {
     }
 
+    public LoaiKhoang(String maLoaiKhoang) {
+        this.maLoaiKhoang = maLoaiKhoang;
+    }
+
     public LoaiKhoang(String maLoaiKhoang, String tenLoaiKhoang, String loaiKhoang) {
         this.maLoaiKhoang = maLoaiKhoang;
         this.tenLoaiKhoang = tenLoaiKhoang;

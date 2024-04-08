@@ -2,6 +2,7 @@ package dao;
 
 import config.DatabaseUtil;
 import entity.Khoang;
+import entity.LoaiKhoang;
 import entity.ToaTau;
 
 import java.sql.Connection;
@@ -33,8 +34,8 @@ public class KhoangDao implements IDao<Khoang, String> {
                 String maKhoang = rs.getString("maKhoang");
                 String tenKhoang = rs.getString("tenKhoang");
                 String maToaTau = rs.getString("maToaTau");
-
-                return new Khoang(maKhoang, tenKhoang, new ToaTau(maToaTau));
+                String maLoaiKhoang = rs.getString("maLoaiKhoang");
+                return new Khoang(maKhoang, tenKhoang, new LoaiKhoang(maLoaiKhoang),new ToaTau(maToaTau));
             }
         } catch (Exception e) {
             Logger.getLogger(KhoangDao.class.getName()).log(Level.SEVERE, null, e);
@@ -54,8 +55,8 @@ public class KhoangDao implements IDao<Khoang, String> {
                 String maKhoang = rs.getString("maKhoang");
                 String tenKhoang = rs.getString("tenKhoang");
                 String maToaTau = rs.getString("maToaTau");
-
-                dsKhoang.add(new Khoang(maKhoang, tenKhoang, new ToaTau(maToaTau)));
+                String maLoaiKhoang = rs.getString("maLoaiKhoang");
+                dsKhoang.add(new Khoang(maKhoang, tenKhoang, new LoaiKhoang(maLoaiKhoang),new ToaTau(maToaTau)));
             }
         } catch (Exception e) {
             Logger.getLogger(KhoangDao.class.getName()).log(Level.SEVERE, e.getMessage(), e);
