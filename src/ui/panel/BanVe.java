@@ -200,8 +200,8 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         cbxGaDi = new SelectForm("Ga đi");
         cbxGaDi.cbb.setEditable(true);
         cbxGaDen = new SelectForm("Ga đến");
-        cbxGaDi.setSelectedItem(null);
         cbxGaDen.cbb.setEditable(true);
+
         dateNgayDi = new InputDate("Ngày đi");
         checkBoxKhuHoi = new JCheckBox("Khứ hồi");
         dateNgayVe = new InputDate("Ngày về");

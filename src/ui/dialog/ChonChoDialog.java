@@ -2,11 +2,8 @@ package ui.dialog;
 
 import ui.component.Carriages;
 import ui.component.Seat;
-
 import javax.swing.*;
-
 import entity.Tau;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,23 +13,12 @@ public class ChonChoDialog extends JFrame {
     private Carriages selectedCarriage;
     private JComboBox<String> carriageTypeComboBox;
     private JPanel seatPanel;
-
-
     public ChonChoDialog(Tau tau) {
         initializeComponents();
         setResizable(false);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
-    }
-
-    public ChonChoDialog(Frame parent, Tau tau) {
-
-        initializeComponents();
-        setResizable(false);
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        pack();
-        setLocationRelativeTo(parent);
     }
 
     private void initializeComponents() {
@@ -102,14 +88,5 @@ public class ChonChoDialog extends JFrame {
                 seatPanel.add(new JLabel()); // Thêm một khoảng trống (JLabel không có văn bản) vào giữa các chỗ ngồi
             }
         }
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        SwingUtilities.invokeLater(() -> {
-            ChonChoDialog dialog = new ChonChoDialog(frame, new Tau());
-            dialog.setVisible(true);
-        });
     }
 }
