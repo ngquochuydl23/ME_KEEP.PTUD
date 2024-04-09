@@ -81,6 +81,32 @@ public class KhachHangDao implements IDao<KhachHang, Integer> {
         }
     }
 
+    public KhachHang themVoiKieuTraVe(KhachHang entity) {
+        try {
+            String sql = "INSERT INTO `KhachHang`(`hoTen`, `soDienThoai`, `thoiGianDangKy`, `laKhachHangThanThiet`) VALUES (?,?,?,?)";
+            PreparedStatement statement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            statement.setString(1, entity.getHoTen());
+            statement.setString(2, entity.getSoDienThoai());
+            statement.setTimestamp(3, Timestamp.valueOf(entity.getThoiGianDangKy()));
+            statement.setBoolean(4, false);
+
+
+            if (statement.executeUpdate() > 0) {
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        entity.setMaKhachHang(generatedKeys.getInt(1));
+                        return entity;
+                    }
+                }
+            }
+            return null;
+        } catch (SQLException ex) {
+            Logger.getLogger(KhachHangDao.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            return null;
+        }
+    }
+
     @Override
     public boolean xoa(Integer id) {
         try {

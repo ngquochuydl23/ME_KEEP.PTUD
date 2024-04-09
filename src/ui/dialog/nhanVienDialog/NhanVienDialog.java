@@ -26,7 +26,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.PlainDocument;
 
 
-public class NhanVienDialog extends JFrame {
+public class NhanVienDialog extends JDialog {
     private HeaderTitle titlePage;
     private ButtonCustom btnSubmit, btnExit;
     private InputForm hoTenInputForm;

@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class KhachHangDialog extends JFrame implements MouseListener, WindowListener {
+public class KhachHangDialog extends JDialog implements MouseListener, WindowListener {
 
 
     private HeaderTitle titlePage;
@@ -164,9 +164,10 @@ public class KhachHangDialog extends JFrame implements MouseListener, WindowList
                 return;
 
             if (khachHang == null) {
-                if (khachHangDao.them(layThongTinKhachHangTuField())) {
+                KhachHang result = khachHangDao.themVoiKieuTraVe(layThongTinKhachHangTuField());
+                if (result != null) {
                     if (taoKhachHangListener != null) {
-                        taoKhachHangListener.taoKhachHangThanhCong();
+                        taoKhachHangListener.taoKhachHangThanhCong(result);
                     }
                     Logger.getLogger(KhachHangDialog.class.getName()).log(Level.INFO, "Thêm khách hàng thành công!");
                     JOptionPane.showMessageDialog(this, "Thêm khách hàng thành công!");
@@ -176,7 +177,7 @@ public class KhachHangDialog extends JFrame implements MouseListener, WindowList
             } else {
                 if (khachHangDao.sua(layThongTinKhachHangTuField())) {
                     if (suaKhachHangListener != null) {
-                        suaKhachHangListener.suaKhachHangThanhCong();
+                        suaKhachHangListener.suaKhachHangThanhCong(layThongTinKhachHangTuField());
                     }
                     Logger.getLogger(KhachHangDialog.class.getName()).log(Level.INFO, "Cập nhật thông tin khách hàng thành công!");
                     JOptionPane.showMessageDialog(this, "Cập nhật thông tin khách hàng thành công!");
@@ -191,16 +192,6 @@ public class KhachHangDialog extends JFrame implements MouseListener, WindowList
             xoaDuLieu();
             dispose();
         }
-
-//        else if (e.getSource() == btnKhMoi) {
-//            dispose();
-//            new KhachHangDialog(jpKH, owner, "Thêm khách hàng", true, "create");
-//        } else if (e.getSource() == btnTim & !this.sdtKH.getText().isEmpty()) {
-//            setKhResult(this.khachHangDao.timTheoSDT(getSdtKH()));
-//
-//            if (khResult != null)
-//                this.setTenKH(getKhResult().getHoTen());
-//        }
     }
 
     @Override
@@ -237,8 +228,10 @@ public class KhachHangDialog extends JFrame implements MouseListener, WindowList
         this.suaKhachHangListener = suaKhachHangListener;
     }
     private KhachHang layThongTinKhachHangTuField() {
+        int maKhacHang = 0;
+        if (!maKhachHangTextField.getText().trim().isEmpty())
+            maKhacHang = Integer.valueOf(maKhachHangTextField.getText().trim());
 
-        int maKhacHang = Integer.valueOf(maKhachHangTextField.getText().trim());
         String tenKhachHang = tenKhachHangTextField.getText().trim();
         String soDienThoai = soDienThoaiTextField.getText().trim();
 
@@ -279,5 +272,11 @@ public class KhachHangDialog extends JFrame implements MouseListener, WindowList
         invalidate();
         validate();
         repaint();
+    }
+
+    public void taoTaiKhoanVoiSoDienThoai(String soDienThoai) {
+        soDienThoaiTextField.setText(soDienThoai);
+        tenKhachHangTextField.requestFocus();
+        tenKhachHangTextField.getTxtForm().requestFocus();
     }
 }

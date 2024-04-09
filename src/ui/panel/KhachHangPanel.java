@@ -69,13 +69,13 @@ public class KhachHangPanel extends JPanel implements ItemListener {
         khachHangDialog = new KhachHangDialog();
         khachHangDialog.setTaoKhachHangListener(new TaoKhachHangListener() {
             @Override
-            public void taoKhachHangThanhCong() {
+            public void taoKhachHangThanhCong(KhachHang khachHang) {
                 loadDataTable();
             }
         });
         khachHangDialog.setSuaKhachHangListener(new SuaKhachHangListener() {
             @Override
-            public void suaKhachHangThanhCong() {
+            public void suaKhachHangThanhCong(KhachHang khachHang) {
                 loadDataTable();
             }
         });

@@ -21,10 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-/**
- *
- * @author Tran Nhat Sinh
- */
+
 public class QuenMatKhau extends JDialog implements ActionListener {
 
     private JButton btnSendMail, btnConfirmOTP, btnChangePass;

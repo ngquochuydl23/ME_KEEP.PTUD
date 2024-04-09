@@ -4,17 +4,18 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import entity.*;
 import ui.component.*;
 import ui.dialog.ChonChoDialog;
 import dao.ChuyenDao;
 import dao.GaDao;
 import dao.TauDao;
 import dao.TuyenDao;
-import entity.Chuyen;
-import entity.Ga;
-import entity.Tau;
-import entity.Tuyen;
 import helper.JTableExporter;
+import ui.dialog.khachHangDialog.KhachHangDialog;
+import ui.dialog.khachHangDialog.TaoKhachHangListener;
+import ui.dialog.timKhachHangDialog.TimKhachHangDialog;
+import ui.dialog.timKhachHangDialog.TimKhachHangListener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -56,7 +57,8 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
     private List<String> tenGaList;
     private List<Chuyen> chuyenList;
     private ChonChoDialog chonChoDialog;
-
+    private TimKhachHangDialog timKhachHangDialog;
+    private KhachHangDialog khachHangDialog;
     Color BackgroundColor = new Color(240, 247, 250);
 
     public BanVe() {
@@ -134,6 +136,29 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         contentCenter.setLayout(new BorderLayout(10, 10));
         add(contentCenter, BorderLayout.CENTER);
 
+        timKhachHangDialog = new TimKhachHangDialog();
+        timKhachHangDialog
+                .setTimKhachHangListener(new TimKhachHangListener() {
+                    @Override
+                    public void timThayhachhang(KhachHang khachHang) {
+                        themKhachHangVaoHoaDon(khachHang);
+                    }
+
+                    @Override
+                    public void khongTimThayKhachHang(String soDienThoai) {
+                        khachHangDialog.taoTaiKhoanVoiSoDienThoai(soDienThoai);
+                        khachHangDialog.setVisible(true);
+                    }
+                });
+
+        khachHangDialog = new KhachHangDialog();
+        khachHangDialog.setTaoKhachHangListener(new TaoKhachHangListener() {
+            @Override
+            public void taoKhachHangThanhCong(KhachHang khachHang) {
+                themKhachHangVaoHoaDon(khachHang);
+            }
+        });
+
         functionBar = new PanelBorderRadius();
         functionBar.setPreferredSize(new Dimension(0, 100));
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
@@ -159,17 +184,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
                 .addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-//                        int index = getRowSelected();
-//                        if (index != -1) {
-//                            if (JOptionPane.showConfirmDialog(
-//                                    null,
-//                                    "Bạn có chắc chắn muốn huỷ phiếu ?\nThao tác này không thể hoàn tác nên hãy suy nghĩ kĩ !",
-//                                    "Huỷ phiếu",
-//                                    JOptionPane.OK_CANCEL_OPTION,
-//                                    JOptionPane.INFORMATION_MESSAGE) == 0) {
-//
-//                            }
-//                        }
+
                     }
                 });
 
@@ -420,4 +435,10 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
     public void mouseExited(MouseEvent e) {
     }
 
+    private void themKhachHangVaoHoaDon(KhachHang khachHang) {
+        //   timKhachHangDialog.setVisible(true);
+
+
+        System.out.println("Thêm khách hàng vào hóa đơn: " + khachHang);
+    }
 }
