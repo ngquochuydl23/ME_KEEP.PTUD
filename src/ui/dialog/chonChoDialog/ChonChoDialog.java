@@ -1,4 +1,4 @@
-package ui.dialog;
+package ui.dialog.chonChoDialog;
 
 import ui.component.Carriage;
 import ui.component.ButtonCustom;
@@ -17,9 +17,6 @@ import entity.ToaTau;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,10 +32,9 @@ public class ChonChoDialog extends JDialog {
     private LoaiKhoangDao loaiKhoangDao;
     private List<ToaTau> toaTaus;
     private LoaiKhoang loaiKhoang;
-    private static List<Integer> soChoNgoi;
+    private ChonChoNgoiListener chonChoNgoiListener;
 
-    public ChonChoDialog(Tau tau) {
-        this.tau = tau;
+    public ChonChoDialog() {
         toaDao = new ToaDao();
         loaiKhoangDao = new LoaiKhoangDao();
 
@@ -52,15 +48,24 @@ public class ChonChoDialog extends JDialog {
         setLocationRelativeTo(null);
     }
 
+    public void setTau(Tau tau) {
+        this.tau = tau;
+
+        toaTaus = toaDao.layToaTheoMaTau(this.tau.getMaTau());
+        loaiKhoang = loaiKhoangDao.layLoaiKhoangTheoMaToa(toaTaus.get(0).getMaToa());
+
+        doToaTauLenUI();
+        updateSeatPanel();
+    }
+
     private void initializeComponents() {
-        this.toaTaus = this.toaDao.layToaTheoMaTau(this.tau.getMaTau());
-        loaiKhoang = this.loaiKhoangDao.layLoaiKhoangTheoMaToa(this.toaTaus.get(0).getMaToa());
+
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         // Panel chọn loại toa và khoang
         this.btgToa = new ButtonGroup();
         topPanel = new JPanel();
-        doToaTauLenUI();
+        //doToaTauLenUI();
 
         JLabel cabinLabel = new JLabel("Chọn số khoang:");
         cabinNumberComboBox = new JComboBox<>();
@@ -73,7 +78,7 @@ public class ChonChoDialog extends JDialog {
 
         seatPanel = new JPanel();
         seatPanel.setLayout(new GridLayout(0, 4));
-        updateSeatPanel();
+        //updateSeatPanel();
 
         JScrollPane scrollPane = new JScrollPane(seatPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -86,9 +91,10 @@ public class ChonChoDialog extends JDialog {
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ChonChoDialog.soChoNgoi = layToanBoChoDangChon();
-                dispose();
-                new TimKhachHangDialog();
+                if (chonChoNgoiListener != null) {
+                    chonChoNgoiListener.chonChoNgoiThanhCong(layToanBoChoDangChon());
+                }
+                //dispose();
             }
         });
 
@@ -187,12 +193,13 @@ public class ChonChoDialog extends JDialog {
         return dsSoChoNgoi;
     }
 
-    public static List<Integer> getSoChoNgoi() {
-        return soChoNgoi;
+    public void setChonChoNgoiListener(ChonChoNgoiListener chonChoNgoiListener) {
+        this.chonChoNgoiListener = chonChoNgoiListener;
     }
 
-    public static void setSoChoNgoi(List<Integer> soChoNgoi) {
-        ChonChoDialog.soChoNgoi = soChoNgoi;
+    @Override
+    public void setVisible(boolean b) {
+        clearSeatSelection();
+        super.setVisible(b);
     }
-
 }

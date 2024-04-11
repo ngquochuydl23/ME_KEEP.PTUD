@@ -5,13 +5,15 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import entity.*;
+import singleton.NhanVienSuDungSingleton;
 import ui.component.*;
-import ui.dialog.ChonChoDialog;
+import ui.dialog.chonChoDialog.ChonChoDialog;
 import dao.ChuyenDao;
 import dao.GaDao;
 import dao.TauDao;
 import dao.TuyenDao;
 import helper.JTableExporter;
+import ui.dialog.chonChoDialog.ChonChoNgoiListener;
 import ui.dialog.khachHangDialog.KhachHangDialog;
 import ui.dialog.khachHangDialog.TaoKhachHangListener;
 import ui.dialog.timKhachHangDialog.TimKhachHangDialog;
@@ -29,6 +31,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -61,7 +64,16 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
     private KhachHangDialog khachHangDialog;
     Color BackgroundColor = new Color(240, 247, 250);
 
+
+
+
+
+    private List<Integer> dsChonChoNhoi;
+
+
+
     public BanVe() {
+        dsChonChoNhoi = new ArrayList<>();
         chuyenList = new ArrayList<>();
         tenGaList = new ArrayList<>();
         tuyenDao = new TuyenDao();
@@ -151,6 +163,17 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
                     }
                 });
 
+        chonChoDialog = new ChonChoDialog();
+        chonChoDialog.setChonChoNgoiListener(new ChonChoNgoiListener() {
+            @Override
+            public void chonChoNgoiThanhCong(List<Integer> dsChoNgoi) {
+                dsChonChoNhoi.clear();
+                dsChonChoNhoi.addAll(dsChoNgoi);
+                chonChoDialog.setVisible(false);
+                timKhachHangDialog.setVisible(true);
+            }
+        });
+
         khachHangDialog = new KhachHangDialog();
         khachHangDialog.setTaoKhachHangListener(new TaoKhachHangListener() {
             @Override
@@ -172,7 +195,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
                     @Override
                     public void actionPerformed(ActionEvent e) {
 
-                        if (!validation() ||  !validateSelectDate()``)
+                        if (!validation() ||  !validateSelectDate())
                             return;
 
                         layDuLieu();
@@ -357,9 +380,8 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
                     JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày đi", "Lỗi !", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
-
-                if (ngayDi != null && !ngayDi.after(new Date())) {
-                    JOptionPane.showMessageDialog(this, "Ngày đi không được nhỏ hơn ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+                if (ngayDi != null && !ngayDi.before(new Date())) {
+                    JOptionPane.showMessageDialog(this, "Ngày đi phải trước ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
                     dateNgayDi.getDateChooser().setCalendar(null);
                 }
                 return true;
@@ -421,7 +443,8 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
             return;
         }
 
-        new ChonChoDialog(tau).setVisible(true);
+        chonChoDialog.setTau(tau);
+        chonChoDialog.setVisible(true);
     }
 
     private Tau layTauDuocChon() {
@@ -457,9 +480,15 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
     }
 
     private void themKhachHangVaoHoaDon(KhachHang khachHang) {
-        //   timKhachHangDialog.setVisible(true);
-
-
+        System.out.println("Danh sách chọn chõ ngồi: " + dsChonChoNhoi);
         System.out.println("Thêm khách hàng vào hóa đơn: " + khachHang);
+        System.out.println("Nhân viên đang sử dụng: " + NhanVienSuDungSingleton.layThongTinNhanVienHienTai());
+
+        NhanVien nhanVien = NhanVienSuDungSingleton.layThongTinNhanVienHienTai();
+        KhuyenMai khuyenMai = null;
+        HoaDon hoaDon = new  HoaDon("maHoaDon", LocalDateTime.now(), "ghiChu", 0, 0, khachHang, nhanVien, khuyenMai);
+
+
+
     }
 }

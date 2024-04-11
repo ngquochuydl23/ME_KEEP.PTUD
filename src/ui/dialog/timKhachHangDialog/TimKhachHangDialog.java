@@ -73,6 +73,7 @@ public class TimKhachHangDialog extends JDialog implements ActionListener, Windo
 
     public void initComponents() {
         addWindowListener(this);
+        setVisible(false);
         setSize(new Dimension(500, 700));
         setLayout(new BorderLayout(0, 0));
 
@@ -126,7 +127,6 @@ public class TimKhachHangDialog extends JDialog implements ActionListener, Windo
 
         xoaDuLieu();
 
-        setVisible(true);
     }
 
     private void xoaDuLieu() {
@@ -196,7 +196,6 @@ public class TimKhachHangDialog extends JDialog implements ActionListener, Windo
             if (timKhachHangListener != null && khachHang != null)
                 timKhachHangListener.timThayhachhang(khachHang);
             dispose();
-            new HoaDonDialog();
         }
     }
 
