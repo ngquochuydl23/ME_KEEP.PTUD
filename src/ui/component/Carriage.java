@@ -69,6 +69,7 @@ public class Carriage extends JButton {
         Carriage carriage = new Carriage(toaTau);
         Cabin cabin = (Cabin) Cabin.createFiftySeaterCabin();
         carriage.addCabin(cabin);
+
         return carriage;
     }
 
@@ -80,7 +81,7 @@ public class Carriage extends JButton {
             for (int j = 0; j < 6; j++) {
                 seats.add(new Seat(j + 1)); // Tạo mới một đối tượng Seat cho mỗi ghế
             }
-            carriage.addCabin(new Cabin(seats));
+
         }
         return carriage;
     }
@@ -91,7 +92,7 @@ public class Carriage extends JButton {
         for (int i = 0; i < 8; i++) {
             List<Seat> seats = new ArrayList<>();
             for (int j = 0; j < 4; j++) {
-                seats.add(new Seat(j + 1)); 
+                seats.add(new Seat(j + 1));
             }
             carriage.addCabin(new Cabin(seats));
         }
@@ -135,24 +136,4 @@ public class Carriage extends JButton {
         Carriage.toaTau = toaTau;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Transparent Button Example");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-            // Tạo một nút với hình ảnh icon
-
-            // ImageIcon icon = new ImageIcon(getCl); // Thay đổi "icon.png" bằng đường dẫn
-            // đến tập tin hình ảnh của bạn
-            JButton button = new Carriage(toaTau);
-
-            // Thêm nút vào frame
-            frame.getContentPane().add(button, BorderLayout.CENTER);
-
-            // Thiết lập kích thước frame và hiển thị
-            frame.setSize(300, 200);
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-        });
-    }
 }

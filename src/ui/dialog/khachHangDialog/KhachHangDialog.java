@@ -6,8 +6,6 @@ import helper.Validation;
 import ui.component.ButtonCustom;
 import ui.component.HeaderTitle;
 import ui.component.InputForm;
-import ui.dialog.nhanVienDialog.NhanVienDialog;
-import ui.panel.KhachHangPanel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -21,8 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class KhachHangDialog extends JDialog implements MouseListener, WindowListener {
-
-
     private HeaderTitle titlePage;
     private JPanel pnlMain, pnlButtom;
     private ButtonCustom btnSubmit, btnHuyBo, btnKhMoi, btnTim;
@@ -33,7 +29,6 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
     private KhachHang khachHang;
     private TaoKhachHangListener taoKhachHangListener;
     private SuaKhachHangListener suaKhachHangListener;
-
 
     public KhachHangDialog() {
         khachHangDao = new KhachHangDao();
@@ -106,18 +101,18 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
         btnKhMoi.addMouseListener(this);
         btnTim.addMouseListener(this);
 
-//        switch (type) {
-//            case "find":
-//                tenKH.setDisable();
-//                if (khResult != null) {
-//                    setTenKH(khResult.getHoTen());
-//                    setSdtKH(khResult.getSoDienThoai());
-//                }
-//
-//                pnlButtom.add(btnTim);
-//                pnlButtom.add(btnKhMoi);
-//                break;
-//        }
+        // switch (type) {
+        // case "find":
+        // tenKH.setDisable();
+        // if (khResult != null) {
+        // setTenKH(khResult.getHoTen());
+        // setSdtKH(khResult.getSoDienThoai());
+        // }
+        //
+        // pnlButtom.add(btnTim);
+        // pnlButtom.add(btnKhMoi);
+        // break;
+        // }
         pnlButtom.add(btnSubmit);
         pnlButtom.add(btnHuyBo);
 
@@ -179,13 +174,13 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
                     if (suaKhachHangListener != null) {
                         suaKhachHangListener.suaKhachHangThanhCong(layThongTinKhachHangTuField());
                     }
-                    Logger.getLogger(KhachHangDialog.class.getName()).log(Level.INFO, "Cập nhật thông tin khách hàng thành công!");
+                    Logger.getLogger(KhachHangDialog.class.getName()).log(Level.INFO,
+                            "Cập nhật thông tin khách hàng thành công!");
                     JOptionPane.showMessageDialog(this, "Cập nhật thông tin khách hàng thành công!");
                     xoaDuLieu();
                     dispose();
                 }
             }
-
 
         }
         if (eSource.equals(btnHuyBo)) {
@@ -227,6 +222,7 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
     public void setSuaKhachHangListener(SuaKhachHangListener suaKhachHangListener) {
         this.suaKhachHangListener = suaKhachHangListener;
     }
+
     private KhachHang layThongTinKhachHangTuField() {
         int maKhacHang = 0;
         if (!maKhachHangTextField.getText().trim().isEmpty())
@@ -235,7 +231,7 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
         String tenKhachHang = tenKhachHangTextField.getText().trim();
         String soDienThoai = soDienThoaiTextField.getText().trim();
 
-        return new entity.KhachHang(maKhacHang,tenKhachHang, soDienThoai, LocalDateTime.now(), false);
+        return new entity.KhachHang(maKhacHang, tenKhachHang, soDienThoai, LocalDateTime.now(), false);
     }
 
     private void xoaDuLieu() {
@@ -262,7 +258,6 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
 
         soDienThoaiTextField.setText(khachHang.getSoDienThoai());
         soDienThoaiTextField.setEditable(false);
-
 
         tenKhachHangTextField.setText(khachHang.getHoTen());
         tenKhachHangTextField.setEditable(false);
