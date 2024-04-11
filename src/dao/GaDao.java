@@ -55,11 +55,26 @@ public class GaDao implements IDao<Ga, String> {
                 list.add(new Ga(maGa, tenGa, vungMien));
             }
         } catch (Exception e) {
-            Logger.getLogger(ChuyenDao.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+            Logger.getLogger(GaDao.class.getName()).log(Level.SEVERE, e.getMessage(), e);
         }
 
         return list;
     }
+
+    public List<String> layHetTenGa() {
+        try {
+            List<String> dsTenGa = layHet().stream()
+                    .map(ga -> ga.getTenGa())
+                    .toList();
+
+            return dsTenGa;
+        } catch (Exception e) {
+            Logger.getLogger(GaDao.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+        }
+
+        return new ArrayList<>();
+    }
+
 
     @Override
     public boolean them(Ga entity) {

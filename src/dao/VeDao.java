@@ -2,6 +2,7 @@ package dao;
 
 import config.DatabaseUtil;
 import entity.Chuyen;
+import entity.Khoang;
 import entity.LoaiKhoang;
 import entity.Ve;
 import java.sql.*;
@@ -32,10 +33,9 @@ public class VeDao implements IDao<Ve, String> {
                 double giaVe = rs.getDouble("giaVe");
                 String moTa = rs.getString("moTa");
                 int tinhTrangVe = rs.getInt("tinhTrangVe");
-                String maLoaiVe = rs.getString("maLoaiVe");
-                String maChuyen = rs.getString("maChuyen");
+                String maKhoang = rs.getString("maKhoang");
 
-                return new Ve(maVe, choNgoi, giaVe, moTa, tinhTrangVe, new LoaiKhoang(maLoaiVe), new Chuyen(maChuyen));
+                return new Ve(maVe, choNgoi, giaVe, moTa, tinhTrangVe, new Khoang(maKhoang));
             }
         } catch (Exception e) {
             Logger.getLogger(VeDao.class.getName()).log(Level.SEVERE, null, e);
@@ -58,9 +58,9 @@ public class VeDao implements IDao<Ve, String> {
                 String moTa = rs.getString("moTa");
                 int tinhTrangVe = rs.getInt("tinhTrangVe");
                 String maLoaiVe = rs.getString("maLoaiVe");
-                String maChuyen = rs.getString("maChuyen");
+                String maKhoang = rs.getString("maKhoang");
 
-                dsVe.add(new Ve(maVe, choNgoi, giaVe, moTa, tinhTrangVe, new LoaiKhoang(maLoaiVe), new Chuyen(maChuyen)));
+                dsVe.add(new Ve(maVe, choNgoi, giaVe, moTa, tinhTrangVe, new Khoang(maKhoang)));
             }
         } catch (Exception e) {
             Logger.getLogger(VeDao.class.getName()).log(Level.SEVERE, e.getMessage(), e);
@@ -71,7 +71,7 @@ public class VeDao implements IDao<Ve, String> {
     @Override
     public boolean them(Ve entity) {
         try {
-            String sql = "INSERT INTO `Ve`(`maVe`, `choNgoi`, `giaVe`, `moTa`, `tinhTrangVe`,`maLoaiVe`, `maChuyen`) VALUES (?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO `Ve`(`maVe`, `choNgoi`, `giaVe`, `moTa`, `tinhTrangVe`,`maKhoang`) VALUES (?,?,?,?,?,?)";
             PreparedStatement statement = con.prepareStatement(sql);
 
             statement.setString(1, entity.getMaVe());
@@ -79,8 +79,7 @@ public class VeDao implements IDao<Ve, String> {
             statement.setDouble(3, entity.getGiaVe());
             statement.setString(4, entity.getMoTa());
             statement.setInt(5, entity.getTinhTrangVe());
-            statement.setString(6, entity.getLoaiVe().getMaLoaiVe());
-            statement.setString(7, entity.getChuyen().getMaChuyen());
+            statement.setString(6, entity.getKhoang().getMaKhoang());
 
             return statement.executeUpdate() > 0;
         } catch (SQLException ex) {
@@ -105,15 +104,14 @@ public class VeDao implements IDao<Ve, String> {
     @Override
     public boolean sua(Ve entity) {
         try {
-            String sql = "UPDATE `Ve` SET `choNgoi`=?,`giaVe`=?,`moTa`=?, `tinhTrangVe`=?, `maLoaiVe`=?, `maChuyen`=? WHERE maVe=?";
+            String sql = "UPDATE `Ve` SET `choNgoi`=?,`giaVe`=?,`moTa`=?, `tinhTrangVe`=?, `maKhoang`=? WHERE maVe=?";
             PreparedStatement pst = con.prepareStatement(sql);
 
             pst.setInt(1, entity.getChoNgoi());
             pst.setDouble(2, entity.getGiaVe());
             pst.setString(3, entity.getMoTa());
             pst.setInt(4, entity.getTinhTrangVe());
-            pst.setString(5, entity.getLoaiVe().getMaLoaiVe());
-            pst.setString(6, entity.getChuyen().getMaChuyen());
+            pst.setString(5, entity.getKhoang().getMaKhoang());
 
             pst.setString(7, entity.getMaVe());
             return pst.executeUpdate() > 0;

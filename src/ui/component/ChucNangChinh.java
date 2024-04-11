@@ -11,10 +11,6 @@ public final class ChucNangChinh extends JToolBar {
 
     public HashMap<String, ButtonToolBar> btn = new HashMap<>();
 
-    public ChucNangChinh(String chucnang, String[] listBtn) {
-        initData();
-        initComponent(chucnang, listBtn);
-    }
 
     public ChucNangChinh(String[] listBtn) {
         NhanVien nhanVien = NhanVienSuDungSingleton.layThongTinNhanVienHienTai();
@@ -43,8 +39,8 @@ public final class ChucNangChinh extends JToolBar {
         btn.put("nhap-excel", new ButtonToolBar("NHẬP EXCEL", "import_excel.svg", "create"));
         btn.put("xuat-excel", new ButtonToolBar("XUẤT EXCEL", "export_excel.svg", "view"));
         btn.put("xem-danh-sach", new ButtonToolBar("XEM DS", "phone.svg", "view"));
-        btn.put("find", new ButtonToolBar("TÌM CHUYẾN", "search.svg", "find"));
-        btn.put("find-customer", new ButtonToolBar("KHÁCH HÀNG", "customer-bigger.svg", "find"));
+        btn.put("tim", new ButtonToolBar("TÌM CHUYẾN", "search.svg", "find"));
+        btn.put("tim-khach-hang", new ButtonToolBar("KHÁCH HÀNG", "customer-bigger.svg", "find"));
     }
 
     public ButtonToolBar getToolbar(String title) {

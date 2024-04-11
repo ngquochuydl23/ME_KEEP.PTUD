@@ -5,7 +5,6 @@ import java.util.Objects;
 public class ToaTau {
     private String maToa;
     private String tenToa;
-
     private Tau tau;
 
     public ToaTau() {

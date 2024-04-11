@@ -26,7 +26,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.PlainDocument;
 
 
-public class NhanVienDialog extends JFrame {
+public class NhanVienDialog extends JDialog {
     private HeaderTitle titlePage;
     private ButtonCustom btnSubmit, btnExit;
     private InputForm hoTenInputForm;
@@ -47,13 +47,11 @@ public class NhanVienDialog extends JFrame {
     private SuaNhanVienListener suaNhanVienListener;
     private JPanel main, bottom;
 
-    private boolean dangXemChiTiet;
 
     public NhanVienDialog() {
         init();
         enableFrom();
         dangChinhSua = false;
-        dangXemChiTiet = false;
         nhanVienDao = new NhanVienDao();
     }
 
@@ -279,7 +277,6 @@ public class NhanVienDialog extends JFrame {
 
     public void xoaDuLieu() {
         dangChinhSua = false;
-        dangXemChiTiet = false;
         titlePage.setLblTitle("Thêm");
 
 
@@ -302,7 +299,6 @@ public class NhanVienDialog extends JFrame {
     public void setNhanVien(NhanVien nhanVien) {
         this.nhanVien = nhanVien;
         dangChinhSua = true;
-        dangXemChiTiet = false;
         titlePage.setLblTitle("Sửa");
         enableFrom();
         hoTenInputForm.setText(nhanVien.getHoTen());
@@ -328,7 +324,6 @@ public class NhanVienDialog extends JFrame {
         setVisible(true);
 
         dangChinhSua = false;
-        dangXemChiTiet = true;
         titlePage.setLblTitle("Sửa");
         disableForm();
         hoTenInputForm.setText(nhanVien.getHoTen());

@@ -1,6 +1,6 @@
 package ui.panel;
 
-import DTO.PhieuNhapDTO;
+
 import ui.component.*;
 
 
@@ -23,7 +23,6 @@ import java.io.IOException;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.text.ParseException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -315,10 +314,10 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
 
     private void layDanhSachLichSu() {
         danhSachLichSuTraVe = new ArrayList<>();
-        Ve ve = new Ve( "tphcm-quynhon",  20,  1000000,  null,  1,  new LoaiKhoang("giuong-nam-khoang-4"), null);
-        entity.KhachHang kh = new entity.KhachHang(1, "Owen Shaw", "0868684961", LocalDateTime.now(), false);
-        LichSuTraVe ls = new LichSuTraVe(1, LocalDateTime.of(2023, 03, 23, 12, 30, 50), "Khong co", kh, ve);
-        danhSachLichSuTraVe.add(ls);
+       // Ve ve = new Ve( "tphcm-quynhon",  20,  1000000,  null,  1,  new LoaiKhoang("giuong-nam-khoang-4"), null);
+       // entity.KhachHang kh = new entity.KhachHang(1, "Owen Shaw", "0868684961", LocalDateTime.now(), false);
+      //  LichSuTraVe ls = new LichSuTraVe(1, LocalDateTime.of(2023, 03, 23, 12, 30, 50), "Khong co", kh, ve);
+        danhSachLichSuTraVe.add(null);
 
         for (LichSuTraVe item : danhSachLichSuTraVe) {
             tblModel.addRow(new String[] {
