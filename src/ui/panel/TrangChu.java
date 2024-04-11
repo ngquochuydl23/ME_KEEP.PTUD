@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import ui.component.PanelShadow;
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import ui.dialog.timKhachHangDialog.TimKhachHangDialog;
 
 public class TrangChu extends JPanel {
 

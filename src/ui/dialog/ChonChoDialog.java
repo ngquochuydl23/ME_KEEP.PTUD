@@ -3,7 +3,6 @@ package ui.dialog;
 import ui.component.Carriage;
 import ui.component.Cabin;
 import ui.component.Seat;
-
 import javax.swing.*;
 
 import dao.LoaiKhoangDao;
