@@ -172,7 +172,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
                     @Override
                     public void actionPerformed(ActionEvent e) {
 
-                        if (!validateSelectDate() || !validation())
+                        if (!validation() ||  !validateSelectDate()``)
                             return;
 
                         layDuLieu();
@@ -352,22 +352,30 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
             Date ngayDi = dateNgayDi.getDate();
             Date ngayVe = dateNgayVe.getDate();
 
-            Date currentDate = new Date();
-            // if (ngayDi != null && !ngayDi.after(currentDate)) {
-            // JOptionPane.showMessageDialog(this, "Ngày đi không được nhỏ hơn ngày hiện
-            // tại", "Lỗi !",
-            // JOptionPane.ERROR_MESSAGE);
-            // dateNgayDi.getDateChooser().setCalendar(null);
-            // return false;
-            // }
-            // if (ngayVe != null && !ngayVe.before(ngayDi)) {
-            // JOptionPane.showMessageDialog(this, "Ngày về không được nhỏ hơn ngày ngày
-            // đi", "Lỗi !",
-            // JOptionPane.ERROR_MESSAGE);
-            // dateNgayVe.getDateChooser().setCalendar(null);
-            // return false;
-            // }
-            if (ngayDi != null && ngayVe != null && ngayDi.after(ngayVe)) {
+            if (!checkBoxKhuHoi.isSelected()) {
+                if (ngayDi == null) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày đi", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+
+                if (ngayDi != null && !ngayDi.after(new Date())) {
+                    JOptionPane.showMessageDialog(this, "Ngày đi không được nhỏ hơn ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+                    dateNgayDi.getDateChooser().setCalendar(null);
+                }
+                return true;
+            }
+
+            if (ngayDi == null) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày đi", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            if (ngayVe == null) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày về", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            if (ngayDi.after(ngayVe)) {
                 JOptionPane.showMessageDialog(this, "Ngày về phải lớn hơn ngày bắt đầu", "Lỗi !",
                         JOptionPane.ERROR_MESSAGE);
                 dateNgayVe.getDateChooser().setCalendar(null);
