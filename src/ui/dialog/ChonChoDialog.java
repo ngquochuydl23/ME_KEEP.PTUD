@@ -1,6 +1,7 @@
 package ui.dialog;
 
 import ui.component.Carriage;
+import ui.component.ButtonCustom;
 import ui.component.Cabin;
 import ui.component.Seat;
 import javax.swing.*;
@@ -84,6 +85,14 @@ public class ChonChoDialog extends JDialog {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
+        JPanel buttonPanel = new JPanel();
+        JButton confirmButton = new ButtonCustom("Xác nhận", "success", 14);
+        JButton cancelButton = new ButtonCustom("Hủy bỏ", "danger", 14);
+
+        buttonPanel.add(confirmButton);
+        buttonPanel.add(cancelButton);
+
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
         mainPanel.setPreferredSize(new Dimension(400, 600));
         add(mainPanel);
