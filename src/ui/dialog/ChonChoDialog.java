@@ -4,6 +4,8 @@ import ui.component.Carriage;
 import ui.component.ButtonCustom;
 import ui.component.Cabin;
 import ui.component.Seat;
+import ui.dialog.timKhachHangDialog.TimKhachHangDialog;
+
 import javax.swing.*;
 
 import dao.LoaiKhoangDao;
@@ -33,7 +35,7 @@ public class ChonChoDialog extends JDialog {
     private LoaiKhoangDao loaiKhoangDao;
     private List<ToaTau> toaTaus;
     private LoaiKhoang loaiKhoang;
-    private List<Integer> soChoNgoi;
+    private static List<Integer> soChoNgoi;
 
     public ChonChoDialog(Tau tau) {
         this.tau = tau;
@@ -84,7 +86,8 @@ public class ChonChoDialog extends JDialog {
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                layToanBoChoDangChon();
+                ChonChoDialog.soChoNgoi = layToanBoChoDangChon();
+                new TimKhachHangDialog();
             }
         });
 
@@ -177,10 +180,18 @@ public class ChonChoDialog extends JDialog {
         for (Seat seat : dsChoNgoi) {
             if (seat.isSelected()) {
                 dsSoChoNgoi.add(seat.getSeatNumber());
-                System.out.println(seat.getSeatNumber());
             }
         }
 
         return dsSoChoNgoi;
     }
+
+    public static List<Integer> getSoChoNgoi() {
+        return soChoNgoi;
+    }
+
+    public static void setSoChoNgoi(List<Integer> soChoNgoi) {
+        ChonChoDialog.soChoNgoi = soChoNgoi;
+    }
+
 }

@@ -64,7 +64,6 @@ public class Seat extends JPanel {
         if (this.getTinhTrangVe() == 1) {
             this.setEnabled(false);
             g2d.setColor(Color.GRAY);
-            System.out.println(this.getMouseListeners());
             this.removeMouseListener(ml);
         }
 
