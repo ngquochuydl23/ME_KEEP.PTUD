@@ -106,7 +106,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         tableChuyenTau = new JTable();
         scrollTableChuyenTau = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"Mã chuyến", "Tuyến", "Tàu", "Thời gian khởi hành", "Thời gian đến dự kiến"};
+        String[] header = new String[] { "Mã chuyến", "Tuyến", "Tàu", "Thời gian khởi hành", "Thời gian đến dự kiến" };
         tblModel.setColumnIdentifiers(header);
         tableChuyenTau.setModel(tblModel);
         tableChuyenTau.setDefaultEditor(Object.class, null);
@@ -139,7 +139,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        chucNangChinh = new ChucNangChinh(new String[]{"tim", "chi-tiet", "huy-ve", "xuat-excel"});
+        chucNangChinh = new ChucNangChinh(new String[] { "tim", "chi-tiet", "huy-ve", "xuat-excel" });
 
         chucNangChinh
                 .getToolbar("tim")
@@ -159,20 +159,20 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
                 .addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-//                        int index = getRowSelected();
-//                        if (index != -1) {
-//                            if (JOptionPane.showConfirmDialog(
-//                                    null,
-//                                    "Bạn có chắc chắn muốn huỷ phiếu ?\nThao tác này không thể hoàn tác nên hãy suy nghĩ kĩ !",
-//                                    "Huỷ phiếu",
-//                                    JOptionPane.OK_CANCEL_OPTION,
-//                                    JOptionPane.INFORMATION_MESSAGE) == 0) {
-//
-//                            }
-//                        }
+                        // int index = getRowSelected();
+                        // if (index != -1) {
+                        // if (JOptionPane.showConfirmDialog(
+                        // null,
+                        // "Bạn có chắc chắn muốn huỷ phiếu ?\nThao tác này không thể hoàn tác nên hãy
+                        // suy nghĩ kĩ !",
+                        // "Huỷ phiếu",
+                        // JOptionPane.OK_CANCEL_OPTION,
+                        // JOptionPane.INFORMATION_MESSAGE) == 0) {
+                        //
+                        // }
+                        // }
                     }
                 });
-
 
         chucNangChinh
                 .getToolbar("xuat-excel")
@@ -186,7 +186,6 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
                         }
                     }
                 });
-
 
         functionBar.add(chucNangChinh);
         contentCenter.add(functionBar, BorderLayout.NORTH);
@@ -205,7 +204,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         dateNgayDi = new InputDate("Ngày đi");
         checkBoxKhuHoi = new JCheckBox("Khứ hồi");
         dateNgayVe = new InputDate("Ngày về");
-        dateNgayVe.getDateChooser().setVisible(false);
+        dateNgayVe.setVisible(false);
         soLuongHanhKhach = new SpinnerForm("Số lượng hành khách");
         soLuongHanhKhach.getSpinnerForm().setEnabled(false);
 
@@ -235,9 +234,8 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
             boolean isKhuHoi = checkBoxKhuHoi.isSelected();
             isKhuHoi = !isKhuHoi;
 
-            dateNgayVe.getDateChooser().setVisible(!isKhuHoi);
+            dateNgayVe.setVisible(!isKhuHoi);
         });
-
 
         box.add(cbxGaDi);
         box.add(cbxGaDen);
@@ -258,15 +256,18 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
     }
 
     public void layDuLieu() {
-        resetForm();
         try {
             tblModel.setRowCount(0);
             tableChuyenTau.repaint();
             tableChuyenTau.revalidate();
-
-            String maGaDi = cbxGaDi.getSelectedItem().toString();
-            String maGaDen = cbxGaDen.getSelectedItem().toString();
-            LocalDate ngayDi = dateNgayDi.getDateAsLocalDate();
+            String maGaDi = "";
+            String maGaDen = "";
+            LocalDate ngayDi = LocalDate.now();
+            if (validation()) {
+                maGaDi = cbxGaDi.getSelectedItem().toString();
+                maGaDen = cbxGaDen.getSelectedItem().toString();
+                ngayDi = dateNgayDi.getDateAsLocalDate();
+            }
 
             chuyenList = chuyenDao.timChuyenTheoGa(maGaDi, maGaDen, ngayDi);
 
@@ -280,7 +281,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
                 Ga gaDen = chuyen.getTuyen().getGaDen();
                 Tau tau = chuyen.getTau();
 
-                tblModel.addRow(new Object[]{
+                tblModel.addRow(new Object[] {
                         chuyen.getMaChuyen(),
                         gaDi.getTenGa() + "-" + gaDen.getTenGa(),
                         tau.getTenTau(),
@@ -300,6 +301,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
 
         if (tenGa.isEmpty()) {
             selectForm.setCbItems(tenGaList);
+            selectForm.getCbb().setSelectedItem(null);
             return;
         }
 
@@ -326,18 +328,20 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
             Date ngayVe = dateNgayVe.getDate();
 
             Date currentDate = new Date();
-            if (ngayDi != null && ngayDi.after(currentDate)) {
-                JOptionPane.showMessageDialog(this, "Ngày đi không được nhỏ hơn ngày hiện tại", "Lỗi !",
-                        JOptionPane.ERROR_MESSAGE);
-                dateNgayDi.getDateChooser().setCalendar(null);
-                return false;
-            }
-            if (ngayVe != null && ngayVe.before(ngayDi)) {
-                JOptionPane.showMessageDialog(this, "Ngày về không được nhỏ hơn ngày ngày đi", "Lỗi !",
-                        JOptionPane.ERROR_MESSAGE);
-                dateNgayVe.getDateChooser().setCalendar(null);
-                return false;
-            }
+            // if (ngayDi != null && !ngayDi.after(currentDate)) {
+            // JOptionPane.showMessageDialog(this, "Ngày đi không được nhỏ hơn ngày hiện
+            // tại", "Lỗi !",
+            // JOptionPane.ERROR_MESSAGE);
+            // dateNgayDi.getDateChooser().setCalendar(null);
+            // return false;
+            // }
+            // if (ngayVe != null && !ngayVe.before(ngayDi)) {
+            // JOptionPane.showMessageDialog(this, "Ngày về không được nhỏ hơn ngày ngày
+            // đi", "Lỗi !",
+            // JOptionPane.ERROR_MESSAGE);
+            // dateNgayVe.getDateChooser().setCalendar(null);
+            // return false;
+            // }
             if (ngayDi != null && ngayVe != null && ngayDi.after(ngayVe)) {
                 JOptionPane.showMessageDialog(this, "Ngày về phải lớn hơn ngày bắt đầu", "Lỗi !",
                         JOptionPane.ERROR_MESSAGE);
@@ -384,7 +388,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
             return;
         }
 
-        new ChonChoDialog(tau);
+        new ChonChoDialog(tau).setVisible(true);
     }
 
     private Tau layTauDuocChon() {
@@ -399,10 +403,9 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
             }
             return tau;
         }
-        JOptionPane.showMessageDialog(null, "Vui lòng chọn một hàng trong bảng chuyến tàu.");
+        JOptionPane.showMessageDialog(null, "Vui lòng chọn một chuyến tàu.");
         return null;
     }
-
 
     @Override
     public void mousePressed(MouseEvent e) {
