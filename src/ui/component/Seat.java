@@ -4,26 +4,31 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Seat extends JPanel {
     private int seatNumber;
     private boolean isSelected;
+    private int tinhTrangVe;
+
+    private MouseListener ml;
 
     public Seat(int seatNumber) {
         this.seatNumber = seatNumber;
-        this.setPreferredSize(new Dimension(50, 50)); // Đặt kích thước cho nút
+
+        this.setPreferredSize(new Dimension(50, 50));
+        ml = new MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                changeSelectSeat();
+            }
+        };
+        this.addMouseListener(ml);
         this.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent evt) {
-                isSelected = !isSelected; // Đảo trạng thái chọn khi nhấn nút
-                repaint(); // Vẽ lại nút sau khi cập nhật
-            }
-
-            @Override
             public void mouseEntered(MouseEvent evt) {
-                setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Đổi con trỏ chuột thành hình bàn tay
+                setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             }
 
             @Override
@@ -31,6 +36,11 @@ public class Seat extends JPanel {
                 setCursor(Cursor.getDefaultCursor()); // Trả lại con trỏ chuột mặc định
             }
         });
+    }
+
+    private void changeSelectSeat() {
+        isSelected = !isSelected;
+        repaint();
     }
 
     public int getSeatNumber() {
@@ -50,6 +60,13 @@ public class Seat extends JPanel {
         } else {
             g2d.setColor(Color.WHITE); // Xóa màu nền khi không được chọn
         }
+
+        if (this.getTinhTrangVe() == 1) {
+            this.setEnabled(false);
+            g2d.setColor(Color.GRAY);
+            this.removeMouseListener(ml);
+        }
+
         g2d.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 30, 30); // Vẽ nền của nút
 
         g2d.setColor(Color.BLACK); // Đặt màu chữ
@@ -72,6 +89,10 @@ public class Seat extends JPanel {
         for (int i = 1; i <= numSeats; i++) {
             seats.add(new Seat(i));
         }
+
+        Seat seat = new Seat(60);
+        seat.setTinhTrangVe(1);
+        seats.set(5, seat);
         return seats;
     }
 
@@ -79,5 +100,21 @@ public class Seat extends JPanel {
         isSelected = false;
         repaint(); // Vẽ lại nút sau khi cập nhật
 
+    }
+
+    public void setSeatNumber(int seatNumber) {
+        this.seatNumber = seatNumber;
+    }
+
+    public void setSelected(boolean isSelected) {
+        this.isSelected = isSelected;
+    }
+
+    public int getTinhTrangVe() {
+        return tinhTrangVe;
+    }
+
+    public void setTinhTrangVe(int tinhTrangVe) {
+        this.tinhTrangVe = tinhTrangVe;
     }
 }

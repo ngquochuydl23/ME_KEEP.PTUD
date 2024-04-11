@@ -4,6 +4,8 @@ import ui.component.Carriage;
 import ui.component.ButtonCustom;
 import ui.component.Cabin;
 import ui.component.Seat;
+import ui.dialog.timKhachHangDialog.TimKhachHangDialog;
+
 import javax.swing.*;
 
 import dao.LoaiKhoangDao;
@@ -15,11 +17,14 @@ import entity.ToaTau;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChonChoDialog extends JDialog {
     private Carriage carriage;
-    private JComboBox<String> carriageTypeComboBox;
     private JComboBox<Integer> cabinNumberComboBox;
     private ButtonGroup btgToa;
     private JPanel topPanel;
@@ -28,16 +33,19 @@ public class ChonChoDialog extends JDialog {
     private JPanel seatPanel;
     private ToaDao toaDao;
     private LoaiKhoangDao loaiKhoangDao;
-    List<ToaTau> toaTaus;
-    LoaiKhoang loaiKhoang;
+    private List<ToaTau> toaTaus;
+    private LoaiKhoang loaiKhoang;
+    private static List<Integer> soChoNgoi;
 
     public ChonChoDialog(Tau tau) {
         this.tau = tau;
         toaDao = new ToaDao();
         loaiKhoangDao = new LoaiKhoangDao();
 
+        setTitle("Chọn chỗ");
+        setModalityType(ModalityType.APPLICATION_MODAL);
         initializeComponents();
-        setSize(600, 900); // Đặt kích thước
+        setSize(600, 900);
         setResizable(false);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         pack();
@@ -54,20 +62,6 @@ public class ChonChoDialog extends JDialog {
         topPanel = new JPanel();
         doToaTauLenUI();
 
-        // JLabel carriageLabel = new JLabel("Chọn loại toa:");
-        // setLayout(new GridLayout(carriageTypes.length, 1)); // Số hàng là độ dài của
-        // mảng carriageTypes
-
-        // carriageTypeComboBox.addActionListener(new ActionListener() {
-        // @Override
-        // public void actionPerformed(ActionEvent e) {
-        // updateCabinComboBox();
-        // updateSeatPanel();
-        // }
-        // });
-        // topPanel.add(carriageLabel);
-        // topPanel.add(carriageButtons);
-
         JLabel cabinLabel = new JLabel("Chọn số khoang:");
         cabinNumberComboBox = new JComboBox<>();
         topPanel.add(cabinLabel);
@@ -77,7 +71,7 @@ public class ChonChoDialog extends JDialog {
 
         // Panel chọn chỗ
 
-        seatPanel = new JPanel(); // Panel chứa các chỗ ngồi
+        seatPanel = new JPanel();
         seatPanel.setLayout(new GridLayout(0, 4));
         updateSeatPanel();
 
@@ -89,6 +83,22 @@ public class ChonChoDialog extends JDialog {
         JButton confirmButton = new ButtonCustom("Xác nhận", "success", 14);
         JButton cancelButton = new ButtonCustom("Hủy bỏ", "danger", 14);
 
+        confirmButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ChonChoDialog.soChoNgoi = layToanBoChoDangChon();
+                dispose();
+                new TimKhachHangDialog();
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+
         buttonPanel.add(confirmButton);
         buttonPanel.add(cancelButton);
 
@@ -96,15 +106,11 @@ public class ChonChoDialog extends JDialog {
         mainPanel.add(scrollPane, BorderLayout.CENTER);
         mainPanel.setPreferredSize(new Dimension(400, 600));
         add(mainPanel);
-
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-
     }
 
     private void doToaTauLenUI() {
         for (ToaTau toaTau : toaTaus) {
-            final ToaTau currentToa = toaTau; // Biến cục bộ final để lưu trữ giá trị của toaTau
+            final ToaTau currentToa = toaTau;
 
             Carriage carriage = new Carriage(toaTau);
             carriage.addActionListener(new ActionListener() {
@@ -133,9 +139,6 @@ public class ChonChoDialog extends JDialog {
     // Cập nhật panel chọn chỗ dựa trên loại toa và khoang đã chọn
     private void updateSeatPanel() {
         String loaiToa = this.loaiKhoang.getMaLoaiKhoang();
-        if (loaiToa == null) {
-            carriage = Carriage.createCarriageWith8Cabins6Seats();
-        }
         switch (loaiToa) {
             case "ghe-ngoi":
                 carriage = Carriage.createCarriageWith50Seats();
@@ -154,44 +157,11 @@ public class ChonChoDialog extends JDialog {
         clearSeatSelection(); // Xóa lựa chọn trên các ghế
         // Toa 1 và 2 chỉ có một khoang, nên hiển thị số chỗ của khoang đầu tiên
         addSeatsToPanel(carriage.getCabins().get(0).getSeats());
-        // Các toa khác có nhiều khoang, hiển thị số chỗ của khoang được chọn
-        List<Cabin> cabins = carriage.getCabins();
-        addSeatsToPanel(carriage.getCabins().get(0).getSeats());
 
-        // Cập nhật giao diện
         revalidate();
 
         repaint();
 
-    }
-
-    // Cập nhật ComboBox số khoang tương ứng với loại toa được chọn
-    // Cập nhật ComboBox số khoang tương ứng với loại toa được chọn
-    private void updateCabinComboBox() {
-        int selectedCarriageIndex = carriageTypeComboBox.getSelectedIndex();
-        int numCabins = 1; // Mặc định là một khoang
-        switch (selectedCarriageIndex) {
-            case 0:
-            case 1:
-                numCabins = 1; // Toa 1 và 2 chỉ có một khoang
-                cabinNumberComboBox.setVisible(false); // Ẩn ComboBox số khoang
-                break;
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-                numCabins = 8; // Các toa khác có 8 khoang
-                cabinNumberComboBox.setVisible(true); // Hiện ComboBox số khoang
-                break;
-        }
-
-        cabinNumberComboBox.removeAllItems();
-        for (int i = 1; i <= numCabins; i++) {
-            cabinNumberComboBox.addItem(i);
-        }
-
-        // Xóa lựa chọn trên các chỗ ngồi
-        clearSeatSelection();
     }
 
     // Thêm các chỗ ngồi vào panel
@@ -201,12 +171,28 @@ public class ChonChoDialog extends JDialog {
         }
     }
 
-    // public static void main(String[] args) {
-    // SwingUtilities.invokeLater(() -> {
-    // JFrame frame = new JFrame("Transparent Button Example");
-    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public List<Integer> layToanBoChoDangChon() {
+        List<Seat> dsChoNgoi = new ArrayList<>();
+        for (Cabin cabin : carriage.getCabins()) {
+            dsChoNgoi = cabin.getSeats();
+        }
 
-    // ChonChoDialog choDialog = new ChonChoDialog()
-    // });
-    // }
+        List<Integer> dsSoChoNgoi = new ArrayList<>();
+        for (Seat seat : dsChoNgoi) {
+            if (seat.isSelected()) {
+                dsSoChoNgoi.add(seat.getSeatNumber());
+            }
+        }
+
+        return dsSoChoNgoi;
+    }
+
+    public static List<Integer> getSoChoNgoi() {
+        return soChoNgoi;
+    }
+
+    public static void setSoChoNgoi(List<Integer> soChoNgoi) {
+        ChonChoDialog.soChoNgoi = soChoNgoi;
+    }
+
 }
