@@ -36,10 +36,11 @@ public class ChonChoDialog extends JDialog {
         loaiKhoangDao = new LoaiKhoangDao();
 
         initializeComponents();
+        setSize(600, 900); // Đặt kích thước
         setResizable(false);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         pack();
-        setLocationRelativeTo(this);
+        setLocationRelativeTo(null);
     }
 
     private void initializeComponents() {
@@ -74,12 +75,17 @@ public class ChonChoDialog extends JDialog {
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
         // Panel chọn chỗ
+
         seatPanel = new JPanel(); // Panel chứa các chỗ ngồi
         seatPanel.setLayout(new GridLayout(0, 4));
         updateSeatPanel();
 
-        mainPanel.add(seatPanel, BorderLayout.CENTER);
-        mainPanel.setPreferredSize(new Dimension(1000, 800)); // Đặt kích thước ưu tiên cho panel chọn chỗ
+        JScrollPane scrollPane = new JScrollPane(seatPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+        mainPanel.setPreferredSize(new Dimension(400, 600));
         add(mainPanel);
 
         this.setLocationRelativeTo(null);
