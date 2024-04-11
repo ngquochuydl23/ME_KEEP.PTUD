@@ -85,6 +85,7 @@ public class HoaDonDialog extends JDialog {
         setLocationRelativeTo(null);
 
         xoaDuLieu();
+        setVisible(true);
     }
 
     private void xoaDuLieu() {

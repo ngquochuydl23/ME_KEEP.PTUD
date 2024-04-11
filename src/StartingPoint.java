@@ -14,7 +14,6 @@ public class StartingPoint {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-
                 try {
                     DatabaseUtil.connect();
                     Logger.getLogger(StartingPoint.class.getName()).log(Level.INFO, "Kết nối thành công");

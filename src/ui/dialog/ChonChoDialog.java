@@ -87,6 +87,7 @@ public class ChonChoDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ChonChoDialog.soChoNgoi = layToanBoChoDangChon();
+                dispose();
                 new TimKhachHangDialog();
             }
         });

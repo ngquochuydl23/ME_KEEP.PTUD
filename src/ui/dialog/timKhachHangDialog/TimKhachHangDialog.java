@@ -6,6 +6,7 @@ import helper.Validation;
 import ui.component.ButtonCustom;
 import ui.component.HeaderTitle;
 import ui.component.InputForm;
+import ui.dialog.HoaDonDialog;
 import ui.dialog.khachHangDialog.SuaKhachHangListener;
 import ui.dialog.khachHangDialog.TaoKhachHangListener;
 
@@ -76,10 +77,9 @@ public class TimKhachHangDialog extends JDialog implements ActionListener, Windo
         setLayout(new BorderLayout(0, 0));
 
         titlePage = new HeaderTitle("Tìm khách hàng");
-        //pnlMain = new JPanel(new GridLayout(3, 1, 20, 0));
+        // pnlMain = new JPanel(new GridLayout(3, 1, 20, 0));
         pnlMain = new JPanel(new FlowLayout());
         pnlMain.setBackground(Color.white);
-
 
         soDienThoaiTextField = new InputForm("Số điện thoại", 450, 80);
         soDienThoaiTextField.addActionListener(this);
@@ -95,7 +95,6 @@ public class TimKhachHangDialog extends JDialog implements ActionListener, Windo
                 .setEnabled(false);
         pnlMain.add(soDienThoaiTextField);
 
-
         pnlMain.add(maKhachHangTextField);
         pnlMain.add(tenKhachHangTextField);
 
@@ -103,12 +102,10 @@ public class TimKhachHangDialog extends JDialog implements ActionListener, Windo
         pnlButtom.setBorder(new EmptyBorder(10, 0, 10, 0));
         pnlButtom.setBackground(Color.white);
 
-
         xoaRongBtn = new ButtonCustom("Xóa rỗng", "danger", 14, 100, 40);
         timBtn = new ButtonCustom("Tìm", "success", 14, 100, 40);
         tiepTucBtn = new ButtonCustom("Tiếp tục", "success", 14, 100, 40);
         btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14, 100, 40);
-
 
         timBtn.addActionListener(this);
         xoaRongBtn.addActionListener(this);
@@ -116,7 +113,6 @@ public class TimKhachHangDialog extends JDialog implements ActionListener, Windo
         btnHuyBo.addActionListener(this);
 
         tiepTucBtn.setEnabled(false);
-
 
         pnlButtom.add(timBtn);
         pnlButtom.add(tiepTucBtn);
@@ -129,7 +125,10 @@ public class TimKhachHangDialog extends JDialog implements ActionListener, Windo
         setLocationRelativeTo(null);
 
         xoaDuLieu();
+
+        setVisible(true);
     }
+
     private void xoaDuLieu() {
         tiepTucBtn.setEnabled(false);
         tenKhachHangTextField.setText("");
@@ -139,6 +138,7 @@ public class TimKhachHangDialog extends JDialog implements ActionListener, Windo
         maKhachHangTextField.setEnabled(false);
         khachHang = null;
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object eSource = e.getSource();
@@ -196,10 +196,11 @@ public class TimKhachHangDialog extends JDialog implements ActionListener, Windo
             if (timKhachHangListener != null && khachHang != null)
                 timKhachHangListener.timThayhachhang(khachHang);
             dispose();
+            new HoaDonDialog();
         }
     }
 
-    public void setTimKhachHangListener(TimKhachHangListener timKhachHangListener){
+    public void setTimKhachHangListener(TimKhachHangListener timKhachHangListener) {
         this.timKhachHangListener = timKhachHangListener;
     }
 }
