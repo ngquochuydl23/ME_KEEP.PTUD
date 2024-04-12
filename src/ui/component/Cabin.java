@@ -24,11 +24,6 @@ public class Cabin {
     public static Cabin createFiftySeaterCabin() {
         return new Cabin(Seat.createSeats(50));
     }
-    
-    // Tạo một khoang với số lượng chỗ ngồi tùy chỉnh
-    public static Cabin createCustomSeaterCabin(int numberOfSeats) {
-        return new Cabin(Seat.createSeats(numberOfSeats));
-    }
 
     // Trả về danh sách các chỗ ngồi trong khoang
     public List<Seat> getSeats() {

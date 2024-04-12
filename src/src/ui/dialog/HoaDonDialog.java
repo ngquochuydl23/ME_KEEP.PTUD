@@ -27,7 +27,8 @@ public class HoaDonDialog extends JDialog {
     private HoaDonDao hoaDonDao;
     private KhachHang khachHang;
 
-    public HoaDonDialog() {
+    public HoaDonDialog(KhachHang khachHang) {
+        this.khachHang = khachHang;
         hoaDonDao = new HoaDonDao();
         initComponents();
     }

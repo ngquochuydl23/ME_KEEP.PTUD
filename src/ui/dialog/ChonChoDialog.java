@@ -18,6 +18,7 @@ import entity.KhachHang;
 import entity.LoaiKhoang;
 import entity.Tau;
 import entity.ToaTau;
+import entity.Ve;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -45,7 +46,7 @@ public class ChonChoDialog extends JDialog {
     private KhachHangDialog khachHangDialog;
     private TimKhachHangDialog timKhachHangDialog;
 
-    private static List<Integer> soChoNgoi;
+    private static List<Ve> listVe;
 
     public ChonChoDialog(Tau tau) {
         this.tau = tau;
@@ -96,7 +97,7 @@ public class ChonChoDialog extends JDialog {
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ChonChoDialog.soChoNgoi = layToanBoChoDangChon();
+                setListVe(layToanBoChoDangChon());
                 dispose();
                 timKhachHangDialog = new TimKhachHangDialog();
                 timKhachHangDialog
@@ -145,6 +146,7 @@ public class ChonChoDialog extends JDialog {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     loaiKhoang = loaiKhoangDao.layLoaiKhoangTheoMaToa(currentToa.getMaToa());
+                    layToanBoChoDangChon();
                     updateSeatPanel();
                 }
             });
@@ -183,30 +185,29 @@ public class ChonChoDialog extends JDialog {
         seatPanel.removeAll(); // Xóa tất cả các ghế hiện tại trên panel
         clearSeatSelection(); // Xóa lựa chọn trên các ghế
         List<Cabin> cabins = carriage.getCabins(); // Lấy danh sách cabins từ carriage
-        
+
         // Tạo layout với số cột phù hợp
-		if (loaiToa.equals("giuong-nam-khoang-6") || loaiToa.equals("giuong-nam-khoang-4")) {
-			GridLayout gridLayout = new GridLayout(0, 2);
-			gridLayout.setHgap(10); // Khoảng trống giữa các cột
-			gridLayout.setVgap(10); // Khoảng trống giữa các hàng
-			seatPanel.setLayout(gridLayout);
-		} else if (loaiToa.equals("ghe-ngoi")) {
-			GridLayout gridLayout = new GridLayout(0, 4);
-			gridLayout.setHgap(10); // Khoảng trống giữa các cột
-			gridLayout.setVgap(10); // Khoảng trống giữa các hàng
-			seatPanel.setLayout(gridLayout);
-	    }
-        
+        if (loaiToa.equals("giuong-nam-khoang-6") || loaiToa.equals("giuong-nam-khoang-4")) {
+            GridLayout gridLayout = new GridLayout(0, 2);
+            gridLayout.setHgap(10); // Khoảng trống giữa các cột
+            gridLayout.setVgap(10); // Khoảng trống giữa các hàng
+            seatPanel.setLayout(gridLayout);
+        } else if (loaiToa.equals("ghe-ngoi")) {
+            GridLayout gridLayout = new GridLayout(0, 4);
+            gridLayout.setHgap(10); // Khoảng trống giữa các cột
+            gridLayout.setVgap(10); // Khoảng trống giữa các hàng
+            seatPanel.setLayout(gridLayout);
+        }
+
         for (Cabin cabin : cabins) { // Lặp qua từng cabin
             addSeatsToPanel(cabin.getSeats()); // Thêm tất cả các ghế của cabin vào panel
-            
+
             seatPanel.add(new JPanel());
             seatPanel.add(new JPanel());
         }
         revalidate();
         repaint();
     }
-
 
     // Thêm các chỗ ngồi vào panel
     private void addSeatsToPanel(List<Seat> seats) {
@@ -215,19 +216,19 @@ public class ChonChoDialog extends JDialog {
         }
     }
 
-    public List<Integer> layToanBoChoDangChon() {
+    public List<Ve> layToanBoChoDangChon() {
         List<Seat> dsChoNgoi = new ArrayList<>();
         for (Cabin cabin : carriage.getCabins()) {
             dsChoNgoi = cabin.getSeats();
         }
-        List<Integer> dsSoChoNgoi = new ArrayList<>();
+        List<Ve> dsVe = new ArrayList<>();
         for (Seat seat : dsChoNgoi) {
             if (seat.isSelected()) {
-                dsSoChoNgoi.add(seat.getSeatNumber());
+                dsVe.add(new Ve());
             }
         }
 
-        return dsSoChoNgoi;
+        return dsVe;
     }
 
     private void themKhachHangVaoHoaDon(KhachHang khachHang) {
@@ -236,11 +237,11 @@ public class ChonChoDialog extends JDialog {
         System.out.println("Thêm khách hàng vào hóa đơn: " + khachHang);
     }
 
-    public static List<Integer> getSoChoNgoi() {
-        return soChoNgoi;
+    public static List<Ve> getListVe() {
+        return listVe;
     }
 
-    public static void setSoChoNgoi(List<Integer> soChoNgoi) {
-        ChonChoDialog.soChoNgoi = soChoNgoi;
+    public static void setListVe(List<Ve> listVe) {
+        ChonChoDialog.listVe = listVe;
     }
 }
