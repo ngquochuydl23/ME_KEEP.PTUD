@@ -1,15 +1,20 @@
 package ui.dialog;
 
 import ui.component.Carriage;
+import ui.component.HeaderTitle;
 import ui.component.ButtonCustom;
 import ui.component.Cabin;
 import ui.component.Seat;
+import ui.dialog.khachHangDialog.KhachHangDialog;
+import ui.dialog.khachHangDialog.TaoKhachHangListener;
 import ui.dialog.timKhachHangDialog.TimKhachHangDialog;
+import ui.dialog.timKhachHangDialog.TimKhachHangListener;
 
 import javax.swing.*;
 
 import dao.LoaiKhoangDao;
 import dao.ToaDao;
+import entity.KhachHang;
 import entity.LoaiKhoang;
 import entity.Tau;
 import entity.ToaTau;
@@ -28,6 +33,7 @@ public class ChonChoDialog extends JDialog {
     private JComboBox<Integer> cabinNumberComboBox;
     private ButtonGroup btgToa;
     private JPanel topPanel;
+    private HeaderTitle headerTitle;
 
     private Tau tau;
     private JPanel seatPanel;
@@ -35,6 +41,10 @@ public class ChonChoDialog extends JDialog {
     private LoaiKhoangDao loaiKhoangDao;
     private List<ToaTau> toaTaus;
     private LoaiKhoang loaiKhoang;
+
+    private KhachHangDialog khachHangDialog;
+    private TimKhachHangDialog timKhachHangDialog;
+
     private static List<Integer> soChoNgoi;
 
     public ChonChoDialog(Tau tau) {
@@ -53,6 +63,7 @@ public class ChonChoDialog extends JDialog {
     }
 
     private void initializeComponents() {
+        headerTitle = new HeaderTitle("Chọn chỗ");
         this.toaTaus = this.toaDao.layToaTheoMaTau(this.tau.getMaTau());
         loaiKhoang = this.loaiKhoangDao.layLoaiKhoangTheoMaToa(this.toaTaus.get(0).getMaToa());
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -88,7 +99,28 @@ public class ChonChoDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 ChonChoDialog.soChoNgoi = layToanBoChoDangChon();
                 dispose();
-                new TimKhachHangDialog();
+                timKhachHangDialog = new TimKhachHangDialog();
+                timKhachHangDialog
+                        .setTimKhachHangListener(new TimKhachHangListener() {
+                            @Override
+                            public void timThayhachhang(KhachHang khachHang) {
+                                themKhachHangVaoHoaDon(khachHang);
+                            }
+
+                            @Override
+                            public void khongTimThayKhachHang(String soDienThoai) {
+                                khachHangDialog.taoTaiKhoanVoiSoDienThoai(soDienThoai);
+                                khachHangDialog.setVisible(true);
+                            }
+                        });
+
+                khachHangDialog = new KhachHangDialog();
+                khachHangDialog.setTaoKhachHangListener(new TaoKhachHangListener() {
+                    @Override
+                    public void taoKhachHangThanhCong(KhachHang khachHang) {
+                        themKhachHangVaoHoaDon(khachHang);
+                    }
+                });
             }
         });
 
@@ -105,6 +137,7 @@ public class ChonChoDialog extends JDialog {
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
         mainPanel.setPreferredSize(new Dimension(400, 600));
+        add(headerTitle, BorderLayout.NORTH);
         add(mainPanel);
     }
 
@@ -185,6 +218,12 @@ public class ChonChoDialog extends JDialog {
         }
 
         return dsSoChoNgoi;
+    }
+
+    private void themKhachHangVaoHoaDon(KhachHang khachHang) {
+        // timKhachHangDialog.setVisible(true);
+
+        System.out.println("Thêm khách hàng vào hóa đơn: " + khachHang);
     }
 
     public static List<Integer> getSoChoNgoi() {

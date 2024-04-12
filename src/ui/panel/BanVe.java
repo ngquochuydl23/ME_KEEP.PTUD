@@ -57,8 +57,6 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
     private List<String> tenGaList;
     private List<Chuyen> chuyenList;
     private ChonChoDialog chonChoDialog;
-    private TimKhachHangDialog timKhachHangDialog;
-    private KhachHangDialog khachHangDialog;
     Color BackgroundColor = new Color(240, 247, 250);
 
     public BanVe() {
@@ -135,29 +133,6 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         contentCenter.setBackground(BackgroundColor);
         contentCenter.setLayout(new BorderLayout(10, 10));
         add(contentCenter, BorderLayout.CENTER);
-
-        timKhachHangDialog = new TimKhachHangDialog();
-        timKhachHangDialog
-                .setTimKhachHangListener(new TimKhachHangListener() {
-                    @Override
-                    public void timThayhachhang(KhachHang khachHang) {
-                        themKhachHangVaoHoaDon(khachHang);
-                    }
-
-                    @Override
-                    public void khongTimThayKhachHang(String soDienThoai) {
-                        khachHangDialog.taoTaiKhoanVoiSoDienThoai(soDienThoai);
-                        khachHangDialog.setVisible(true);
-                    }
-                });
-
-        khachHangDialog = new KhachHangDialog();
-        khachHangDialog.setTaoKhachHangListener(new TaoKhachHangListener() {
-            @Override
-            public void taoKhachHangThanhCong(KhachHang khachHang) {
-                themKhachHangVaoHoaDon(khachHang);
-            }
-        });
 
         functionBar = new PanelBorderRadius();
         functionBar.setPreferredSize(new Dimension(0, 100));
@@ -448,10 +423,4 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
     public void mouseExited(MouseEvent e) {
     }
 
-    private void themKhachHangVaoHoaDon(KhachHang khachHang) {
-        //   timKhachHangDialog.setVisible(true);
-
-
-        System.out.println("Thêm khách hàng vào hóa đơn: " + khachHang);
-    }
 }

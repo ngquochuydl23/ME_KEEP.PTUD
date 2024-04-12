@@ -196,7 +196,7 @@ public class TimKhachHangDialog extends JDialog implements ActionListener, Windo
             if (timKhachHangListener != null && khachHang != null)
                 timKhachHangListener.timThayhachhang(khachHang);
             dispose();
-            new HoaDonDialog();
+            new HoaDonDialog(this.khachHang);
         }
     }
 
