@@ -188,7 +188,6 @@ public class ChonChoDialog extends JDialog {
         repaint();
     }
 
-    // Thêm các chỗ ngồi vào panel
     private void addSeatsToPanel(List<Seat> seats) {
         for (Seat seat : seats) {
             seatPanel.add(seat);
@@ -206,7 +205,6 @@ public class ChonChoDialog extends JDialog {
                 dsVe.add(new Ve());
             }
         }
-
         return dsVe;
     }
 

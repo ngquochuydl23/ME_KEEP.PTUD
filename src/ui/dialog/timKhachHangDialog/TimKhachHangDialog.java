@@ -6,17 +6,11 @@ import helper.Validation;
 import ui.component.ButtonCustom;
 import ui.component.HeaderTitle;
 import ui.component.InputForm;
-import ui.dialog.HoaDonDialog;
-import ui.dialog.khachHangDialog.SuaKhachHangListener;
-import ui.dialog.khachHangDialog.TaoKhachHangListener;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.time.LocalDateTime;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class TimKhachHangDialog extends JDialog implements ActionListener, WindowListener {
 

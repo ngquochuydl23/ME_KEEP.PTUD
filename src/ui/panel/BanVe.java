@@ -16,6 +16,7 @@ import helper.JTableExporter;
 import ui.dialog.chonChoDialog.ChonChoNgoiListener;
 import ui.dialog.khachHangDialog.KhachHangDialog;
 import ui.dialog.khachHangDialog.TaoKhachHangListener;
+import ui.dialog.taoHoaDonDialog.TaoHoaDonDialog;
 import ui.dialog.timKhachHangDialog.TimKhachHangDialog;
 import ui.dialog.timKhachHangDialog.TimKhachHangListener;
 
@@ -63,12 +64,8 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
     private TimKhachHangDialog timKhachHangDialog;
     private KhachHangDialog khachHangDialog;
     Color BackgroundColor = new Color(240, 247, 250);
-
-
-
     private List<Ve> dsVe;
-
-
+    private TaoHoaDonDialog taoHoaDonDialog;
 
     public BanVe() {
         dsVe = new ArrayList<>();
@@ -86,6 +83,12 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         cbxGaDen.setCbItems(tenGaList);
 
         resetForm();
+
+
+
+        taoHoaDonDialog = new TaoHoaDonDialog();
+        taoHoaDonDialog.setData( new KhachHang(1, "Nguyễn Quốc Huy", "086868491", LocalDateTime.now(), true));
+        taoHoaDonDialog.setVisible(true);
     }
 
     public void initPadding() {
@@ -487,6 +490,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         HoaDon hoaDon = new  HoaDon("maHoaDon", LocalDateTime.now(), "ghiChu", 0, 0, khachHang, nhanVien, khuyenMai);
 
 
-
     }
+
+
 }
