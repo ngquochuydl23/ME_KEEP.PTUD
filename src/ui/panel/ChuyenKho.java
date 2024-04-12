@@ -1,7 +1,9 @@
 package ui.panel;
 
 import ui.component.IntegratedSearch;
-import ui.component.MainFunction;
+import ui.component.ChucNangChinh;
+import ui.component.ChucNangChinh;
+
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -15,11 +17,11 @@ public class ChuyenKho extends JPanel {
     JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
     JTable tableSanPham;
     JScrollPane scrollTableSanPham;
-    MainFunction mainFunction;
+    ChucNangChinh chucNangChinh;
     IntegratedSearch search;
     JLabel lbl1, lblImage;
     DefaultTableModel tblModel;
-    
+
     Color BackgroundColor = new Color(240, 247, 250);
 
     private void initComponent() {
@@ -31,12 +33,12 @@ public class ChuyenKho extends JPanel {
         tableSanPham = new JTable();
         scrollTableSanPham = new JScrollPane();
         tableSanPham.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{},
-                new String[]{}
-        ));
+                new Object[][] {},
+                new String[] {}));
         tableSanPham.setFont(new java.awt.Font("Segoe UI", 0, 14));
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"STT", "Mã phiếu kiểm kê", "Nhân viên kiểm kê", "Thời gian", "Số lượng thực tế","Chênh lệch"};
+        String[] header = new String[] { "STT", "Mã phiếu kiểm kê", "Nhân viên kiểm kê", "Thời gian",
+                "Số lượng thực tế", "Chênh lệch" };
         tblModel.setColumnIdentifiers(header);
         tableSanPham.setModel(tblModel);
         scrollTableSanPham.setViewportView(tableSanPham);
@@ -80,10 +82,10 @@ public class ChuyenKho extends JPanel {
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-//        mainFunction = new MainFunction();
-        functionBar.add(mainFunction);
+        // ChucNangChinh = new ChucNangChinh();
+        functionBar.add(chucNangChinh);
 
-        search = new IntegratedSearch(new String[]{"Tất cả"});
+        search = new IntegratedSearch(new String[] { "Tất cả" });
         functionBar.add(search);
 
         contentCenter.add(functionBar, BorderLayout.NORTH);

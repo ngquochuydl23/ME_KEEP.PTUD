@@ -66,14 +66,12 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
 
 
 
-
-
-    private List<Integer> dsChonChoNhoi;
+    private List<Ve> dsVe;
 
 
 
     public BanVe() {
-        dsChonChoNhoi = new ArrayList<>();
+        dsVe = new ArrayList<>();
         chuyenList = new ArrayList<>();
         tenGaList = new ArrayList<>();
         tuyenDao = new TuyenDao();
@@ -166,9 +164,9 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         chonChoDialog = new ChonChoDialog();
         chonChoDialog.setChonChoNgoiListener(new ChonChoNgoiListener() {
             @Override
-            public void chonChoNgoiThanhCong(List<Integer> dsChoNgoi) {
-                dsChonChoNhoi.clear();
-                dsChonChoNhoi.addAll(dsChoNgoi);
+            public void chonChoNgoiThanhCong(List<Ve> danhSachVe) {
+                dsVe.clear();
+                dsVe.addAll(danhSachVe);
                 chonChoDialog.setVisible(false);
                 timKhachHangDialog.setVisible(true);
             }
@@ -480,7 +478,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
     }
 
     private void themKhachHangVaoHoaDon(KhachHang khachHang) {
-        System.out.println("Danh sách chọn chõ ngồi: " + dsChonChoNhoi);
+        System.out.println("Danh sách vé chọn: " + dsVe);
         System.out.println("Thêm khách hàng vào hóa đơn: " + khachHang);
         System.out.println("Nhân viên đang sử dụng: " + NhanVienSuDungSingleton.layThongTinNhanVienHienTai());
 

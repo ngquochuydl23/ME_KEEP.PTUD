@@ -81,7 +81,9 @@ public class Carriage extends JButton {
             for (int j = 0; j < 6; j++) {
                 seats.add(new Seat(j + 1)); // Tạo mới một đối tượng Seat cho mỗi ghế
             }
-
+            Cabin cabin = new Cabin(seats);
+            cabin.updateSeatNumbers(i * 6 + 1); // Cập nhật số trên ghế cho mỗi cabin
+            carriage.addCabin(cabin);
         }
         return carriage;
     }
@@ -92,13 +94,15 @@ public class Carriage extends JButton {
         for (int i = 0; i < 8; i++) {
             List<Seat> seats = new ArrayList<>();
             for (int j = 0; j < 4; j++) {
-                seats.add(new Seat(j + 1));
+                seats.add(new Seat(j + 1)); // Tạo mới một đối tượng Seat cho mỗi ghế
             }
-            carriage.addCabin(new Cabin(seats));
+            Cabin cabin = new Cabin(seats);
+            cabin.updateSeatNumbers(i * 4 + 1); // Cập nhật số trên ghế cho mỗi cabin
+            carriage.addCabin(cabin);
         }
         return carriage;
     }
-
+    
     public void addCabin(Cabin cabin) {
         cabins.add(cabin);
     }
@@ -134,6 +138,5 @@ public class Carriage extends JButton {
 
     public void setToaTau(ToaTau toaTau) {
         Carriage.toaTau = toaTau;
-    }
-
+    }  
 }

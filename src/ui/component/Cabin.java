@@ -9,7 +9,7 @@ public class Cabin {
     public Cabin(List<Seat> seats) {
         this.seats = seats;
     }
-
+    
     // Tạo một khoang với 4 chỗ ngồi
     public static Cabin createFourSeaterCabin() {
         return new Cabin(Seat.createSeats(4));
@@ -34,7 +34,14 @@ public class Cabin {
     public int getNumberOfSeats() {
         return seats.size();
     }
-
+    
+    public void updateSeatNumbers(int startSeatNumber) {
+        for (int i = 0; i < seats.size(); i++) {
+            Seat seat = seats.get(i);
+            seat.setSeatNumber(startSeatNumber + i);
+        }
+    }
+    
     // Trả về chỗ ngồi tại một vị trí cụ thể trong khoang
     public Seat getSeat(int seatNumber) {
         if (seatNumber > 0 && seatNumber <= seats.size()) {

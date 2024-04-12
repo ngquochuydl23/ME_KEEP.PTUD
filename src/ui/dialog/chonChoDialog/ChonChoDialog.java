@@ -1,18 +1,24 @@
 package ui.dialog.chonChoDialog;
 
 import ui.component.Carriage;
+import ui.component.HeaderTitle;
 import ui.component.ButtonCustom;
 import ui.component.Cabin;
 import ui.component.Seat;
+import ui.dialog.khachHangDialog.KhachHangDialog;
+import ui.dialog.khachHangDialog.TaoKhachHangListener;
 import ui.dialog.timKhachHangDialog.TimKhachHangDialog;
+import ui.dialog.timKhachHangDialog.TimKhachHangListener;
 
 import javax.swing.*;
 
 import dao.LoaiKhoangDao;
 import dao.ToaDao;
+import entity.KhachHang;
 import entity.LoaiKhoang;
 import entity.Tau;
 import entity.ToaTau;
+import entity.Ve;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -25,6 +31,7 @@ public class ChonChoDialog extends JDialog {
     private JComboBox<Integer> cabinNumberComboBox;
     private ButtonGroup btgToa;
     private JPanel topPanel;
+    private HeaderTitle headerTitle;
 
     private Tau tau;
     private JPanel seatPanel;
@@ -37,7 +44,6 @@ public class ChonChoDialog extends JDialog {
     public ChonChoDialog() {
         toaDao = new ToaDao();
         loaiKhoangDao = new LoaiKhoangDao();
-
         setTitle("Chọn chỗ");
         setModalityType(ModalityType.APPLICATION_MODAL);
         initializeComponents();
@@ -59,7 +65,6 @@ public class ChonChoDialog extends JDialog {
     }
 
     private void initializeComponents() {
-
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         // Panel chọn loại toa và khoang
@@ -104,29 +109,26 @@ public class ChonChoDialog extends JDialog {
                 dispose();
             }
         });
-
         buttonPanel.add(confirmButton);
         buttonPanel.add(cancelButton);
-
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
-        mainPanel.setPreferredSize(new Dimension(400, 600));
+        mainPanel.setPreferredSize(new Dimension(800, 600));
         add(mainPanel);
     }
 
     private void doToaTauLenUI() {
         for (ToaTau toaTau : toaTaus) {
             final ToaTau currentToa = toaTau;
-
             Carriage carriage = new Carriage(toaTau);
             carriage.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     loaiKhoang = loaiKhoangDao.layLoaiKhoangTheoMaToa(currentToa.getMaToa());
+                    layToanBoChoDangChon();
                     updateSeatPanel();
                 }
             });
-
             this.btgToa.add(carriage);
             this.topPanel.add(carriage);
         }
@@ -161,13 +163,29 @@ public class ChonChoDialog extends JDialog {
         }
         seatPanel.removeAll(); // Xóa tất cả các ghế hiện tại trên panel
         clearSeatSelection(); // Xóa lựa chọn trên các ghế
-        // Toa 1 và 2 chỉ có một khoang, nên hiển thị số chỗ của khoang đầu tiên
-        addSeatsToPanel(carriage.getCabins().get(0).getSeats());
+        List<Cabin> cabins = carriage.getCabins(); // Lấy danh sách cabins từ carriage
 
+        // Tạo layout với số cột phù hợp
+        if (loaiToa.equals("giuong-nam-khoang-6") || loaiToa.equals("giuong-nam-khoang-4")) {
+            GridLayout gridLayout = new GridLayout(0, 2);
+            gridLayout.setHgap(10); // Khoảng trống giữa các cột
+            gridLayout.setVgap(10); // Khoảng trống giữa các hàng
+            seatPanel.setLayout(gridLayout);
+        } else if (loaiToa.equals("ghe-ngoi")) {
+            GridLayout gridLayout = new GridLayout(0, 4);
+            gridLayout.setHgap(10); // Khoảng trống giữa các cột
+            gridLayout.setVgap(10); // Khoảng trống giữa các hàng
+            seatPanel.setLayout(gridLayout);
+        }
+
+        for (Cabin cabin : cabins) { // Lặp qua từng cabin
+            addSeatsToPanel(cabin.getSeats()); // Thêm tất cả các ghế của cabin vào panel
+
+            seatPanel.add(new JPanel());
+            seatPanel.add(new JPanel());
+        }
         revalidate();
-
         repaint();
-
     }
 
     // Thêm các chỗ ngồi vào panel
@@ -177,20 +195,19 @@ public class ChonChoDialog extends JDialog {
         }
     }
 
-    public List<Integer> layToanBoChoDangChon() {
+    public List<Ve> layToanBoChoDangChon() {
         List<Seat> dsChoNgoi = new ArrayList<>();
         for (Cabin cabin : carriage.getCabins()) {
             dsChoNgoi = cabin.getSeats();
         }
-
-        List<Integer> dsSoChoNgoi = new ArrayList<>();
+        List<Ve> dsVe = new ArrayList<>();
         for (Seat seat : dsChoNgoi) {
             if (seat.isSelected()) {
-                dsSoChoNgoi.add(seat.getSeatNumber());
+                dsVe.add(new Ve());
             }
         }
 
-        return dsSoChoNgoi;
+        return dsVe;
     }
 
     public void setChonChoNgoiListener(ChonChoNgoiListener chonChoNgoiListener) {

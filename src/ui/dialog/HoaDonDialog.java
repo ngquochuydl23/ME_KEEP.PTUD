@@ -18,16 +18,18 @@ import ui.component.InputForm;
 public class HoaDonDialog extends JDialog {
     private HeaderTitle titlePage;
     private JPanel pnlMain;
+    private JPanel pnlKhachHang;
     private JPanel pnlButtom;
 
     private ButtonCustom tiepTucBtn, btnHuyBo, timBtn, xoaRongBtn;
     private InputForm tenKhachHangTextField;
-    private InputForm soDienThoaiTextField;
     private InputForm maKhachHangTextField;
     private HoaDonDao hoaDonDao;
     private KhachHang khachHang;
 
-    public HoaDonDialog() {
+    public HoaDonDialog(KhachHang khachHang) {
+        this.khachHang = khachHang;
+
         hoaDonDao = new HoaDonDao();
         initComponents();
     }
@@ -41,22 +43,25 @@ public class HoaDonDialog extends JDialog {
         pnlMain = new JPanel(new FlowLayout());
         pnlMain.setBackground(Color.white);
 
-        soDienThoaiTextField = new InputForm("Số điện thoại", 450, 80);
-        // soDienThoaiTextField.addActionListener(new );
-
-        tenKhachHangTextField = new InputForm("Tên khách hàng", 450, 80);
+        tenKhachHangTextField = new InputForm("Tên khách hàng", 390, 80);
         tenKhachHangTextField
                 .getTxtForm()
                 .setEnabled(false);
+        tenKhachHangTextField.getTxtForm().setText(this.khachHang.getHoTen());
 
-        maKhachHangTextField = new InputForm("Mã khách hàng", 450, 80);
+        maKhachHangTextField = new InputForm("Mã khách hàng", 90, 80);
         maKhachHangTextField
                 .getTxtForm()
                 .setEnabled(false);
-        pnlMain.add(soDienThoaiTextField);
+        maKhachHangTextField.getTxtForm().setText(String.valueOf(this.khachHang.getMaKhachHang()));
 
-        pnlMain.add(maKhachHangTextField);
-        pnlMain.add(tenKhachHangTextField);
+        pnlKhachHang = new JPanel(new BorderLayout());
+        pnlKhachHang.setBackground(Color.white);
+
+        pnlKhachHang.add(maKhachHangTextField, BorderLayout.WEST);
+        pnlKhachHang.add(tenKhachHangTextField);
+
+        pnlMain.add(pnlKhachHang);
 
         pnlButtom = new JPanel(new FlowLayout());
         pnlButtom.setBorder(new EmptyBorder(10, 0, 10, 0));
@@ -84,7 +89,6 @@ public class HoaDonDialog extends JDialog {
         add(pnlButtom, BorderLayout.SOUTH);
         setLocationRelativeTo(null);
 
-        xoaDuLieu();
         setVisible(true);
     }
 
@@ -92,7 +96,6 @@ public class HoaDonDialog extends JDialog {
         tiepTucBtn.setEnabled(false);
         tenKhachHangTextField.setText("");
         tenKhachHangTextField.setEnabled(false);
-        soDienThoaiTextField.setText("");
         maKhachHangTextField.setText("");
         maKhachHangTextField.setEnabled(false);
         khachHang = null;

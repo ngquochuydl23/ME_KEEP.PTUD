@@ -1,7 +1,7 @@
 package ui.panel;
 
 import ui.component.IntegratedSearch;
-import ui.component.MainFunction;
+import ui.component.ChucNangChinh;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -37,18 +37,18 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
     JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
     JTable tableNhaCungCap;
     JScrollPane scrollTableSanPham;
-    MainFunction mainFunction;
+    ChucNangChinh chucNangChinh;
     IntegratedSearch search;
     JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
     Color BackgroundColor = new Color(240, 247, 250);
     DefaultTableModel tblModel;
 
     private void initComponent() {
-        //Set model table
+        // Set model table
         tableNhaCungCap = new JTable();
         scrollTableSanPham = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"Mã NCC", "Tên nhà cung cấp", "Địa chỉ", "Email", "Số điện thoại"};
+        String[] header = new String[] { "Mã NCC", "Tên nhà cung cấp", "Địa chỉ", "Email", "Số điện thoại" };
         tblModel.setColumnIdentifiers(header);
         tableNhaCungCap.setModel(tblModel);
         tableNhaCungCap.setFocusable(false);
@@ -65,7 +65,8 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
         this.setLayout(new BorderLayout(0, 0));
         this.setOpaque(true);
 
-        // pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4 chỉ để thêm contentCenter ở giữa mà contentCenter không bị dính sát vào các thành phần khác
+        // pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4 chỉ để thêm contentCenter ở
+        // giữa mà contentCenter không bị dính sát vào các thành phần khác
         pnlBorder1 = new JPanel();
         pnlBorder1.setPreferredSize(new Dimension(0, 10));
         pnlBorder1.setBackground(BackgroundColor);
@@ -92,20 +93,22 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
         contentCenter.setLayout(new BorderLayout(10, 10));
         this.add(contentCenter, BorderLayout.CENTER);
 
-        // functionBar là thanh bên trên chứa các nút chức năng như thêm xóa sửa, và tìm kiếm
+        // functionBar là thanh bên trên chứa các nút chức năng như thêm xóa sửa, và tìm
+        // kiếm
         functionBar = new PanelBorderRadius();
         functionBar.setPreferredSize(new Dimension(0, 100));
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        String[] action = {"create", "update", "delete", "detail", "import", "export"};
-        mainFunction = new MainFunction( "nhacungcap", action);
+        String[] action = { "create", "update", "delete", "detail", "import", "export" };
+        chucNangChinh = new ChucNangChinh(action);
         for (String ac : action) {
-            mainFunction.btn.get(ac).addActionListener(this);
+            chucNangChinh.btn.get(ac).addActionListener(this);
         }
-        functionBar.add(mainFunction);
+        functionBar.add(chucNangChinh);
 
-        search = new IntegratedSearch(new String[]{"Tất cả", "Mã nhà cung cấp", "Tên nhà cung cấp", "Địa chỉ", "Email", "Số điện thoại"});
+        search = new IntegratedSearch(
+                new String[] { "Tất cả", "Mã nhà cung cấp", "Tên nhà cung cấp", "Địa chỉ", "Email", "Số điện thoại" });
         search.cbxChoose.addItemListener(this);
         search.txtSearchForm.addKeyListener(new KeyAdapter() {
             @Override
@@ -123,7 +126,7 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
         main = new PanelBorderRadius();
         BoxLayout boxly = new BoxLayout(main, BoxLayout.Y_AXIS);
         main.setLayout(boxly);
-//        main.setBorder(new EmptyBorder(20, 20, 20, 20));
+        // main.setBorder(new EmptyBorder(20, 20, 20, 20));
         contentCenter.add(main, BorderLayout.CENTER);
         main.add(scrollTableSanPham);
     }
@@ -133,8 +136,6 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
         initComponent();
         tableNhaCungCap.setDefaultEditor(Object.class, null);
     }
-
-
 
     public void openFile(String file) {
         try {
@@ -193,7 +194,6 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
             }
         }
 
-
     }
 
     public int getRowSelected() {
@@ -206,14 +206,15 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == mainFunction.btn.get("create")) {
+        if (e.getSource() == chucNangChinh.btn.get("create")) {
 
-        } else if (e.getSource() == mainFunction.btn.get("update")) {
+        } else if (e.getSource() == chucNangChinh.btn.get("update")) {
             int index = getRowSelected();
             if (index != -1) {
-//                NhaCungCapDialog nccDialog = new NhaCungCapDialog(this, owner, "Chỉnh sửa nhà cung cấp", true, "update", listncc.get(index));
+                // NhaCungCapDialog nccDialog = new NhaCungCapDialog(this, owner, "Chỉnh sửa nhà
+                // cung cấp", true, "update", listncc.get(index));
             }
-        } else if (e.getSource() == mainFunction.btn.get("delete")) {
+        } else if (e.getSource() == chucNangChinh.btn.get("delete")) {
             int index = getRowSelected();
             if (index != -1) {
                 int input = JOptionPane.showConfirmDialog(null,
@@ -223,17 +224,18 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
 
                 }
             }
-        } else if (e.getSource() == mainFunction.btn.get("detail")) {
+        } else if (e.getSource() == chucNangChinh.btn.get("detail")) {
             int index = getRowSelected();
             if (index != -1) {
-//                NhaCungCapDialog nccDialog = new NhaCungCapDialog(this, owner, "Chi tiết nhà cung cấp", true, "view", listncc.get(index));
+                // NhaCungCapDialog nccDialog = new NhaCungCapDialog(this, owner, "Chi tiết nhà
+                // cung cấp", true, "view", listncc.get(index));
             }
         } else if (e.getSource() == search.btnReset) {
             search.txtSearchForm.setText("");
 
-        } else if (e.getSource() == mainFunction.btn.get("import")) {
+        } else if (e.getSource() == chucNangChinh.btn.get("import")) {
             importExcel();
-        } else if (e.getSource() == mainFunction.btn.get("export")) {
+        } else if (e.getSource() == chucNangChinh.btn.get("export")) {
             try {
                 JTableExporter.exportJTableToExcel(tableNhaCungCap);
             } catch (IOException ex) {
