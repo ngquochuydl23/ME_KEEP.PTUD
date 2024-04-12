@@ -1,30 +1,19 @@
 package ui.dialog;
 
 import ui.component.Carriage;
-import ui.component.HeaderTitle;
 import ui.component.ButtonCustom;
 import ui.component.Cabin;
 import ui.component.Seat;
-import ui.dialog.khachHangDialog.KhachHangDialog;
-import ui.dialog.khachHangDialog.TaoKhachHangListener;
 import ui.dialog.timKhachHangDialog.TimKhachHangDialog;
-import ui.dialog.timKhachHangDialog.TimKhachHangListener;
-
 import javax.swing.*;
-
 import dao.LoaiKhoangDao;
 import dao.ToaDao;
-import entity.KhachHang;
 import entity.LoaiKhoang;
 import entity.Tau;
 import entity.ToaTau;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,18 +22,14 @@ public class ChonChoDialog extends JDialog {
     private JComboBox<Integer> cabinNumberComboBox;
     private ButtonGroup btgToa;
     private JPanel topPanel;
-    private HeaderTitle headerTitle;
-
     private Tau tau;
     private JPanel seatPanel;
     private ToaDao toaDao;
     private LoaiKhoangDao loaiKhoangDao;
     private List<ToaTau> toaTaus;
     private LoaiKhoang loaiKhoang;
-
-    private KhachHangDialog khachHangDialog;
-    private TimKhachHangDialog timKhachHangDialog;
-
+	private int seatsPerCabin = 10;
+	private int numberOfCabins = 8;
     private static List<Integer> soChoNgoi;
 
     public ChonChoDialog(Tau tau) {
@@ -62,67 +47,31 @@ public class ChonChoDialog extends JDialog {
     }
 
     private void initializeComponents() {
-        headerTitle = new HeaderTitle("Chọn chỗ");
         this.toaTaus = this.toaDao.layToaTheoMaTau(this.tau.getMaTau());
         loaiKhoang = this.loaiKhoangDao.layLoaiKhoangTheoMaToa(this.toaTaus.get(0).getMaToa());
         JPanel mainPanel = new JPanel(new BorderLayout());
-
         // Panel chọn loại toa và khoang
         this.btgToa = new ButtonGroup();
         topPanel = new JPanel();
         doToaTauLenUI();
-
-        JLabel cabinLabel = new JLabel("Chọn số khoang:");
-        cabinNumberComboBox = new JComboBox<>();
-        topPanel.add(cabinLabel);
-        topPanel.add(cabinNumberComboBox);
-
         mainPanel.add(topPanel, BorderLayout.NORTH);
-
         // Panel chọn chỗ
-
         seatPanel = new JPanel();
         seatPanel.setLayout(new GridLayout(0, 4));
         updateSeatPanel();
-
         JScrollPane scrollPane = new JScrollPane(seatPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-
         JPanel buttonPanel = new JPanel();
         JButton confirmButton = new ButtonCustom("Xác nhận", "success", 14);
         JButton cancelButton = new ButtonCustom("Hủy bỏ", "danger", 14);
-
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ChonChoDialog.soChoNgoi = layToanBoChoDangChon();
-                dispose();
-                timKhachHangDialog = new TimKhachHangDialog();
-                timKhachHangDialog
-                        .setTimKhachHangListener(new TimKhachHangListener() {
-                            @Override
-                            public void timThayhachhang(KhachHang khachHang) {
-                                themKhachHangVaoHoaDon(khachHang);
-                            }
-
-                            @Override
-                            public void khongTimThayKhachHang(String soDienThoai) {
-                                khachHangDialog.taoTaiKhoanVoiSoDienThoai(soDienThoai);
-                                khachHangDialog.setVisible(true);
-                            }
-                        });
-
-                khachHangDialog = new KhachHangDialog();
-                khachHangDialog.setTaoKhachHangListener(new TaoKhachHangListener() {
-                    @Override
-                    public void taoKhachHangThanhCong(KhachHang khachHang) {
-                        themKhachHangVaoHoaDon(khachHang);
-                    }
-                });
+                new TimKhachHangDialog();
             }
         });
-
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -226,14 +175,7 @@ public class ChonChoDialog extends JDialog {
                 dsSoChoNgoi.add(seat.getSeatNumber());
             }
         }
-
         return dsSoChoNgoi;
-    }
-
-    private void themKhachHangVaoHoaDon(KhachHang khachHang) {
-        // timKhachHangDialog.setVisible(true);
-
-        System.out.println("Thêm khách hàng vào hóa đơn: " + khachHang);
     }
 
     public static List<Integer> getSoChoNgoi() {
