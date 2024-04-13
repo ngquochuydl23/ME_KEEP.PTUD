@@ -1,15 +1,13 @@
 package ui.dialog.chonChoDialog;
 
+import dao.KhoangDao;
+import entity.*;
 import ui.component.*;
 
 import javax.swing.*;
 
 import dao.LoaiKhoangDao;
 import dao.ToaTauDao;
-import entity.LoaiKhoang;
-import entity.Tau;
-import entity.ToaTau;
-import entity.Ve;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,17 +16,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChonChoDialog extends JDialog {
-    private ToaTauBtn carriage;
+    private ToaTauBtn toaTauBtn;
     private SelectForm loaiKhoangCbx;
+    private SelectForm khoangCbx;
     private ButtonGroup btgToa;
     private JPanel topPanel;
     private Tau tau;
     private JPanel seatPanel;
     private ToaTauDao toaTauDao;
+    private KhoangDao khoangDao;
     private LoaiKhoangDao loaiKhoangDao;
     private List<ToaTau> danhSachToaTau;
     private List<LoaiKhoang> danhSachLoaiKhoang;
     private LoaiKhoang loaiKhoang;
+    private List<Khoang> dsKhoang;
 
     private ToaTau toaTauDangChon;
     private ChonChoNgoiListener chonChoNgoiListener;
@@ -40,22 +41,25 @@ public class ChonChoDialog extends JDialog {
         setSize(600, 900);
         setResizable(false);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        pack();
         setLocationRelativeTo(null);
 
         toaTauDao = new ToaTauDao();
         loaiKhoangDao = new LoaiKhoangDao();
+        khoangDao = new KhoangDao();
 
+        doDuLieuLoaiKhoang();
     }
 
     public void setTau(Tau tau) {
         this.tau = tau;
 
+        dsKhoang = new ArrayList<>();
         //danhSachToaTau = toaDao.layToaTheoMaTau(this.tau.getMaTau());
-        loaiKhoang = loaiKhoangDao.layLoaiKhoangTheoMaToa(danhSachToaTau.get(0).getMaToa());
+        ///loaiKhoang = loaiKhoangDao.layLoaiKhoangTheoMaToa(danhSachToaTau.get(0).getMaToa());
 
         layDuLieuToaTau();
         updateSeatPanel();
+        pack();
     }
 
     private void initializeComponents() {
@@ -64,12 +68,10 @@ public class ChonChoDialog extends JDialog {
         btgToa = new ButtonGroup();
         topPanel = new JPanel();
 
-        JLabel cabinLabel = new JLabel("Chọn loại khoang:");
-        loaiKhoangCbx = new SelectForm("Loại khoang");
-        loaiKhoangCbx.setVisible(false);
 
-        topPanel.add(cabinLabel);
-        topPanel.add(loaiKhoangCbx);
+        loaiKhoangCbx = new SelectForm("Loại khoang");
+        //topPanel.add(loaiKhoangCbx);
+        //topPanel.add(khoangCbx);
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
@@ -140,46 +142,46 @@ public class ChonChoDialog extends JDialog {
 
     // Cập nhật panel chọn chỗ dựa trên loại toa và khoang đã chọn
     private void updateSeatPanel() {
-        String loaiToa = this.loaiKhoang.getMaLoaiKhoang();
-        switch (loaiToa) {
-            case "ghe-ngoi":
-                carriage = ToaTauBtn.createCarriageWith50Seats();
-                break;
-            case "giuong-nam-khoang-6":
-                carriage = ToaTauBtn.createCarriageWith8Cabins6Seats();
-                break;
-            case "giuong-nam-khoang-4":
-                carriage = ToaTauBtn.createCarriageWith8Cabins4Seats();
-                break;
-            default:
-                carriage = ToaTauBtn.createCarriageWith50Seats();
-                return;
-        }
-        seatPanel.removeAll(); // Xóa tất cả các ghế hiện tại trên panel
-        clearSeatSelection(); // Xóa lựa chọn trên các ghế
-        List<KhoangBtn> cabins = carriage.getCabins(); // Lấy danh sách cabins từ carriage
-
-        // Tạo layout với số cột phù hợp
-        if (loaiToa.equals("giuong-nam-khoang-6") || loaiToa.equals("giuong-nam-khoang-4")) {
-            GridLayout gridLayout = new GridLayout(0, 2);
-            gridLayout.setHgap(10); // Khoảng trống giữa các cột
-            gridLayout.setVgap(10); // Khoảng trống giữa các hàng
-            seatPanel.setLayout(gridLayout);
-        } else if (loaiToa.equals("ghe-ngoi")) {
-            GridLayout gridLayout = new GridLayout(0, 4);
-            gridLayout.setHgap(10); // Khoảng trống giữa các cột
-            gridLayout.setVgap(10); // Khoảng trống giữa các hàng
-            seatPanel.setLayout(gridLayout);
-        }
-
-        for (KhoangBtn cabin : cabins) { // Lặp qua từng cabin
-            addSeatsToPanel(cabin.getSeats()); // Thêm tất cả các ghế của cabin vào panel
-
-            seatPanel.add(new JPanel());
-            seatPanel.add(new JPanel());
-        }
-        revalidate();
-        repaint();
+//        String loaiToa = this.loaiKhoang.getMaLoaiKhoang();
+//        switch (loaiToa) {
+//            case "ghe-ngoi":
+//                carriage = ToaTauBtn.createCarriageWith50Seats();
+//                break;
+//            case "giuong-nam-khoang-6":
+//                carriage = ToaTauBtn.createCarriageWith8Cabins6Seats();
+//                break;
+//            case "giuong-nam-khoang-4":
+//                carriage = ToaTauBtn.createCarriageWith8Cabins4Seats();
+//                break;
+//            default:
+//                carriage = ToaTauBtn.createCarriageWith50Seats();
+//                return;
+//        }
+//        seatPanel.removeAll(); // Xóa tất cả các ghế hiện tại trên panel
+//        clearSeatSelection(); // Xóa lựa chọn trên các ghế
+//        List<KhoangBtn> cabins = carriage.getCabins(); // Lấy danh sách cabins từ carriage
+//
+//        // Tạo layout với số cột phù hợp
+//        if (loaiToa.equals("giuong-nam-khoang-6") || loaiToa.equals("giuong-nam-khoang-4")) {
+//            GridLayout gridLayout = new GridLayout(0, 2);
+//            gridLayout.setHgap(10); // Khoảng trống giữa các cột
+//            gridLayout.setVgap(10); // Khoảng trống giữa các hàng
+//            seatPanel.setLayout(gridLayout);
+//        } else if (loaiToa.equals("ghe-ngoi")) {
+//            GridLayout gridLayout = new GridLayout(0, 4);
+//            gridLayout.setHgap(10); // Khoảng trống giữa các cột
+//            gridLayout.setVgap(10); // Khoảng trống giữa các hàng
+//            seatPanel.setLayout(gridLayout);
+//        }
+//
+//        for (KhoangBtn cabin : cabins) { // Lặp qua từng cabin
+//            addSeatsToPanel(cabin.getSeats()); // Thêm tất cả các ghế của cabin vào panel
+//
+//            seatPanel.add(new JPanel());
+//            seatPanel.add(new JPanel());
+//        }
+//        revalidate();
+//        repaint();
     }
 
     private void addSeatsToPanel(List<Seat> seats) {
@@ -190,7 +192,7 @@ public class ChonChoDialog extends JDialog {
 
     public List<Ve> layToanBoChoDangChon() {
         List<Seat> dsChoNgoi = new ArrayList<>();
-        for (KhoangBtn cabin : carriage.getCabins()) {
+        for (KhoangBtn cabin : toaTauBtn.getCabins()) {
             dsChoNgoi = cabin.getSeats();
         }
         List<Ve> dsVe = new ArrayList<>();
@@ -226,20 +228,30 @@ public class ChonChoDialog extends JDialog {
             toaTauBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    doDuLieuVaoLoaiKhoangComboBox(toaTau);
+                    layKhoangTuToaTau(toaTau);
                 }
             });
             btgToa.add(toaTauBtn);
             topPanel.add(toaTauBtn);
         }
+        revalidate();
+        repaint();
     }
 
-    private void doDuLieuVaoLoaiKhoangComboBox(ToaTau toaTau) {
-        toaTauDangChon = toaTau;
+    private void layKhoangTuToaTau(ToaTau toaTau) {
+        toaTauDangChon = toaTau;;
+        System.out.println(toaTauDangChon);
+
+        int loaiKhoangIdx = loaiKhoangCbx.getSelectedIndex();
+        LoaiKhoang loaiKhoangDangChon = danhSachLoaiKhoang.get(loaiKhoangIdx);
+        ;
+//        layToanBoChoDangChon();
+//        updateSeatPanel();
+    }
+
+    private void doDuLieuLoaiKhoang() {
         danhSachLoaiKhoang = loaiKhoangDao.layHet();
         loaiKhoangCbx.setCbItems(danhSachLoaiKhoang.stream().map(item -> (String) item.getTenLoaiKhoang()).toList());
-        loaiKhoangCbx.setVisible(true);
-        layToanBoChoDangChon();
-        updateSeatPanel();
     }
+
 }

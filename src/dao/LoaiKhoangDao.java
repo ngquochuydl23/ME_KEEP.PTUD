@@ -40,15 +40,15 @@ public class LoaiKhoangDao implements IDao<LoaiKhoang, String> {
     public List<LoaiKhoang> layHet() {
         List<LoaiKhoang> dsLoaiVe = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM LoaiVe";
+            String sql = "SELECT * FROM LoaiKhoang";
             PreparedStatement statement = con.prepareStatement(sql);
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-                String maLoaiVe = rs.getString("maLoaiVe");
-                String tenLoaiVe = rs.getString("tenLoaiVe");
+                String maLoaiKhoang = rs.getString("MaLoaiKhoang");
+                String tenLoaiKhoang = rs.getString("TenLoaiKhoang");
 
-                dsLoaiVe.add(new LoaiKhoang(maLoaiVe, tenLoaiVe));
+                dsLoaiVe.add(new LoaiKhoang(maLoaiKhoang, tenLoaiKhoang));
             }
         } catch (Exception e) {
             Logger.getLogger(LoaiKhoangDao.class.getName()).log(Level.SEVERE, e.getMessage(), e);
