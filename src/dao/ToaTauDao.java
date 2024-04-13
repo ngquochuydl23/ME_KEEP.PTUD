@@ -12,10 +12,10 @@ import config.DatabaseUtil;
 import entity.Tau;
 import entity.ToaTau;
 
-public class ToaDao implements IDao<ToaTau, String> {
+public class ToaTauDao implements IDao<ToaTau, String> {
     private Connection con;
 
-    public ToaDao() {
+    public ToaTauDao() {
         con = DatabaseUtil.getConnection();
     }
 

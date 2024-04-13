@@ -12,7 +12,7 @@ public class Ve {
      * 1: Da dat
      */
     private int tinhTrangVe;
-    private Khoang khoang;
+    private LoaiKhoang loaiKhoang;
 
     public Ve() {
     }
@@ -21,13 +21,13 @@ public class Ve {
         this.maVe = maVe;
     }
 
-    public Ve(String maVe, int choNgoi, double giaVe, String moTa, int tinhTrangVe, Khoang khoang) {
+    public Ve(String maVe, int choNgoi, double giaVe, String moTa, int tinhTrangVe, LoaiKhoang loaiKhoang) {
         this.maVe = maVe;
         this.choNgoi = choNgoi;
         this.giaVe = giaVe;
         this.moTa = moTa;
         this.tinhTrangVe = tinhTrangVe;
-        this.khoang = khoang;
+        this.loaiKhoang = loaiKhoang;
     }
 
     public String getMaVe() {
@@ -70,16 +70,12 @@ public class Ve {
         this.tinhTrangVe = tinhTrangVe;
     }
 
-    @Override
-    public String toString() {
-        return "Ve{" +
-                "maVe='" + maVe + '\'' +
-                ", choNgoi=" + choNgoi +
-                ", giaVe=" + giaVe +
-                ", moTa='" + moTa + '\'' +
-                ", tinhTrangVe='" + tinhTrangVe + '\'' +
-                ", khoang=" + khoang +
-                '}';
+    public LoaiKhoang getLoaiKhoang() {
+        return loaiKhoang;
+    }
+
+    public void setLoaiKhoang(LoaiKhoang loaiKhoang) {
+        this.loaiKhoang = loaiKhoang;
     }
 
     @Override
@@ -97,11 +93,15 @@ public class Ve {
         return Objects.hash(maVe);
     }
 
-    public Khoang getKhoang() {
-        return khoang;
-    }
-
-    public void setKhoang(Khoang khoang) {
-        this.khoang = khoang;
+    @Override
+    public String toString() {
+        return "Ve{" +
+                "maVe='" + maVe + '\'' +
+                ", choNgoi=" + choNgoi +
+                ", giaVe=" + giaVe +
+                ", moTa='" + moTa + '\'' +
+                ", tinhTrangVe=" + tinhTrangVe +
+                ", loaiKhoang=" + loaiKhoang +
+                '}';
     }
 }

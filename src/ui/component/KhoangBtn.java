@@ -2,27 +2,27 @@ package ui.component;
 
 import java.util.List;
 
-public class Cabin {
+public class KhoangBtn {
     private List<Seat> seats;
 
     // Constructor nhận một danh sách ghế khi khởi tạo khoang
-    public Cabin(List<Seat> seats) {
+    public KhoangBtn(List<Seat> seats) {
         this.seats = seats;
     }
     
     // Tạo một khoang với 4 chỗ ngồi
-    public static Cabin createFourSeaterCabin() {
-        return new Cabin(Seat.createSeats(4));
+    public static KhoangBtn createFourSeaterCabin() {
+        return new KhoangBtn(Seat.createSeats(4));
     }
 
     // Tạo một khoang với 6 chỗ ngồi
-    public static Cabin createSixSeaterCabin() {
-        return new Cabin(Seat.createSeats(6));
+    public static KhoangBtn createSixSeaterCabin() {
+        return new KhoangBtn(Seat.createSeats(6));
     }
 
     // Tạo một khoang với 50 chỗ ngồi
-    public static Cabin createFiftySeaterCabin() {
-        return new Cabin(Seat.createSeats(50));
+    public static KhoangBtn createFiftySeaterCabin() {
+        return new KhoangBtn(Seat.createSeats(50));
     }
 
     // Trả về danh sách các chỗ ngồi trong khoang

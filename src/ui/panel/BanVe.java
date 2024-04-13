@@ -85,9 +85,8 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         resetForm();
 
 
-
         taoHoaDonDialog = new TaoHoaDonDialog();
-        taoHoaDonDialog.setData( new KhachHang(1, "Nguyễn Quốc Huy", "086868491", LocalDateTime.now(), true));
+        taoHoaDonDialog.setData(new KhachHang(1, "Nguyễn Quốc Huy", "086868491", LocalDateTime.now(), true), dsVe);
         taoHoaDonDialog.setVisible(true);
     }
 
@@ -121,7 +120,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         tableChuyenTau = new JTable();
         scrollTableChuyenTau = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[] { "Mã chuyến", "Tuyến", "Tàu", "Thời gian khởi hành", "Thời gian đến dự kiến" };
+        String[] header = new String[]{"Mã chuyến", "Tuyến", "Tàu", "Thời gian khởi hành", "Thời gian đến dự kiến"};
         tblModel.setColumnIdentifiers(header);
         tableChuyenTau.setModel(tblModel);
         tableChuyenTau.setDefaultEditor(Object.class, null);
@@ -150,19 +149,18 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         add(contentCenter, BorderLayout.CENTER);
 
         timKhachHangDialog = new TimKhachHangDialog();
-        timKhachHangDialog
-                .setTimKhachHangListener(new TimKhachHangListener() {
-                    @Override
-                    public void timThayhachhang(KhachHang khachHang) {
-                        themKhachHangVaoHoaDon(khachHang);
-                    }
+        timKhachHangDialog.setTimKhachHangListener(new TimKhachHangListener() {
+            @Override
+            public void timThayhachhang(KhachHang khachHang) {
+                themKhachHangVaoHoaDon(khachHang);
+            }
 
-                    @Override
-                    public void khongTimThayKhachHang(String soDienThoai) {
-                        khachHangDialog.taoTaiKhoanVoiSoDienThoai(soDienThoai);
-                        khachHangDialog.setVisible(true);
-                    }
-                });
+            @Override
+            public void khongTimThayKhachHang(String soDienThoai) {
+                khachHangDialog.taoTaiKhoanVoiSoDienThoai(soDienThoai);
+                khachHangDialog.setVisible(true);
+            }
+        });
 
         chonChoDialog = new ChonChoDialog();
         chonChoDialog.setChonChoNgoiListener(new ChonChoNgoiListener() {
@@ -188,53 +186,46 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        chucNangChinh = new ChucNangChinh(new String[] { "tim", "chi-tiet", "huy-ve", "xuat-excel" });
+        chucNangChinh = new ChucNangChinh(new String[]{"tim", "chi-tiet", "huy-ve", "xuat-excel"});
 
-        chucNangChinh
-                .getToolbar("tim")
-                .addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
+        chucNangChinh.getToolbar("tim").addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-                        if (!validation() ||  !validateSelectDate())
-                            return;
+                if (!validation() || !validateSelectDate()) return;
 
-                        layDuLieu();
-                    }
-                });
+                layDuLieu();
+            }
+        });
 
-        chucNangChinh
-                .getToolbar("huy-ve")
-                .addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        // int index = getRowSelected();
-                        // if (index != -1) {
-                        // if (JOptionPane.showConfirmDialog(
-                        // null,
-                        // "Bạn có chắc chắn muốn huỷ phiếu ?\nThao tác này không thể hoàn tác nên hãy
-                        // suy nghĩ kĩ !",
-                        // "Huỷ phiếu",
-                        // JOptionPane.OK_CANCEL_OPTION,
-                        // JOptionPane.INFORMATION_MESSAGE) == 0) {
-                        //
-                        // }
-                        // }
-                    }
-                });
+        chucNangChinh.getToolbar("huy-ve").addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // int index = getRowSelected();
+                // if (index != -1) {
+                // if (JOptionPane.showConfirmDialog(
+                // null,
+                // "Bạn có chắc chắn muốn huỷ phiếu ?\nThao tác này không thể hoàn tác nên hãy
+                // suy nghĩ kĩ !",
+                // "Huỷ phiếu",
+                // JOptionPane.OK_CANCEL_OPTION,
+                // JOptionPane.INFORMATION_MESSAGE) == 0) {
+                //
+                // }
+                // }
+            }
+        });
 
-        chucNangChinh
-                .getToolbar("xuat-excel")
-                .addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        try {
-                            JTableExporter.exportJTableToExcel(tableChuyenTau);
-                        } catch (IOException ex) {
-                            Logger.getLogger(Chuyen.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                });
+        chucNangChinh.getToolbar("xuat-excel").addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    JTableExporter.exportJTableToExcel(tableChuyenTau);
+                } catch (IOException ex) {
+                    Logger.getLogger(Chuyen.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
 
         functionBar.add(chucNangChinh);
         contentCenter.add(functionBar, BorderLayout.NORTH);
@@ -330,13 +321,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
                 Ga gaDen = chuyen.getTuyen().getGaDen();
                 Tau tau = chuyen.getTau();
 
-                tblModel.addRow(new Object[] {
-                        chuyen.getMaChuyen(),
-                        gaDi.getTenGa() + "-" + gaDen.getTenGa(),
-                        tau.getTenTau(),
-                        chuyen.getThoiGianKhoiHanh(),
-                        chuyen.getThoiGianDen()
-                });
+                tblModel.addRow(new Object[]{chuyen.getMaChuyen(), gaDi.getTenGa() + "-" + gaDen.getTenGa(), tau.getTenTau(), chuyen.getThoiGianKhoiHanh(), chuyen.getThoiGianDen()});
             }
         } catch (ParseException ex) {
             ex.printStackTrace();
@@ -354,10 +339,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
             return;
         }
 
-        List<String> ketQua = tenGaList
-                .stream()
-                .filter(item -> item.toLowerCase().contains(tenGa))
-                .toList();
+        List<String> ketQua = tenGaList.stream().filter(item -> item.toLowerCase().contains(tenGa)).toList();
 
         selectForm.setCbItems(ketQua);
         editorComponent.setText(previousText);
@@ -399,8 +381,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
             }
 
             if (ngayDi.after(ngayVe)) {
-                JOptionPane.showMessageDialog(this, "Ngày về phải lớn hơn ngày bắt đầu", "Lỗi !",
-                        JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ngày về phải lớn hơn ngày bắt đầu", "Lỗi !", JOptionPane.ERROR_MESSAGE);
                 dateNgayVe.getDateChooser().setCalendar(null);
                 return false;
             }
@@ -487,9 +468,10 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
 
         NhanVien nhanVien = NhanVienSuDungSingleton.layThongTinNhanVienHienTai();
         KhuyenMai khuyenMai = null;
-        HoaDon hoaDon = new  HoaDon("maHoaDon", LocalDateTime.now(), "ghiChu", 0, 0, khachHang, nhanVien, khuyenMai);
+        HoaDon hoaDon = new HoaDon("maHoaDon", LocalDateTime.now(), "ghiChu", 0, 0, khachHang, nhanVien, khuyenMai);
 
-
+        taoHoaDonDialog.setData(khachHang, dsVe);
+        taoHoaDonDialog.setVisible(true);
     }
 
 

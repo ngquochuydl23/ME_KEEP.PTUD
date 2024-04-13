@@ -39,10 +39,8 @@ public class NhanVienDialog extends JDialog {
     private JRadioButton gioiTinhNuRbtn;
     private InputDate ngaySinhInputDate;
     private NhanVien nhanVien;
-
     private boolean dangChinhSua;
     private NhanVienDao nhanVienDao;
-
     private TaoNhanVienListener taoNhanVienListener;
     private SuaNhanVienListener suaNhanVienListener;
     private JPanel main, bottom;

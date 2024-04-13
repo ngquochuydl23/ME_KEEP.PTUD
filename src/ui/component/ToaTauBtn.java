@@ -2,30 +2,25 @@ package ui.component;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
-import java.awt.FlowLayout;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 import entity.LoaiKhoang;
 import entity.ToaTau;
 
-public class Carriage extends JButton {
-    private List<Cabin> cabins;
+public class ToaTauBtn extends JButton {
+    private List<KhoangBtn> cabins;
     private static ToaTau toaTau;
 
-    public Carriage(ToaTau toaTau) {
-        Carriage.toaTau = toaTau;
+    public ToaTauBtn(ToaTau toaTau) {
+        ToaTauBtn.toaTau = toaTau;
         cabins = new ArrayList<>();
         initComponent(toaTau.getTenToa());
     }
@@ -65,23 +60,23 @@ public class Carriage extends JButton {
     }
 
     // Tạo một toa với 50 chỗ
-    public static Carriage createCarriageWith50Seats() {
-        Carriage carriage = new Carriage(toaTau);
-        Cabin cabin = (Cabin) Cabin.createFiftySeaterCabin();
+    public static ToaTauBtn createCarriageWith50Seats() {
+        ToaTauBtn carriage = new ToaTauBtn(toaTau);
+        KhoangBtn cabin = (KhoangBtn) KhoangBtn.createFiftySeaterCabin();
         carriage.addCabin(cabin);
 
         return carriage;
     }
 
     // Tạo một toa với 8 khoang, mỗi khoang có 6 chỗ
-    public static Carriage createCarriageWith8Cabins6Seats() {
-        Carriage carriage = new Carriage(toaTau);
+    public static ToaTauBtn createCarriageWith8Cabins6Seats() {
+        ToaTauBtn carriage = new ToaTauBtn(toaTau);
         for (int i = 0; i < 8; i++) {
             List<Seat> seats = new ArrayList<>();
             for (int j = 0; j < 6; j++) {
                 seats.add(new Seat(j + 1)); // Tạo mới một đối tượng Seat cho mỗi ghế
             }
-            Cabin cabin = new Cabin(seats);
+            KhoangBtn cabin = new KhoangBtn(seats);
             cabin.updateSeatNumbers(i * 6 + 1); // Cập nhật số trên ghế cho mỗi cabin
             carriage.addCabin(cabin);
         }
@@ -89,43 +84,43 @@ public class Carriage extends JButton {
     }
 
     // Tạo một toa với 8 khoang, mỗi khoang có 4 chỗ
-    public static Carriage createCarriageWith8Cabins4Seats() {
-        Carriage carriage = new Carriage(toaTau);
+    public static ToaTauBtn createCarriageWith8Cabins4Seats() {
+        ToaTauBtn carriage = new ToaTauBtn(toaTau);
         for (int i = 0; i < 8; i++) {
             List<Seat> seats = new ArrayList<>();
             for (int j = 0; j < 4; j++) {
                 seats.add(new Seat(j + 1)); // Tạo mới một đối tượng Seat cho mỗi ghế
             }
-            Cabin cabin = new Cabin(seats);
+            KhoangBtn cabin = new KhoangBtn(seats);
             cabin.updateSeatNumbers(i * 4 + 1); // Cập nhật số trên ghế cho mỗi cabin
             carriage.addCabin(cabin);
         }
         return carriage;
     }
     
-    public void addCabin(Cabin cabin) {
+    public void addCabin(KhoangBtn cabin) {
         cabins.add(cabin);
     }
 
-    public List<Cabin> getCabins() {
+    public List<KhoangBtn> getCabins() {
         return cabins;
     }
 
     public int getTotalNumberOfSeats() {
         int totalSeats = 0;
-        for (Cabin cabin : cabins) {
+        for (KhoangBtn cabin : cabins) {
             totalSeats += cabin.getNumberOfSeats();
         }
         return totalSeats;
     }
 
-    public static void displayCarriageInfo(Carriage carriage) {
-        List<Cabin> cabins = carriage.getCabins();
+    public static void displayCarriageInfo(ToaTauBtn carriage) {
+        List<KhoangBtn> cabins = carriage.getCabins();
         int totalSeats = carriage.getTotalNumberOfSeats();
         System.out.println("Total number of seats: " + totalSeats);
         System.out.println("Number of cabins: " + cabins.size());
         for (int i = 0; i < cabins.size(); i++) {
-            Cabin cabin = cabins.get(i);
+            KhoangBtn cabin = cabins.get(i);
             int cabinNumber = i + 1;
             System.out.println("Cabin " + cabinNumber + ":");
             System.out.println("   Number of seats: " + cabin.getNumberOfSeats());
@@ -137,6 +132,6 @@ public class Carriage extends JButton {
     }
 
     public void setToaTau(ToaTau toaTau) {
-        Carriage.toaTau = toaTau;
+        ToaTauBtn.toaTau = toaTau;
     }  
 }

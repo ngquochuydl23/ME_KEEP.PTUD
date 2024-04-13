@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -178,7 +179,8 @@ public class TaoHoaDonDialog extends JDialog {
             veModel.addRow(new String[]{
                     ve.getMaVe(),
                     String.valueOf(ve.getChoNgoi()),
-                    ve.getKhoang().getTenKhoang(),
+                    "",
+                 //   ve.getKhoang().getTenKhoang(),
                     String.valueOf(ve.getGiaVe()),
                     ve.getMoTa()
             });
@@ -202,8 +204,12 @@ public class TaoHoaDonDialog extends JDialog {
 
     @Override
     public void setVisible(boolean b) {
-        xoaDuLieu();
         super.setVisible(b);
+
+        if (!b) {
+            xoaDuLieu();
+        }
+
     }
 
     // @Override

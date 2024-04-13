@@ -35,7 +35,7 @@ public class VeDao implements IDao<Ve, String> {
                 int tinhTrangVe = rs.getInt("tinhTrangVe");
                 String maKhoang = rs.getString("maKhoang");
 
-                return new Ve(maVe, choNgoi, giaVe, moTa, tinhTrangVe, new Khoang(maKhoang));
+                return new Ve(maVe, choNgoi, giaVe, moTa, tinhTrangVe,null);
             }
         } catch (Exception e) {
             Logger.getLogger(VeDao.class.getName()).log(Level.SEVERE, null, e);
@@ -60,7 +60,7 @@ public class VeDao implements IDao<Ve, String> {
                 String maLoaiVe = rs.getString("maLoaiVe");
                 String maKhoang = rs.getString("maKhoang");
 
-                dsVe.add(new Ve(maVe, choNgoi, giaVe, moTa, tinhTrangVe, new Khoang(maKhoang)));
+                dsVe.add(new Ve(maVe, choNgoi, giaVe, moTa, tinhTrangVe, null));
             }
         } catch (Exception e) {
             Logger.getLogger(VeDao.class.getName()).log(Level.SEVERE, e.getMessage(), e);
@@ -79,7 +79,7 @@ public class VeDao implements IDao<Ve, String> {
             statement.setDouble(3, entity.getGiaVe());
             statement.setString(4, entity.getMoTa());
             statement.setInt(5, entity.getTinhTrangVe());
-            statement.setString(6, entity.getKhoang().getMaKhoang());
+            statement.setString(6,"");
 
             return statement.executeUpdate() > 0;
         } catch (SQLException ex) {
@@ -111,7 +111,7 @@ public class VeDao implements IDao<Ve, String> {
             pst.setDouble(2, entity.getGiaVe());
             pst.setString(3, entity.getMoTa());
             pst.setInt(4, entity.getTinhTrangVe());
-            pst.setString(5, entity.getKhoang().getMaKhoang());
+            pst.setString(5, "");
 
             pst.setString(7, entity.getMaVe());
             return pst.executeUpdate() > 0;
