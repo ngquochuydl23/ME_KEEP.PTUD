@@ -6,5 +6,5 @@ import java.util.List;
 
 @FunctionalInterface
 public interface ChonChoNgoiListener {
-    void chonChoNgoiThanhCong(List<Ve> dsVe);
+    void chonChoNgoiThanhCong(List<Integer> dsCho);
 }

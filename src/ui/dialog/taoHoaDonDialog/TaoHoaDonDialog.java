@@ -39,11 +39,11 @@ public class TaoHoaDonDialog extends JDialog {
     private JTable veTable;
     private DefaultTableModel veModel;
     private HoaDon hoaDon;
-    private List<Ve> danhSachVe;
+    private List<Integer> dsCho;
     private KhachHang khachHang;
 
     public TaoHoaDonDialog() {
-        danhSachVe = new ArrayList<>();
+        dsCho = new ArrayList<>();
 
         hoaDonDao = new HoaDonDao();
         initComponents();
@@ -123,9 +123,6 @@ public class TaoHoaDonDialog extends JDialog {
         khVaTien.add(khachHangPanel);
         khVaTien.add(tienBox);
 
-
-        ///
-
         veModel = new DefaultTableModel("Mã vé;Chỗ ngồi;Tên khoang;Giá vé;Mô tả".split(";"), 0);
         veTable = new JTable(veModel);
         JScrollPane veTablePanel = new JScrollPane(veTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -164,8 +161,8 @@ public class TaoHoaDonDialog extends JDialog {
         setVisible(true);
     }
 
-    public void setData(KhachHang khachHang, List<Ve> dsVe) {
-        this.danhSachVe.addAll(dsVe);
+    public void setData(KhachHang khachHang, List<Integer> dsCho) {
+        this.dsCho.addAll(dsCho);
         this.khachHang = khachHang;
 
         maKhachHangTextField.getTxtForm().setText(String.valueOf(khachHang.getMaKhachHang()));
@@ -175,20 +172,20 @@ public class TaoHoaDonDialog extends JDialog {
         while (veModel.getRowCount() > 0)
             veModel.removeRow(0);
 
-        for (Ve ve :danhSachVe) {
-            veModel.addRow(new String[]{
-                    ve.getMaVe(),
-                    String.valueOf(ve.getChoNgoi()),
-                    "",
-                 //   ve.getKhoang().getTenKhoang(),
-                    String.valueOf(ve.getGiaVe()),
-                    ve.getMoTa()
-            });
+        for (Integer cho :dsCho) {
+            // veModel.addRow(new String[]{
+            //         ve.getMaVe(),
+            //         String.valueOf(ve.getChoNgoi()),
+            //         "",
+            //      //   ve.getKhoang().getTenKhoang(),
+            //         String.valueOf(ve.getGiaVe()),
+            //         ve.getMoTa()
+            // });
         }
     }
 
     private void xoaDuLieu() {
-        danhSachVe.clear();
+        // danhSachVe.clear();
         khachHang = null;
 
         maKhachHangTextField.getTxtForm().setText("");
@@ -211,6 +208,8 @@ public class TaoHoaDonDialog extends JDialog {
         }
 
     }
+
+
 
     // @Override
     // public void actionPerformed(ActionEvent e) {

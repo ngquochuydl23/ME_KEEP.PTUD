@@ -64,11 +64,11 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
     private TimKhachHangDialog timKhachHangDialog;
     private KhachHangDialog khachHangDialog;
     Color BackgroundColor = new Color(240, 247, 250);
-    private List<Ve> dsVe;
+    private List<Integer> danhSachCho = new ArrayList<>();
     private TaoHoaDonDialog taoHoaDonDialog;
 
     public BanVe() {
-        dsVe = new ArrayList<>();
+       
         chuyenList = new ArrayList<>();
         tenGaList = new ArrayList<>();
         tuyenDao = new TuyenDao();
@@ -86,7 +86,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
 
 
         taoHoaDonDialog = new TaoHoaDonDialog();
-        taoHoaDonDialog.setData(new KhachHang(1, "Nguyễn Quốc Huy", "086868491", LocalDateTime.now(), true), dsVe);
+        taoHoaDonDialog.setData(new KhachHang(1, "Nguyễn Quốc Huy", "086868491", LocalDateTime.now(), true), danhSachCho);
         // taoHoaDonDialog.setData( new KhachHang(1, "Nguyễn Quốc Huy", "086868491", LocalDateTime.now(), true));
         taoHoaDonDialog.setVisible(true);
     }
@@ -166,9 +166,9 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         chonChoDialog = new ChonChoDialog();
         chonChoDialog.setChonChoNgoiListener(new ChonChoNgoiListener() {
             @Override
-            public void chonChoNgoiThanhCong(List<Ve> danhSachVe) {
-                dsVe.clear();
-                dsVe.addAll(danhSachVe);
+            public void chonChoNgoiThanhCong(List<Integer> dsCho) {
+                danhSachCho.clear();
+                danhSachCho.addAll(dsCho);
                 chonChoDialog.setVisible(false);
                 timKhachHangDialog.setVisible(true);
             }
@@ -463,7 +463,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
     }
 
     private void themKhachHangVaoHoaDon(KhachHang khachHang) {
-        System.out.println("Danh sách vé chọn: " + dsVe);
+        System.out.println("Danh sách vé chọn: " + danhSachCho);
         System.out.println("Thêm khách hàng vào hóa đơn: " + khachHang);
         System.out.println("Nhân viên đang sử dụng: " + NhanVienSuDungSingleton.layThongTinNhanVienHienTai());
 
@@ -471,7 +471,14 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         KhuyenMai khuyenMai = null;
         HoaDon hoaDon = new HoaDon("maHoaDon", LocalDateTime.now(), "ghiChu", 0, 0, khachHang, nhanVien, khuyenMai);
 
-        taoHoaDonDialog.setData(khachHang, dsVe);
+
+
+        String maGaDi = cbxGaDi.getSelectedItem().toString();
+        String maGaDen = cbxGaDen.getSelectedItem().toString();
+        Tau tau = layTauDuocChon();
+
+
+        taoHoaDonDialog.setData(khachHang, danhSachCho);
         taoHoaDonDialog.setVisible(true);
     }
 

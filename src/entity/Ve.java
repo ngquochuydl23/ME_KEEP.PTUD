@@ -8,8 +8,8 @@ public class Ve {
     private double giaVe;
     private String moTa;
     /*
-     * 0: Chua dat
-     * 1: Da dat
+     * 0: Da dat
+     * 1: Chua dat
      */
     private int tinhTrangVe;
     private LoaiKhoang loaiKhoang;
