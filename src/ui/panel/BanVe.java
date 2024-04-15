@@ -16,7 +16,8 @@ import helper.JTableExporter;
 import ui.dialog.chonChoDialog.ChonChoNgoiListener;
 import ui.dialog.khachHangDialog.KhachHangDialog;
 import ui.dialog.khachHangDialog.TaoKhachHangListener;
-import ui.dialog.taoHoaDonDialog.TaoHoaDonDialog;
+import ui.dialog.thanhToanDialog.ThanhToanDialog;
+import ui.dialog.thanhToanDialog.ThanhToanListener;
 import ui.dialog.timKhachHangDialog.TimKhachHangDialog;
 import ui.dialog.timKhachHangDialog.TimKhachHangListener;
 
@@ -32,7 +33,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -65,11 +65,18 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
     private KhachHangDialog khachHangDialog;
     Color BackgroundColor = new Color(240, 247, 250);
     private List<Integer> danhSachCho = new ArrayList<>();
-    private TaoHoaDonDialog taoHoaDonDialog;
+    private ThanhToanDialog thanhToanDialog;
     private ToaTau toaTauChon;
 
     public BanVe() {
-        taoHoaDonDialog = new TaoHoaDonDialog();
+        thanhToanDialog = new ThanhToanDialog();
+        thanhToanDialog.setThanhToanListener(new ThanhToanListener() {
+            @Override
+            public void thanhToanThanhCong(HoaDon hoaDon) {
+                System.out.println(hoaDon);
+                resetForm();
+            }
+        });
         chuyenList = new ArrayList<>();
         tenGaList = new ArrayList<>();
         tuyenDao = new TuyenDao();
@@ -459,29 +466,20 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
     }
 
     private void themKhachHangVaoHoaDon(KhachHang khachHang) {
-        System.out.println("Danh sách vé chọn: " + danhSachCho);
-        System.out.println("Thêm khách hàng vào hóa đơn: " + khachHang);
-        System.out.println("Nhân viên đang sử dụng: " + NhanVienSuDungSingleton.layThongTinNhanVienHienTai());
-
         NhanVien nhanVien = NhanVienSuDungSingleton.layThongTinNhanVienHienTai();
-        KhuyenMai khuyenMai = null;
-        HoaDon hoaDon = new HoaDon("maHoaDon", LocalDateTime.now(), "ghiChu", 0, 0, khachHang, nhanVien, khuyenMai);
-
-
 
         String maGaDi = cbxGaDi.getSelectedItem().toString();
         String maGaDen = cbxGaDen.getSelectedItem().toString();
         Tau tau = layTauDuocChon();
-
-
-        taoHoaDonDialog.setData(
+        thanhToanDialog.setData(
+                nhanVien,
                 maGaDi,
                 maGaDen,
                 tau,
                 toaTauChon,
                 khachHang,
                 danhSachCho);
-        taoHoaDonDialog.setVisible(true);
+        thanhToanDialog.setVisible(true);
     }
 
 

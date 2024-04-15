@@ -7,9 +7,11 @@ public class HoaDon {
     private String maHoaDon;
     private LocalDateTime thoiGianTaoHoaDon;
     private String ghiChu;
-    private double thueVat;
+    private double vat;
 
-    private double tienKhachDua;
+    private double tongTien;
+    private double tamTinh;
+    private double tongTienGiam;
 
     private KhachHang khachHang;
     private NhanVien nhanVien;
@@ -17,19 +19,21 @@ public class HoaDon {
     private KhuyenMai khuyenMai;
     public HoaDon() {}
 
-    public HoaDon(String maHoaDon) {
-        this.maHoaDon = maHoaDon;
-    }
-
-    public HoaDon(String maHoaDon, LocalDateTime thoiGianTaoHoaDon, String ghiChu, double thueVat, double tienKhachDua, KhachHang khachHang, NhanVien nhanVien, KhuyenMai khuyenMai) {
+    public HoaDon(String maHoaDon, LocalDateTime thoiGianTaoHoaDon, String ghiChu, double vat, double tongTien, double tamTinh, double tongTienGiam, KhachHang khachHang, NhanVien nhanVien, KhuyenMai khuyenMai) {
         this.maHoaDon = maHoaDon;
         this.thoiGianTaoHoaDon = thoiGianTaoHoaDon;
         this.ghiChu = ghiChu;
-        this.thueVat = thueVat;
-        this.tienKhachDua = tienKhachDua;
+        this.vat = vat;
+        this.tongTien = tongTien;
+        this.tamTinh = tamTinh;
+        this.tongTienGiam = tongTienGiam;
         this.khachHang = khachHang;
         this.nhanVien = nhanVien;
         this.khuyenMai = khuyenMai;
+    }
+
+    public HoaDon(String maHoaDon) {
+        this.maHoaDon = maHoaDon;
     }
 
     public String getMaHoaDon() {
@@ -56,20 +60,36 @@ public class HoaDon {
         this.ghiChu = ghiChu;
     }
 
-    public double getThueVat() {
-        return thueVat;
+    public double getVat() {
+        return vat;
     }
 
-    public void setThueVat(double thueVat) {
-        this.thueVat = thueVat;
+    public void setVat(double vat) {
+        this.vat = vat;
     }
 
-    public double getTienKhachDua() {
-        return tienKhachDua;
+    public double getTongTien() {
+        return tongTien;
     }
 
-    public void setTienKhachDua(double tienKhachDua) {
-        this.tienKhachDua = tienKhachDua;
+    public void setTongTien(double tongTien) {
+        this.tongTien = tongTien;
+    }
+
+    public double getTamTinh() {
+        return tamTinh;
+    }
+
+    public void setTamTinh(double tamTinh) {
+        this.tamTinh = tamTinh;
+    }
+
+    public double getTongTienGiam() {
+        return tongTienGiam;
+    }
+
+    public void setTongTienGiam(double tongTienGiam) {
+        this.tongTienGiam = tongTienGiam;
     }
 
     public KhachHang getKhachHang() {
@@ -97,29 +117,31 @@ public class HoaDon {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HoaDon hoaDon = (HoaDon) o;
+        return Double.compare(hoaDon.vat, vat) == 0 && Double.compare(hoaDon.tongTien, tongTien) == 0 && Double.compare(hoaDon.tamTinh, tamTinh) == 0 && Double.compare(hoaDon.tongTienGiam, tongTienGiam) == 0 && Objects.equals(maHoaDon, hoaDon.maHoaDon) && Objects.equals(thoiGianTaoHoaDon, hoaDon.thoiGianTaoHoaDon) && Objects.equals(ghiChu, hoaDon.ghiChu) && Objects.equals(khachHang, hoaDon.khachHang) && Objects.equals(nhanVien, hoaDon.nhanVien) && Objects.equals(khuyenMai, hoaDon.khuyenMai);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(maHoaDon, thoiGianTaoHoaDon, ghiChu, vat, tongTien, tamTinh, tongTienGiam, khachHang, nhanVien, khuyenMai);
+    }
+
+    @Override
     public String toString() {
         return "HoaDon{" +
                 "maHoaDon='" + maHoaDon + '\'' +
                 ", thoiGianTaoHoaDon=" + thoiGianTaoHoaDon +
                 ", ghiChu='" + ghiChu + '\'' +
-                ", thueVat=" + thueVat +
-                ", tienKhachDua=" + tienKhachDua +
+                ", vat=" + vat +
+                ", tongTien=" + tongTien +
+                ", tamTinh=" + tamTinh +
+                ", tongTienGiam=" + tongTienGiam +
                 ", khachHang=" + khachHang +
                 ", nhanVien=" + nhanVien +
                 ", khuyenMai=" + khuyenMai +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        HoaDon hoaDon = (HoaDon) o;
-        return Objects.equals(maHoaDon, hoaDon.maHoaDon);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(maHoaDon);
     }
 }
