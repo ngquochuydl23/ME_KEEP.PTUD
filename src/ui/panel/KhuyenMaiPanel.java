@@ -14,9 +14,12 @@ import java.awt.event.KeyEvent;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -31,6 +34,9 @@ import ui.component.ChucNangChinh;
 import ui.component.IntegratedSearch;
 import ui.component.PanelBorderRadius;
 import ui.component.TableSorter;
+import ui.dialog.khuyenMaiDialog.KhuyenMaiDialog;
+import ui.dialog.khuyenMaiDialog.SuaKhuyenMaiListener;
+import ui.dialog.khuyenMaiDialog.TaoKhuyenMaiListener;
 
 /**
  * KhuyenMaiPanel
@@ -44,6 +50,7 @@ public class KhuyenMaiPanel extends JPanel {
     private ChucNangChinh chucNangChinh;
     private IntegratedSearch search;
     private DefaultTableModel tblModel;
+    private KhuyenMaiDialog khuyenMaiDialog;
     Color BackgroundColor = new Color(240, 247, 250);
 
     private KhuyenMaiDao khuyenMaiDao;
@@ -60,6 +67,21 @@ public class KhuyenMaiPanel extends JPanel {
         setBackground(BackgroundColor);
         setLayout(new BorderLayout(0, 0));
         setOpaque(true);
+
+        this.khuyenMaiDialog = new KhuyenMaiDialog();
+        this.khuyenMaiDialog.addTaoKhuyenMaiListener(new TaoKhuyenMaiListener() {
+            @Override
+            public void taoKhuyenMaiThanhCong(KhuyenMai khuyenMai) {
+                loadDataTable();
+            }
+        });
+
+        this.khuyenMaiDialog.addSuaKhuyenMaiListener(new SuaKhuyenMaiListener() {
+            @Override
+            public void suaKhuyenMaiThanhCong(KhuyenMai khuyenMai) {
+                loadDataTable();
+            }
+        });
 
         tableKhuyenMai = new JTable();
         tableKhuyenMai.setDefaultEditor(Object.class, null);
@@ -118,6 +140,7 @@ public class KhuyenMaiPanel extends JPanel {
                 .addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        khuyenMaiDialog.setVisible(true);
                     }
                 });
 
@@ -126,6 +149,9 @@ public class KhuyenMaiPanel extends JPanel {
                 .addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        KhuyenMai khuyenMai = layKhuyenMaiDangChon();
+                        khuyenMaiDialog.setKhuyenMai(khuyenMai);
+                        khuyenMaiDialog.setVisible(true);
                     }
                 });
 
@@ -134,24 +160,41 @@ public class KhuyenMaiPanel extends JPanel {
                 .addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-
+                        khuyenMaiDialog.xemKhuyenMai(layKhuyenMaiDangChon());
+                        khuyenMaiDialog.setVisible(true);
                     }
                 });
 
         chucNangChinh
                 .getToolbar("xoa")
                 .addActionListener(new ActionListener() {
-
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        KhuyenMai khuyenMai = layKhuyenMaiDangChon();
+                        if (khuyenMai == null) {
+                            return;
+                        }
+                        if (JOptionPane.showConfirmDialog(
+                                null,
+                                "Bạn có chắc chắn muốn xóa khuyến mãi này ?",
+                                "Xóa khuyến mãi",
+                                JOptionPane.OK_CANCEL_OPTION,
+                                JOptionPane.INFORMATION_MESSAGE) == JOptionPane.YES_OPTION) {
 
+                            if (khuyenMaiDao.xoa(khuyenMai.getMaKhuyenMai())) {
+                                loadDataTable();
+                                Logger.getLogger(KhachHangPanel.class.getName()).log(Level.INFO,
+                                        "Xóa khách hàng thành công!");
+                                JOptionPane.showMessageDialog(null, "Xóa khách hàng thành công!");
+                            }
+                        }
                     }
                 });
 
         functionBar.add(chucNangChinh);
 
         search = new IntegratedSearch(
-                new String[] { "Tất cả", "Mã khách hàng", "Tên khách hàng", "Khách hàng thân thiết", "Số điện thoại" });
+                new String[] { "Tất cả", "Mã khuyến mãi", "Tỉ lệ giảm", "Khách hàng thân thiết", "Số điện thoại" });
         search.btnReset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -197,6 +240,14 @@ public class KhuyenMaiPanel extends JPanel {
 
         main.add(scrolltableKhuyenMai);
 
+    }
+
+    public KhuyenMai layKhuyenMaiDangChon() {
+        int index = tableKhuyenMai.getSelectedRow();
+        if (index == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn khuyến mãi");
+        }
+        return khuyenMais.get(index);
     }
 
     // public void timKhachHang(String text, String type) {
