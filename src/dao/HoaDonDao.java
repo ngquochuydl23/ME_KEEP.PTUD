@@ -60,7 +60,8 @@ public class HoaDonDao implements IDao<HoaDon, String> {
     public List<HoaDon> layHet() {
         List<HoaDon> dsHoaDon = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM HoaDon";
+            String sql = "SELECT hd.*, kh.HoTen, kh.SoDienThoai, kh.ThoiGianDangKy, kh.LaKhachHangThanThiet FROM HoaDon hd JOIN KhachHang kh ON hd.MaKhachHang = kh.MaKhachHang";
+
             PreparedStatement pst = con.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
 
@@ -77,7 +78,17 @@ public class HoaDonDao implements IDao<HoaDon, String> {
                 double tamTinh = rs.getDouble("TamTinh");
                 double tongTienGiam = rs.getDouble("TongTienGiam");
 
-                dsHoaDon.add(new HoaDon(maHoaDon, thoiGianTaoHoaDon, ghiChu, vat, tongTien, tamTinh, tongTienGiam, new KhachHang(maKhachHang), new NhanVien(maNhanVien), new KhuyenMai(maKhuyenMai)));
+                // Lấy thông tin của khách hàng từ ResultSet
+                String hoTenKhachHang = rs.getString("HoTen");
+                String soDienThoaiKhachHang = rs.getString("SoDienThoai");
+                LocalDateTime thoiGianDangKy = rs.getTimestamp("ThoiGianDangKy").toLocalDateTime();
+                boolean laKhachHangThanThiet = rs.getBoolean("LaKhachHangThanThiet");
+
+                // Tạo đối tượng KhachHang từ thông tin lấy được
+                KhachHang khachHang = new KhachHang(maKhachHang, hoTenKhachHang, soDienThoaiKhachHang, thoiGianDangKy, laKhachHangThanThiet);
+
+                // Thêm đối tượng HoaDon vào danh sách
+                dsHoaDon.add(new HoaDon(maHoaDon, thoiGianTaoHoaDon, ghiChu, vat, tongTien, tamTinh, tongTienGiam, khachHang, new NhanVien(maNhanVien), new KhuyenMai(maKhuyenMai)));
             }
         } catch (Exception e) {
             Logger.getLogger(HoaDonDao.class.getName()).log(Level.SEVERE, null, e);
@@ -85,6 +96,8 @@ public class HoaDonDao implements IDao<HoaDon, String> {
         return dsHoaDon;
     }
 
+
+    
     @Override
     public boolean them(HoaDon entity) {
 
@@ -163,6 +176,6 @@ public class HoaDonDao implements IDao<HoaDon, String> {
             runtimeEx.printStackTrace();
 
             return false;
-        }
+        }   
     }
 }

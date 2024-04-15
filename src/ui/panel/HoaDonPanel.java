@@ -2,6 +2,7 @@ package ui.panel;
 
 import ui.component.*;
 import entity.HoaDon;
+import entity.KhachHang;
 import helper.JTableExporter;
 import helper.Validation;
 
@@ -9,6 +10,10 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import dao.HoaDonDao;
+import dao.KhachHangDao;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -21,7 +26,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Stream;
 
-public final class HoaDonPanel extends JPanel {
+public final class HoaDonPanel extends JPanel{
 
     private PanelBorderRadius main, functionBar, box;
     private JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
@@ -31,11 +36,15 @@ public final class HoaDonPanel extends JPanel {
     private SelectForm trangThaiDonHangComboBox;
     private InputDate thoiGianTaoHoaDonInputDate;
     private InputForm soDienThoaiInputForm;
+    private HoaDonDao hoaDonDAO;
     private List<HoaDon> danhSachHoaDon;
 
     public HoaDonPanel() {
+    	danhSachHoaDon = new ArrayList<HoaDon>();
+    	hoaDonDAO = new HoaDonDao();
         initComponent();
         layDanhSachNhaGa();
+        doDuLieuVaoBang();
         layDanhSachLichSu();
     }
 
@@ -257,8 +266,24 @@ public final class HoaDonPanel extends JPanel {
           //  Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
     private void layDanhSachLichSu() {
         danhSachHoaDon = new ArrayList<>();
+    }
+    
+    public void doDuLieuVaoBang() {
+    	while (tblModel.getRowCount() > 0) {
+    		tblModel.removeRow(0);;
+    	}
+        danhSachHoaDon = hoaDonDAO.layHet();
+        // Duyệt qua danh sách hóa đơn và thêm từng hóa đơn vào bảng
+        for (HoaDon hoaDon : danhSachHoaDon) {
+        	tblModel.addRow( new Object[] {
+        			 hoaDon.getMaHoaDon(),
+                     hoaDon.getKhachHang().getHoTen(), // Thay thế bằng phương thức lấy tên khách hàng của bạn
+                     hoaDon.getTongTien(), // Thay thế bằng phương thức lấy tổng tiền của bạn
+                     hoaDon.getThoiGianTaoHoaDon(), // Thay thế bằng phương thức lấy thời gian tạo hóa đơn của bạn
+                     hoaDon.getGhiChu() //
+        	});
+        }
     }
 }
