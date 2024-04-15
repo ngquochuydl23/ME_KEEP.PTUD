@@ -6,6 +6,7 @@ import entity.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Level;
@@ -62,7 +63,17 @@ public class HoaDonDao implements IDao<HoaDon, String> {
     }
 
     @Override
-    public boolean them(HoaDon entity) {
+    public boolean them(HoaDon entity) throws SQLException {
+        try {
+            con.setAutoCommit(false);
+
+
+        } catch (SQLException e) {
+            con.rollback();
+            e.printStackTrace();
+        } catch (RuntimeException runtimeEx) {
+            runtimeEx.printStackTrace();
+        }
         return false;
     }
 
@@ -75,5 +86,4 @@ public class HoaDonDao implements IDao<HoaDon, String> {
     public boolean sua(HoaDon entity) {
         return false;
     }
-
 }
