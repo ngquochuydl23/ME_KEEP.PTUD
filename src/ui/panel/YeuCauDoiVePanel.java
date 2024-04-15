@@ -317,7 +317,7 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
             tblModel.addRow(new String[] {
                     item.getVe().getMaVe(),
                     item.getKhachHang().getHoTen(),
-                    String.valueOf(item.getVe().getChoNgoi()),
+                 //   String.valueOf(item.getVe().getChoNgoi()),
                     item.getThoiGianTraVe().toString(),
                     item.getGhiChu()
             });

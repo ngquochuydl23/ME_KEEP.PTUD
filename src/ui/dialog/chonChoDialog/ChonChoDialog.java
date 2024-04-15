@@ -206,14 +206,14 @@ public class ChonChoDialog extends JDialog {
         List<Ve> dsVe = new ArrayList<>();
         for (Seat seat : dsChoNgoi) {
             if (seat.isSelected()) {
-                dsVe.add(new Ve(
-                       "",
-                        seat.getSeatNumber(),
-                        0,
-                        null,
-                        1,
-                        loaiKhoang
-                ));
+//                dsVe.add(new Ve(
+//                       "",
+//                        seat.getSeatNumber(),
+//                        0,
+//                        null,
+//                        1,
+//                        loaiKhoang
+//                ));
             }
         }
         return dsVe;

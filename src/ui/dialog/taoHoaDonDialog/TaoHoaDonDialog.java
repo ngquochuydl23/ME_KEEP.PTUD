@@ -176,14 +176,14 @@ public class TaoHoaDonDialog extends JDialog {
             veModel.removeRow(0);
 
         for (Ve ve :danhSachVe) {
-            veModel.addRow(new String[]{
-                    ve.getMaVe(),
-                    String.valueOf(ve.getChoNgoi()),
-                    "",
-                 //   ve.getKhoang().getTenKhoang(),
-                    String.valueOf(ve.getGiaVe()),
-                    ve.getMoTa()
-            });
+//            veModel.addRow(new String[]{
+//                    ve.getMaVe(),
+//                    String.valueOf(ve.getChoNgoi()),
+//                    "",
+//                 //   ve.getKhoang().getTenKhoang(),
+//                    String.valueOf(ve.getGiaVe()),
+//                    ve.getMoTa()
+//            });
         }
     }
 

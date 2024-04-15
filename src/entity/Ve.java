@@ -1,33 +1,35 @@
 package entity;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Ve {
+
     private String maVe;
-    private int choNgoi;
-    private double giaVe;
-    private String moTa;
-    /*
-     * 0: Chua dat
-     * 1: Da dat
-     */
-    private int tinhTrangVe;
-    private LoaiKhoang loaiKhoang;
+
+    private Slot slot;
+
+    private KhachHang khachHang;
+
+    private Tuyen tuyen;
+
+    private Tau tau;
+
 
     public Ve() {
+
     }
 
     public Ve(String maVe) {
         this.maVe = maVe;
     }
 
-    public Ve(String maVe, int choNgoi, double giaVe, String moTa, int tinhTrangVe, LoaiKhoang loaiKhoang) {
+    public Ve(String maVe, Slot slot, KhachHang khachHang, Tuyen tuyen, Tau tau) {
         this.maVe = maVe;
-        this.choNgoi = choNgoi;
-        this.giaVe = giaVe;
-        this.moTa = moTa;
-        this.tinhTrangVe = tinhTrangVe;
-        this.loaiKhoang = loaiKhoang;
+        this.slot = slot;
+        this.khachHang = khachHang;
+        this.tuyen = tuyen;
+        this.tau = tau;
     }
 
     public String getMaVe() {
@@ -38,70 +40,79 @@ public class Ve {
         this.maVe = maVe;
     }
 
-    public int getChoNgoi() {
-        return choNgoi;
+    public Slot getSlot() {
+        return slot;
     }
 
-    public void setChoNgoi(int choNgoi) {
-        this.choNgoi = choNgoi;
+    public void setSlot(Slot slot) {
+        this.slot = slot;
     }
 
-    public double getGiaVe() {
-        return giaVe;
+    public KhachHang getKhachHang() {
+        return khachHang;
     }
 
-    public void setGiaVe(double giaVe) {
-        this.giaVe = giaVe;
+    public void setKhachHang(KhachHang khachHang) {
+        this.khachHang = khachHang;
     }
 
-    public String getMoTa() {
-        return moTa;
+    public Tuyen getTuyen() {
+        return tuyen;
     }
 
-    public void setMoTa(String moTa) {
-        this.moTa = moTa;
+    public void setTuyen(Tuyen tuyen) {
+        this.tuyen = tuyen;
     }
 
-    public int getTinhTrangVe() {
-        return tinhTrangVe;
+    public Tau getTau() {
+        return tau;
     }
 
-    public void setTinhTrangVe(int tinhTrangVe) {
-        this.tinhTrangVe = tinhTrangVe;
-    }
-
-    public LoaiKhoang getLoaiKhoang() {
-        return loaiKhoang;
-    }
-
-    public void setLoaiKhoang(LoaiKhoang loaiKhoang) {
-        this.loaiKhoang = loaiKhoang;
+    public void setTau(Tau tau) {
+        this.tau = tau;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Ve ve = (Ve) o;
-        return Objects.equals(maVe, ve.maVe);
+        return Objects.equals(maVe, ve.maVe) && Objects.equals(slot, ve.slot) && Objects.equals(khachHang, ve.khachHang) && Objects.equals(tuyen, ve.tuyen) && Objects.equals(tau, ve.tau);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(maVe);
+        return Objects.hash(maVe, slot, khachHang, tuyen, tau);
     }
 
     @Override
     public String toString() {
         return "Ve{" +
                 "maVe='" + maVe + '\'' +
-                ", choNgoi=" + choNgoi +
-                ", giaVe=" + giaVe +
-                ", moTa='" + moTa + '\'' +
-                ", tinhTrangVe=" + tinhTrangVe +
-                ", loaiKhoang=" + loaiKhoang +
+                ", slot=" + slot +
+                ", khachHang=" + khachHang +
+                ", tuyen=" + tuyen +
+                ", tau=" + tau +
                 '}';
+    }
+
+    public double tinhGiaBanVe() {
+        double giaVe;
+        double giaNiemYet = tuyen.getGiaNiemYet();
+
+        String loaiKhoang = slot
+                .getKhoang()
+                .getLoaiKhoang()
+                .getMaLoaiKhoang();
+
+        if (loaiKhoang.equals("giuong-nam-khoang-4")) {
+            giaVe = giaNiemYet + (giaNiemYet * 0.3);
+        } else if (loaiKhoang.equals("giuong-nam-khoang-6")) {
+            giaVe = giaNiemYet + (giaNiemYet * 0.15);
+        } else {
+            giaVe = giaNiemYet;
+        }
+
+        return giaVe;
     }
 }

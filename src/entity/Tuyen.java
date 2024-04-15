@@ -9,6 +9,8 @@ public class Tuyen {
     private Ga gaDen;
     private LocalDateTime thoiGianTaoTuyen;
 
+    private double giaNiemYet;
+
     public Tuyen() {
 
     }
@@ -22,6 +24,13 @@ public class Tuyen {
         this.gaDi = gaDi;
         this.gaDen = gaDen;
         this.thoiGianTaoTuyen = thoiGianTaoTuyen;
+    }
+
+    public Tuyen(String maTuyen, Ga gaDi, Ga gaDen,double giaNiemYet) {
+        this.maTuyen = maTuyen;
+        this.gaDi = gaDi;
+        this.gaDen = gaDen;
+        this.giaNiemYet = giaNiemYet;
     }
 
     public String getMaTuyen() {
@@ -40,30 +49,6 @@ public class Tuyen {
         this.thoiGianTaoTuyen = thoiGianTaoTuyen;
     }
 
-    @Override
-    public String toString() {
-        return "Tuyen{" +
-                "maTuyen='" + maTuyen + '\'' +
-                ", gaDi='" + gaDi + '\'' +
-                ", gaDen='" + gaDen + '\'' +
-                ", thoiGianTaoTuyen=" + thoiGianTaoTuyen +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        Tuyen tuyen = (Tuyen) o;
-        return Objects.equals(maTuyen, tuyen.maTuyen);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(maTuyen);
-    }
 
     public Ga getGaDi() {
         return gaDi;
@@ -80,4 +65,25 @@ public class Tuyen {
     public void setGaDen(Ga gaDen) {
         this.gaDen = gaDen;
     }
+
+    public double getGiaNiemYet() {
+        return giaNiemYet;
+    }
+
+    public void setGiaNiemYet(double giaNiemYet) {
+        this.giaNiemYet = giaNiemYet;
+    }
+
+    @Override
+    public String toString() {
+        return "Tuyen{" +
+                "maTuyen='" + maTuyen + '\'' +
+                ", gaDi=" + gaDi +
+                ", gaDen=" + gaDen +
+                ", thoiGianTaoTuyen=" + thoiGianTaoTuyen +
+                ", giaNiemYet=" + giaNiemYet +
+                '}';
+    }
+
+
 }

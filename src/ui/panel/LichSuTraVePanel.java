@@ -320,13 +320,13 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
         danhSachLichSuTraVe.add(null);
 
         for (LichSuTraVe item : danhSachLichSuTraVe) {
-            tblModel.addRow(new String[] {
-                    item.getVe().getMaVe(),
-                    item.getKhachHang().getHoTen(),
-                    String.valueOf(item.getVe().getChoNgoi()),
-                    item.getThoiGianTraVe().toString(),
-                    item.getGhiChu()
-            });
+//            tblModel.addRow(new String[] {
+//                    item.getVe().getMaVe(),
+//                    item.getKhachHang().getHoTen(),
+//                    String.valueOf(item.getVe().getChoNgoi()),
+//                    item.getThoiGianTraVe().toString(),
+//                    item.getGhiChu()
+//            });
         }
     }
 }

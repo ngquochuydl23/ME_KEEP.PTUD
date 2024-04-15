@@ -48,13 +48,14 @@ public class SlotDao implements IDao<SlotDao, String>{
         return false;
     }
 
-    public List<Slot> laySlotTheoMaToaTau(String maToaTau) {
+    public List<Slot> laySlotTheoMaToaTauVaDsChoNgoi(String maToaTau) {
         List<Slot> dsSlot = new ArrayList<>();
         try {
             String sql = "SELECT * FROM quanlibanve.Slot slot\n" +
                     "LEFT JOIN Khoang khoang ON khoang.MaKhoang  = slot.MaKhoang \n" +
                     "WHERE khoang.MaToa = ?\n" +
                     "ORDER BY slot.SoSlot ASC";
+
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, maToaTau);
             ResultSet rs = pst.executeQuery();
