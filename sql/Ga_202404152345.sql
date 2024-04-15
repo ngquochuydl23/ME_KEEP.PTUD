@@ -1,0 +1,55 @@
+INSERT INTO quanlibanve.Ga (MaGa,TenGa,VungMien) VALUES
+	 ('an-my','An Mỹ','Trung'),
+	 ('bim-son','Bỉm Sơn','Bắc'),
+	 ('binh-luc','Bình Lục','Bắc'),
+	 ('cat-dang','Ninh Bình','Bắc'),
+	 ('cau-giat','Cầu Giát','Bắc'),
+	 ('cau-ho','Cầu Họ','Bắc'),
+	 ('cau-yen','Cầu Yên','Bắc'),
+	 ('cho-sy','Chợ Sy','Bắc'),
+	 ('cho-tia','Chợ Tía','Bắc'),
+	 ('dang-xa','Đặng Xá','Bắc');
+INSERT INTO quanlibanve.Ga (MaGa,TenGa,VungMien) VALUES
+	 ('di-an','Dĩ An','Nam'),
+	 ('dia-nguc','Địa Ngục','Bắc'),
+	 ('do-len','Đò Lèn','Bắc'),
+	 ('dong-giao','Đồng Giao','Bắc'),
+	 ('dong-van','Đồng Văn','Bắc'),
+	 ('ghenh','Ghềnh','Bắc'),
+	 ('gia-huynh','Gia Huỳnh','Nam'),
+	 ('giap-bat','Giáp Bát','Bắc '),
+	 ('go-vap','Gò Vấp','Nam'),
+	 ('ha-noi','Hà Nội','Bắc');
+INSERT INTO quanlibanve.Ga (MaGa,TenGa,VungMien) VALUES
+	 ('hoang-mai','Hoàng Mai','Bắc'),
+	 ('khoa-truong','Khoa Trường','Bắc'),
+	 ('minh-khoi','Minh Khôi','Bắc'),
+	 ('my-ly','Mỹ Lý','Bắc'),
+	 ('nam-dinh','Nam Định','Bắc'),
+	 ('nghia-trang','Nghĩa Trang','Bắc'),
+	 ('nui-goi','Núi Gôi','Bắc'),
+	 ('phu-ly','Phủ Lý','Bắc'),
+	 ('phu-xuyen','Phú Xuyên','Bắc'),
+	 ('quan-hanh','Quán Hành','Bắc');
+INSERT INTO quanlibanve.Ga (MaGa,TenGa,VungMien) VALUES
+	 ('quang-ngai','Quảng Ngãi','Trung'),
+	 ('sai-gon','Sài Gòn','Nam'),
+	 ('song-dinh','Song Dinh','Nam'),
+	 ('song-phan','Song Phan','Nam'),
+	 ('suoi-khiet','Suối Khiết','Nam'),
+	 ('suoi-van','Suối Vân','Nam'),
+	 ('thanh-hoa','Thanh Hóa','Trung'),
+	 ('thanh-khe','Thanh Khê','Trung'),
+	 ('thanh-phu','Thanh Phú','Nam'),
+	 ('thi-long','Thị Long','Bắc');
+INSERT INTO quanlibanve.Ga (MaGa,TenGa,VungMien) VALUES
+	 ('thien-dang','Thiên Đàng','Nam'),
+	 ('thuong-tin','Thường Tín','Bắc'),
+	 ('tran-tao','Trản Táo','Nam'),
+	 ('trinh-xuyen','Trình Xuyên','Bắc'),
+	 ('truong-lam','Trường Lâm','Bắc'),
+	 ('van-dien','Vân Điển','Bắc'),
+	 ('van-trai','Văn Trai','Bắc'),
+	 ('vinh','Vinh','Trung'),
+	 ('yen-ly','Yên Lý','Bắc'),
+	 ('yen-thai','Yên Thái','Bắc');

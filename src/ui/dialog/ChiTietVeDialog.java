@@ -82,10 +82,6 @@ public class ChiTietVeDialog extends JDialog implements ActionListener{
         maKhuyenMaiField.setText("");
         moTaField.setText("");
     }
-    
-    public static void main(String[] args) {
-        new ChiTietVeDialog().setVisible(true);
-    }
 
 	@Override
 	public void actionPerformed(ActionEvent e) {

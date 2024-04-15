@@ -1,0 +1,55 @@
+INSERT INTO quanlibanve.Tuyen (MaTuyen,NgayTaoTuyen,MaGaDi,MaGaDen,GiaNiemYet) VALUES
+	 ('1','2024-03-29','sai-gon','ha-noi',900000.0),
+	 ('10','2024-03-29','di-an','thanh-hoa',800000.0),
+	 ('11','2024-04-12','binh-luc','dang-xa',300000.0),
+	 ('12','2024-04-12','an-my','bim-son',250000.0),
+	 ('13','2024-04-12','phu-xuỷen','thanh-khe',450000.0),
+	 ('14','2024-04-12','sai-gon','quang-ngai',500000.0),
+	 ('15','2024-04-12','cat-dang','thuong-tin',250000.0),
+	 ('16','2024-04-12','dang-xa','nam-dinh',300000.0),
+	 ('17','2024-04-12','trinh-xuyen','nghia-trang',500000.0),
+	 ('18','2024-04-12','ghenh','do-len',450000.0);
+INSERT INTO quanlibanve.Tuyen (MaTuyen,NgayTaoTuyen,MaGaDi,MaGaDen,GiaNiemYet) VALUES
+	 ('19','2024-04-12','cho-tia','dong-giao',750000.0),
+	 ('2','2024-04-12','go-vap','di-an',200000.0),
+	 ('20','2024-04-12','cau-ho','an-my',440000.0),
+	 ('21','2024-04-12','cau-yen','dong-van',340000.0),
+	 ('22','2024-04-12','suoi-van','van-dien',350000.0),
+	 ('23','2024-04-12','thanh-phu','sai-gon',600000.0),
+	 ('24','2024-04-12','suoi-van','ha-noi',470000.0),
+	 ('25','2024-04-12','khoa-truong','go-vap',300000.0),
+	 ('26','2024-04-12','van-trai','phu-ly',230000.0),
+	 ('27','2024-04-12','minh-khoi','cho-tia',440000.0);
+INSERT INTO quanlibanve.Tuyen (MaTuyen,NgayTaoTuyen,MaGaDi,MaGaDen,GiaNiemYet) VALUES
+	 ('28','2024-04-12','phu-xuyen','song-phan',300000.0),
+	 ('29','2024-04-12','thuong-tin','nam-dinh',340000.0),
+	 ('3','2024-04-12','gia-huynh','giap-bat',200000.0),
+	 ('30','2024-04-12','hoang-mai','my-ly',180000.0),
+	 ('31','2024-04-12','thien-dang','dia-nguc',220000.0),
+	 ('32','2024-04-12','dia-nguc','thien-dang',345000.0),
+	 ('33','2024-04-12','ha-noi','sai-gon',900000.0),
+	 ('34','2024-04-12','thanh-hoa','di-an',800000.0),
+	 ('35','2024-04-12','di-an','go-vap',800000.0),
+	 ('36','2024-04-12','giap-bat','gia-huynh',600000.0);
+INSERT INTO quanlibanve.Tuyen (MaTuyen,NgayTaoTuyen,MaGaDi,MaGaDen,GiaNiemYet) VALUES
+	 ('37','2024-04-12','sai-gon','cau-ho',700000.0),
+	 ('38','2024-04-12','ha-noi','quang-ngai',400000.0),
+	 ('39','2024-04-12','phu-xuyen','van-dien',350000.0),
+	 ('4','2024-04-12','cau-ho','sai-gon',700000.0),
+	 ('40','2024-04-12','go-vap','ghenh',340000.0),
+	 ('41','2024-04-12','trinh-xuyen','nui-goi',300000.0),
+	 ('42','2024-04-12','di-an','thanh-khe',600000.0),
+	 ('43','2024-04-12','dang-xa','binh-luc',490000.0),
+	 ('44','2024-04-12','bim-son','an-my',200000.0),
+	 ('45','2024-04-12','thanh-khe','phu-xuyen',340000.0);
+INSERT INTO quanlibanve.Tuyen (MaTuyen,NgayTaoTuyen,MaGaDi,MaGaDen,GiaNiemYet) VALUES
+	 ('46','2024-04-12','quang-ngai','sai-gon',430000.0),
+	 ('47','2024-04-12','thuong-tin','cat-dang',200000.0),
+	 ('48','2024-04-12','nam-dinh','dang-xa',390000.0),
+	 ('49','2024-04-12','nghia-trang','trinh-xuyen',300000.0),
+	 ('5','2024-04-12','quang-ngai','ha-noi',400000.0),
+	 ('50','2024-04-12','do-len','ghenh',370000.0),
+	 ('6','2024-04-12','van-dien','phu-xuyen',260000.0),
+	 ('7','2024-04-12','ghenh','go-vap',230000.0),
+	 ('8','2024-04-12','nui-goi','trinh-xuyen',120000.0),
+	 ('9','2024-04-12','thanh-khe','di-an',300000.0);

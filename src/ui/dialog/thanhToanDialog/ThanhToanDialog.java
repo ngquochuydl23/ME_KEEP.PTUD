@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
@@ -25,6 +27,7 @@ import entity.*;
 import ui.component.ButtonCustom;
 import ui.component.HeaderTitle;
 import ui.component.InputForm;
+import ui.dialog.ChiTietVeDialog;
 
 public class ThanhToanDialog extends JDialog {
     private HeaderTitle titlePage;
@@ -230,6 +233,35 @@ public class ThanhToanDialog extends JDialog {
             tongTienTamTinh += giaVe;
 
             danhSachVe.add(ve);
+            veTable.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    int row = veTable.getSelectedRow();
+                    if (row >= 0) {
+                        new ChiTietVeDialog().setVisible(true);
+                    }
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+
+                }
+            });
             veModel.addRow(new String[]{
                     maVe,
                     String.valueOf(slot.getSoSlot()),

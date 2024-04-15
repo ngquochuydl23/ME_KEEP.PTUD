@@ -59,7 +59,6 @@ public class HoaDonDao implements IDao<HoaDon, String> {
     @Override
     public List<HoaDon> layHet() {
         List<HoaDon> dsHoaDon = new ArrayList<>();
-        List<NhanVien> dsNhanVien = new ArrayList<>();
         try {
             String sql = "SELECT * FROM HoaDon";
             PreparedStatement pst = con.prepareStatement(sql);
@@ -81,7 +80,7 @@ public class HoaDonDao implements IDao<HoaDon, String> {
                 dsHoaDon.add(new HoaDon(maHoaDon, thoiGianTaoHoaDon, ghiChu, vat, tongTien, tamTinh, tongTienGiam, new KhachHang(maKhachHang), new NhanVien(maNhanVien), new KhuyenMai(maKhuyenMai)));
             }
         } catch (Exception e) {
-            Logger.getLogger(NhanVienDao.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(HoaDonDao.class.getName()).log(Level.SEVERE, null, e);
         }
         return dsHoaDon;
     }

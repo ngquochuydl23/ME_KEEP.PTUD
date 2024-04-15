@@ -21,9 +21,7 @@ public class MenuTaskbar extends JPanel {
     String[][] getSt = {
             {"Trang chủ", "home.svg", "trangchu"},
             {"Hóa đơn", "product.svg", "sanpham"},
-            {"Khu vực kho", "area.svg", "khuvuckho"},
             {"Lịch sử trả vé", "import.svg", "nhaphang"},
-            {"Phiếu xuất", "export.svg", "xuathang"},
             {"Khách hàng", "customer.svg", "khachhang"},
             {"Yêu cầu đổi vé", "supplier.svg", "nhacungcap"},
             {"Nhân viên", "staff.svg", "nhanvien"},
@@ -148,53 +146,41 @@ public class MenuTaskbar extends JPanel {
         });
         listitem[2].addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                main.setPanel(new HoaDonPanel());
+            public void mousePressed(MouseEvent evt) {
+                main.setPanel(new LichSuTraVePanel());
             }
         });
         listitem[3].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                main.setPanel(new LichSuTraVePanel());
+                main.setPanel(new KhachHangPanel());
             }
         });
         listitem[4].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                main.setPanel(new LichSuTraVePanel());
+                main.setPanel(new YeuCauDoiVePanel());
             }
         });
         listitem[5].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                main.setPanel(new KhachHangPanel());
+                main.setPanel(new NhanVienPanel());
             }
         });
         listitem[6].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                main.setPanel(new YeuCauDoiVePanel());
+                main.setPanel(new KhuyenMaiPanel());
             }
         });
         listitem[7].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                main.setPanel(new NhanVienPanel());
-            }
-        });
-        listitem[8].addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                main.setPanel(new KhuyenMaiPanel());
-            }
-        });
-        listitem[9].addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent evt) {
                 //main.setPanel(new ThongKe());
             }
         });
-        listitem[10].addMouseListener(new MouseAdapter() {
+        listitem[8].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
                 if (JOptionPane.showConfirmDialog(
@@ -208,7 +194,7 @@ public class MenuTaskbar extends JPanel {
                 }
             }
         });
-        listitem[11].addMouseListener(new MouseAdapter() {
+        listitem[9].addMouseListener(new MouseAdapter() {
 
             @Override
             public void mousePressed(MouseEvent evt) {
