@@ -87,6 +87,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
 
         taoHoaDonDialog = new TaoHoaDonDialog();
         taoHoaDonDialog.setData(new KhachHang(1, "Nguyễn Quốc Huy", "086868491", LocalDateTime.now(), true), dsVe);
+        // taoHoaDonDialog.setData( new KhachHang(1, "Nguyễn Quốc Huy", "086868491", LocalDateTime.now(), true));
         taoHoaDonDialog.setVisible(true);
     }
 

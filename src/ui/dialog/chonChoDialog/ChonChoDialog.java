@@ -34,6 +34,8 @@ public class ChonChoDialog extends JDialog {
     private ToaTau toaTauDangChon;
     private ChonChoNgoiListener chonChoNgoiListener;
 
+    private ToaTau toaDangChon;
+
     public ChonChoDialog() {
         setTitle("Chọn chỗ");
         setModalityType(ModalityType.APPLICATION_MODAL);
@@ -93,6 +95,7 @@ public class ChonChoDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (chonChoNgoiListener != null) {
+                    System.out.println(toaDangChon.toString());
                     chonChoNgoiListener.chonChoNgoiThanhCong(layToanBoChoDangChon());
                 }
                 //dispose();
@@ -120,6 +123,7 @@ public class ChonChoDialog extends JDialog {
             carriage.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    toaDangChon = currentToa;
                     loaiKhoang = loaiKhoangDao.layLoaiKhoangTheoMaToa(currentToa.getMaToa());
                     layToanBoChoDangChon();
                     updateSeatPanel();
@@ -127,6 +131,10 @@ public class ChonChoDialog extends JDialog {
             });
             this.btgToa.add(carriage);
             this.topPanel.add(carriage);
+        }
+
+        if (this.toaDangChon == null) {
+            this.toaDangChon = this.toaTaus.get(0);
         }
     }
 
