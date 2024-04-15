@@ -11,6 +11,6 @@ public class TestVe {
         Slot slot = new Slot("D10H-toa4-khoang1-giuongnamkhoang4-slot1", 1, khoang, 1);
         Ve ve = new Ve("ve-123", slot, null, tuyen, null);
 
-        System.out.println(ve.tinhGiaBanVe());
+
     }
 }

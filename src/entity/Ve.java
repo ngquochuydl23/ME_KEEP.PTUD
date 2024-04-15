@@ -96,14 +96,10 @@ public class Ve {
                 '}';
     }
 
-    public double tinhGiaBanVe() {
+    public double tinhGiaBanVe(String loaiKhoang) {
         double giaVe;
         double giaNiemYet = tuyen.getGiaNiemYet();
 
-        String loaiKhoang = slot
-                .getKhoang()
-                .getLoaiKhoang()
-                .getMaLoaiKhoang();
 
         if (loaiKhoang.equals("giuong-nam-khoang-4")) {
             giaVe = giaNiemYet + (giaNiemYet * 0.3);

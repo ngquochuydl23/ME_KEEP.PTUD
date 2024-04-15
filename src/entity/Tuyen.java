@@ -26,7 +26,7 @@ public class Tuyen {
         this.thoiGianTaoTuyen = thoiGianTaoTuyen;
     }
 
-    public Tuyen(String maTuyen, Ga gaDi, Ga gaDen,double giaNiemYet) {
+    public Tuyen(String maTuyen, Ga gaDi, Ga gaDen, double giaNiemYet) {
         this.maTuyen = maTuyen;
         this.gaDi = gaDi;
         this.gaDen = gaDen;

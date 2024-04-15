@@ -11,12 +11,11 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-import dao.HoaDonDao;
-import entity.HoaDon;
-import entity.KhachHang;
-import entity.Ve;
+import dao.*;
+import entity.*;
 import ui.component.ButtonCustom;
 import ui.component.HeaderTitle;
 import ui.component.InputForm;
@@ -39,13 +38,20 @@ public class TaoHoaDonDialog extends JDialog {
     private JTable veTable;
     private DefaultTableModel veModel;
     private HoaDon hoaDon;
-    private List<Ve> danhSachVe;
+    private List<Integer> dsCho;
     private KhachHang khachHang;
 
-    public TaoHoaDonDialog() {
-        danhSachVe = new ArrayList<>();
+    private TuyenDao tuyenDao;
+    private SlotDao slotDao;
+    private LoaiKhoangDao loaiKhoangDao;
 
+    public TaoHoaDonDialog() {
+        dsCho = new ArrayList<>();
+
+        slotDao = new SlotDao();
         hoaDonDao = new HoaDonDao();
+        tuyenDao = new TuyenDao();
+        loaiKhoangDao = new LoaiKhoangDao();
         initComponents();
     }
 
@@ -123,11 +129,16 @@ public class TaoHoaDonDialog extends JDialog {
         khVaTien.add(khachHangPanel);
         khVaTien.add(tienBox);
 
+        veModel = new DefaultTableModel("Mã vé;Chỗ ngồi;Tên toa;Giá vé;Mô tả".split(";"), 0);
 
-        ///
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
-        veModel = new DefaultTableModel("Mã vé;Chỗ ngồi;Tên khoang;Giá vé;Mô tả".split(";"), 0);
         veTable = new JTable(veModel);
+        veTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        veTable.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        veTable.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+
         JScrollPane veTablePanel = new JScrollPane(veTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         veTablePanel.setBorder(new TitledBorder("Thông tin vé"));
 
@@ -160,35 +171,54 @@ public class TaoHoaDonDialog extends JDialog {
         add(pnlMain, BorderLayout.CENTER);
         add(pnlButtom, BorderLayout.SOUTH);
         setLocationRelativeTo(null);
-
-        setVisible(true);
     }
 
-    public void setData(KhachHang khachHang, List<Ve> dsVe) {
-        this.danhSachVe.addAll(dsVe);
+    public void setData(
+            String tenGaDi,
+            String tenGaDen,
+            Tau tau,
+            ToaTau toaTau,
+            KhachHang khachHang,
+            List<Integer> dsCho) {
+
+        this.dsCho.addAll(dsCho);
         this.khachHang = khachHang;
 
         maKhachHangTextField.getTxtForm().setText(String.valueOf(khachHang.getMaKhachHang()));
         tenKhachHangTextField.getTxtForm().setText(khachHang.getHoTen());
         soDienThoaiTextField.getTxtForm().setText(khachHang.getSoDienThoai());
 
+        Tuyen tuyen = tuyenDao.timTuyenTheoTenGa(tenGaDi, tenGaDen);
         while (veModel.getRowCount() > 0)
             veModel.removeRow(0);
 
-        for (Ve ve :danhSachVe) {
-//            veModel.addRow(new String[]{
-//                    ve.getMaVe(),
-//                    String.valueOf(ve.getChoNgoi()),
-//                    "",
-//                 //   ve.getKhoang().getTenKhoang(),
-//                    String.valueOf(ve.getGiaVe()),
-//                    ve.getMoTa()
-//            });
+        List<Ve> danhSachVe = new ArrayList<>();
+        List<Slot> dsSlot = slotDao.laySlotTheoMaToaTauVaDsChoNgoi(toaTau.getMaToa(), dsCho);
+
+        for (Slot slot : dsSlot) {
+
+            String maGaDi = tuyen.getGaDi().getMaGa();
+            String maGaDen = tuyen.getGaDen().getMaGa();
+            String maVe = maGaDi + "-" + maGaDen + "-" + slot.getMaSlot();
+            Ve ve = new Ve(maVe, slot, khachHang, tuyen, tau);
+            LoaiKhoang loaiKhoang = loaiKhoangDao.layLoaiKhoangTheoMaToa(toaTau.getMaToa());
+            double giaVe = ve.tinhGiaBanVe(loaiKhoang.getMaLoaiKhoang());
+            danhSachVe.add(ve);
+            System.out.println(slot.getSoSlot());
+
+             veModel.addRow(new String[]{
+                     maVe,
+                     String.valueOf(slot.getSoSlot()),
+                     toaTau.getTenToa(),
+                     String.valueOf(giaVe),
+                     ""
+             });
         }
     }
 
+
     private void xoaDuLieu() {
-        danhSachVe.clear();
+        // danhSachVe.clear();
         khachHang = null;
 
         maKhachHangTextField.getTxtForm().setText("");
@@ -211,6 +241,7 @@ public class TaoHoaDonDialog extends JDialog {
         }
 
     }
+
 
     // @Override
     // public void actionPerformed(ActionEvent e) {

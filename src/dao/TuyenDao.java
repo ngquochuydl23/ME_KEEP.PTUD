@@ -111,9 +111,12 @@ public class TuyenDao implements IDao<Tuyen, String> {
         }
     }
 
-    public Tuyen timTuyen(String maGaDi, String maGaDen) {
+    public Tuyen timTuyenTheoTenGa(String maGaDi, String maGaDen) {
         try {
-            String sql = "SELECT * FROM Tuyen WHERE MaGaDi=? AND MaGaDen=?";
+            String sql = "SELECT * FROM quanlibanve.Tuyen tuyen\n" +
+                    "LEFT JOIN Ga gaDi ON gaDi.MaGa = tuyen.MaGaDi \n" +
+                    "LEFT JOIN Ga gaDen ON gaDen.MaGa = tuyen.MaGaDen \n" +
+                    "WHERE gaDi.TenGa = ? AND gaDen.TenGa = ?";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, maGaDi);
             pst.setString(2, maGaDen);
@@ -123,9 +126,9 @@ public class TuyenDao implements IDao<Tuyen, String> {
                 String maTuyen = rs.getString("MaTuyen");
                 String diemDi = rs.getString("MaGaDi");
                 String diemDen = rs.getString("MaGaDen");
-                LocalDateTime NgayTaoTuyen = rs.getTimestamp("NgayTaoTuyen").toLocalDateTime();
+                double giaNiemYet = rs.getDouble("giaNiemYet");
 
-                return new Tuyen(maTuyen, new Ga(diemDi), new Ga(diemDen), NgayTaoTuyen);
+                return new Tuyen(maTuyen, new Ga(diemDi), new Ga(diemDen), giaNiemYet);
             }
         } catch (Exception e) {
             Logger.getLogger(TuyenDao.class.getName()).log(Level.SEVERE, null, e);

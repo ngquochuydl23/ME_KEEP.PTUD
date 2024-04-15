@@ -6,11 +6,9 @@ import entity.LoaiKhoang;
 import entity.Slot;
 import entity.ToaTau;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,13 +46,16 @@ public class SlotDao implements IDao<SlotDao, String>{
         return false;
     }
 
-    public List<Slot> laySlotTheoMaToaTauVaDsChoNgoi(String maToaTau) {
+    public List<Slot> laySlotTheoMaToaTauVaDsChoNgoi(String maToaTau, List<Integer> dsCho) {
         List<Slot> dsSlot = new ArrayList<>();
+        StringBuilder dsChoParam = new StringBuilder(dsCho.toString());
+        dsChoParam.setCharAt(0,'(');
+        dsChoParam.setCharAt(dsCho.toString().length() - 1,')');
         try {
             String sql = "SELECT * FROM quanlibanve.Slot slot\n" +
                     "LEFT JOIN Khoang khoang ON khoang.MaKhoang  = slot.MaKhoang \n" +
-                    "WHERE khoang.MaToa = ?\n" +
-                    "ORDER BY slot.SoSlot ASC";
+                    "WHERE khoang.MaToa = ? AND slot.SoSlot IN "+ dsChoParam +"\n" +
+                    "ORDER BY slot.SoSlot ASC ";
 
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, maToaTau);
@@ -71,7 +72,7 @@ public class SlotDao implements IDao<SlotDao, String>{
         } catch (Exception e) {
             Logger.getLogger(SlotDao.class.getName()).log(Level.SEVERE, null, e);
         }
-        return null;
+        return dsSlot;
     }
 
     public boolean capNhatHetSlot(String maToaTau, List<Integer> dsSoSlot) {
