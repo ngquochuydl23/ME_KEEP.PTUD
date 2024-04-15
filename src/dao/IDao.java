@@ -1,5 +1,6 @@
 package dao;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface IDao<T, TKey> {
@@ -7,7 +8,7 @@ public interface IDao<T, TKey> {
 
     List<T> layHet();
 
-    boolean them(T entity);
+    boolean them(T entity) throws SQLException;
 
     boolean xoa(TKey id);
 

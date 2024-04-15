@@ -16,6 +16,8 @@ import java.util.logging.Logger;
 
 public class KhoangDao implements IDao<Khoang, String> {
 
+
+
     private Connection con;
 
     public KhoangDao() {

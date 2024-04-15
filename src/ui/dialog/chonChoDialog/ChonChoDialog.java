@@ -134,7 +134,7 @@ public class ChonChoDialog extends JDialog {
         }
 
         if (this.toaDangChon == null) {
-            this.toaDangChon = this.toaTaus.get(0);
+            this.toaDangChon = this.danhSachToaTau.get(0);
         }
     }
 
