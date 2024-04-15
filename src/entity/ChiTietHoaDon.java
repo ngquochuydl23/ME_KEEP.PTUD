@@ -4,22 +4,15 @@ import java.util.Objects;
 
 public class ChiTietHoaDon {
     private double donGia;
-
     private Ve ve;
     private HoaDon hoaDon;
+
 
     public ChiTietHoaDon(HoaDon hoaDon, Ve ve) {
         this.hoaDon = hoaDon;
         this.ve = ve;
     }
 
-    public double getDonGia() {
-        return donGia;
-    }
-
-    public void setDonGia(double donGia) {
-        this.donGia = donGia;
-    }
 
     public Ve getVe() {
         return ve;
@@ -42,7 +35,7 @@ public class ChiTietHoaDon {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChiTietHoaDon that = (ChiTietHoaDon) o;
-        return Double.compare(donGia, that.donGia) == 0 && Objects.equals(ve, that.ve) && Objects.equals(hoaDon, that.hoaDon);
+        return Double.compare(that.donGia, donGia) == 0 && Objects.equals(ve, that.ve) && Objects.equals(hoaDon, that.hoaDon);
     }
 
     @Override

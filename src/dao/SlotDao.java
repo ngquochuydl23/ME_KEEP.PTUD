@@ -75,33 +75,20 @@ public class SlotDao implements IDao<SlotDao, String>{
         return dsSlot;
     }
 
-    public boolean capNhatHetSlot(String maToaTau, List<Integer> dsSoSlot) {
-        try {
-            con.setAutoCommit(false);
+    public boolean capNhatHetSlot(Connection conn, String maToaTau, List<Integer> dsSoSlot) throws SQLException {
+        for (Integer soSlot: dsSoSlot) {
+            String sql = "UPDATE quanlibanve.Slot slot\n" +
+                    "LEFT JOIN Khoang khoang ON khoang.MaKhoang = slot.MaKhoang\n" +
+                    "SET slot.TinhTrang = 0\n" +
+                    "WHERE khoang.MaToa = ? AND slot.SoSlot = ?";
+            PreparedStatement pst =  conn.prepareStatement(sql);
+            pst.setString(1, maToaTau);
+            pst.setInt(2, soSlot);
 
-            for (Integer soSlot: dsSoSlot) {
-                String sql = "UPDATE quanlibanve.Slot slot\n" +
-                        "LEFT JOIN Khoang khoang ON khoang.MaKhoang = slot.MaKhoang\n" +
-                        "SET slot.TinhTrang = 0\n" +
-                        "WHERE khoang.MaToa = ? AND slot.SoSlot = ?";
-                PreparedStatement pst =  con.prepareStatement(sql);
-                pst.setString(1, maToaTau);
-                pst.setInt(2, soSlot);
-
-                if (pst.executeUpdate() > 0)
-                    continue;
-                else return false;
-            }
-
-        } catch (Exception e) {
-            try {
-                con.rollback();
-            } catch (Exception rollBackEx) {
-                rollBackEx.printStackTrace();
-            }
-            e.printStackTrace();
-            return false;
+            if (pst.executeUpdate() > 0)
+                continue;
+            else return false;
         }
-        return false;
+        return true;
     }
 }
