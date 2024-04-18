@@ -116,7 +116,7 @@ public class HoaDonDao implements IDao<HoaDon, String> {
 
 
     public boolean taoHoaDon(String maToaTau,
-                             List<Integer> dsSoSlot,
+                             List<Slot> dsChoDaChon,
                              HoaDon entity,
                              List<ChiTietHoaDon> dsChiTietHoaDon,
                              List<Ve> dsVe) throws SQLException {
@@ -135,12 +135,13 @@ public class HoaDonDao implements IDao<HoaDon, String> {
             hoaDonStmt.setDouble(6, entity.getTongTien());
             hoaDonStmt.setDouble(7, entity.getTamTinh());
             hoaDonStmt.setDouble(8, entity.getTongTienGiam());
+
             if (hoaDonStmt.executeUpdate() > 0) {
-                System.out.println("capNhatHetSlot");
+                System.out.println("Bước 1. Tạo hóa đơn thành công");
             }
 
-            if (slotDao.capNhatHetSlot(con, maToaTau, dsSoSlot)) {
-                System.out.println("capNhatHetSlot");
+            if (slotDao.capNhatHetSlot(con, dsChoDaChon)) {
+                System.out.println("Bước 2. Chuyển trạng thái thành hết vé");
             }
 
             PreparedStatement veStmt = con.prepareStatement("INSERT INTO quanlibanve.Ve (MaVe, MaKhachHang, MaTuyen, MaTau, MaSlot) VALUES(?, ?, ?, ?, ?)");

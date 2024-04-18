@@ -63,7 +63,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
     private TimKhachHangDialog timKhachHangDialog;
     private KhachHangDialog khachHangDialog;
     Color BackgroundColor = new Color(240, 247, 250);
-    private List<Integer> danhSachCho = new ArrayList<>();
+    private List<SlotBtn> dsChoDaChon = new ArrayList<>();
     private ThanhToanDialog thanhToanDialog;
     private ToaTau toaTauChon;
 
@@ -166,10 +166,10 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         chonChoDialog = new ChonChoDialog();
         chonChoDialog.setChonChoNgoiListener(new ChonChoNgoiListener() {
             @Override
-            public void chonChoNgoiThanhCong(ToaTau toaTau, List<Integer> dsCho) {
+            public void chonChoNgoiThanhCong(ToaTau toaTau, List<SlotBtn> dsCho) {
                 toaTauChon = toaTau;
-                danhSachCho.clear();
-                danhSachCho.addAll(dsCho);
+                dsChoDaChon.clear();
+                dsChoDaChon.addAll(dsCho);
                 chonChoDialog.setVisible(false);
                 timKhachHangDialog.setVisible(true);
             }
@@ -466,7 +466,8 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
                 tau,
                 toaTauChon,
                 khachHang,
-                danhSachCho);
+                dsChoDaChon);
+
         thanhToanDialog.setVisible(true);
     }
 

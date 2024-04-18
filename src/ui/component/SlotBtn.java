@@ -1,5 +1,7 @@
 package ui.component;
 
+import entity.Slot;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -7,17 +9,34 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class Seat extends JPanel {
-    private int seatNumber;
+public class SlotBtn extends JPanel {
     private boolean isSelected;
-    private int tinhTrangChoNgoi;
+    private String maToaTau;
+    private Slot slot;
+
+    @Override
+    public String toString() {
+        return "SlotBtn{" +
+                "maToaTau='" + maToaTau + '\'' +
+                ", slot=" + slot +
+                '}' +"\n";
+    }
 
     private MouseListener ml;
 
-    public Seat(int seatNumber) {
-        this.seatNumber = seatNumber;
+    public String getMaToaTau() {
+        return maToaTau;
+    }
+
+    public void setMaToaTau(String maToaTau) {
+        this.maToaTau = maToaTau;
+    }
+
+    public SlotBtn(String maToaTau, Slot slot, boolean isSelected) {
+        this.maToaTau = maToaTau;
+        this.slot = slot;
+        this.isSelected = isSelected;
 
         this.setPreferredSize(new Dimension(50, 50));
         ml = new MouseAdapter() {
@@ -39,19 +58,18 @@ public class Seat extends JPanel {
         });
     }
 
-    public Seat(int seatNumber, int tinhTrangChoNgoi) {
-        this(seatNumber);
-        this.tinhTrangChoNgoi = tinhTrangChoNgoi;
-    }
 
+    public SlotBtn(String maToaTau, Slot slot) {
+        this(maToaTau , slot, false);
+    }
 
     private void changeSelectSeat() {
         isSelected = !isSelected;
         repaint();
     }
 
-    public int getSeatNumber() {
-        return seatNumber;
+    public Slot getSlot() {
+        return slot;
     }
 
     public boolean isSelected() {
@@ -68,7 +86,7 @@ public class Seat extends JPanel {
             g2d.setColor(Color.WHITE); // Xóa màu nền khi không được chọn
         }
 
-        if (this.getTinhTrangChoNgoi() == 0) {
+        if (this.getSlot().getTinhTrang() == 0) {
             this.setEnabled(false);
             g2d.setColor(Color.GRAY);
             this.removeMouseListener(ml);
@@ -78,7 +96,7 @@ public class Seat extends JPanel {
 
         g2d.setColor(Color.BLACK); // Đặt màu chữ
         FontMetrics fm = g2d.getFontMetrics();
-        String text = String.valueOf(seatNumber);
+        String text = String.valueOf(slot.getSoSlot());
         int textWidth = fm.stringWidth(text);
         int textHeight = fm.getHeight();
         int x = (getWidth() - textWidth) / 2;
@@ -90,49 +108,17 @@ public class Seat extends JPanel {
         g2d.dispose();
     }
 
-    // Tạo danh sách các ghế với số lượng ghế mong muốn
-//    public static List<Seat> createSeats(int numSeats) {
-//        List<Seat> seats = new ArrayList<>();
-//        for (int i = 1; i <= numSeats; i++) {
-//            seats.add(new Seat(i));
-//        }
-//
-//        Seat seat = new Seat(60);
-//        seat.setTinhTrangChoNgoi(1);
-//        seats.set(5, seat);
-//        return seats;
-//    }
 
-    public static List<Seat> createSeats(Map<Integer, Integer> dsChoNgoi) {
-        List<Seat> seats = new ArrayList<>();
-
-        for(Map.Entry<Integer, Integer> entry : dsChoNgoi.entrySet()) {
-            Integer soSlot = entry.getKey();
-            Integer tinhTrang = entry.getValue();
-            seats.add(new Seat(soSlot, tinhTrang));
+    public static List<SlotBtn> createSeats(String maToaTau, List<Slot> dsChoNgoi) {
+        List<SlotBtn> seats = new ArrayList<>();
+        for (Slot item : dsChoNgoi) {
+            seats.add(new SlotBtn(maToaTau, item));
         }
         return seats;
     }
 
     public void clearSelection() {
         isSelected = false;
-        repaint(); // Vẽ lại nút sau khi cập nhật
-
-    }
-
-    public void setSeatNumber(int seatNumber) {
-        this.seatNumber = seatNumber;
-    }
-
-    public void setSelected(boolean isSelected) {
-        this.isSelected = isSelected;
-    }
-
-    public int getTinhTrangChoNgoi() {
-        return tinhTrangChoNgoi;
-    }
-
-    public void setTinhTrangChoNgoi(int tinhTrangVe) {
-        this.tinhTrangChoNgoi = tinhTrangVe;
+        repaint();
     }
 }

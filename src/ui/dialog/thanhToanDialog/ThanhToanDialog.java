@@ -27,6 +27,7 @@ import entity.*;
 import ui.component.ButtonCustom;
 import ui.component.HeaderTitle;
 import ui.component.InputForm;
+import ui.component.SlotBtn;
 import ui.dialog.ChiTietVeDialog;
 
 public class ThanhToanDialog extends JDialog {
@@ -45,7 +46,7 @@ public class ThanhToanDialog extends JDialog {
     private JTable veTable;
     private DefaultTableModel veModel;
     private HoaDon hoaDon;
-    private List<Integer> dsCho;
+    private List<Slot> dsChoDaChon;
     private KhachHang khachHang;
     private double tongTien;
     private double tongTienGiam;
@@ -56,13 +57,12 @@ public class ThanhToanDialog extends JDialog {
     private double tongTienTamTinh;
     private NhanVien nhanVien;
     private ToaTau toaTau;
-    private List<Integer> dsChoAsInt;
     Locale locale = new Locale("vi", "VN");
     NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
     private ThanhToanListener thanhToanListener;
 
     public ThanhToanDialog() {
-        dsCho = new ArrayList<>();
+        dsChoDaChon = new ArrayList<>();
         danhSachVe = new ArrayList<>();
         slotDao = new SlotDao();
         hoaDonDao = new HoaDonDao();
@@ -204,10 +204,8 @@ public class ThanhToanDialog extends JDialog {
             Tau tau,
             ToaTau toaTau,
             KhachHang khachHang,
-            List<Integer> dsCho) {
-        this.dsChoAsInt = dsCho;
+            List<SlotBtn> dsCho) {
         this.nhanVien = nhanVien;
-        this.dsCho.addAll(dsCho);
         this.khachHang = khachHang;
         this.toaTau = toaTau;
 
@@ -220,9 +218,12 @@ public class ThanhToanDialog extends JDialog {
             veModel.removeRow(0);
 
         tongTienTamTinh = 0.0;
-        List<Slot> dsSlot = slotDao.laySlotTheoMaToaTauVaDsChoNgoi(toaTau.getMaToa(), dsCho);
+        dsChoDaChon = dsCho
+                .stream()
+                .map(slotBtn -> slotBtn.getSlot())
+                .toList();
 
-        for (Slot slot : dsSlot) {
+        for (Slot slot : dsChoDaChon) {
             Date date= new Date();
             String maGaDi = tuyen.getGaDi().getMaGa();
             String maGaDen = tuyen.getGaDen().getMaGa();
@@ -336,7 +337,7 @@ public class ThanhToanDialog extends JDialog {
             }
 
 
-            if (hoaDonDao.taoHoaDon(toaTau.getMaToa(), dsChoAsInt, hoaDon, dsChiTietHoaDon, danhSachVe)) {
+            if (hoaDonDao.taoHoaDon(toaTau.getMaToa(), dsChoDaChon, hoaDon, dsChiTietHoaDon, danhSachVe)) {
                 JOptionPane.showMessageDialog(this, "Thanh toán thành công!");
                 if (thanhToanListener != null){
                     thanhToanListener.thanhToanThanhCong(hoaDon);
