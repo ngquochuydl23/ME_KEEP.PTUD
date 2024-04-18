@@ -7,11 +7,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Seat extends JPanel {
     private int seatNumber;
     private boolean isSelected;
-    private int tinhTrangVe;
+    private int tinhTrangChoNgoi;
 
     private MouseListener ml;
 
@@ -38,6 +39,12 @@ public class Seat extends JPanel {
         });
     }
 
+    public Seat(int seatNumber, int tinhTrangChoNgoi) {
+        this(seatNumber);
+        this.tinhTrangChoNgoi = tinhTrangChoNgoi;
+    }
+
+
     private void changeSelectSeat() {
         isSelected = !isSelected;
         repaint();
@@ -61,7 +68,7 @@ public class Seat extends JPanel {
             g2d.setColor(Color.WHITE); // Xóa màu nền khi không được chọn
         }
 
-        if (this.getTinhTrangVe() == 1) {
+        if (this.getTinhTrangChoNgoi() == 0) {
             this.setEnabled(false);
             g2d.setColor(Color.GRAY);
             this.removeMouseListener(ml);
@@ -84,15 +91,26 @@ public class Seat extends JPanel {
     }
 
     // Tạo danh sách các ghế với số lượng ghế mong muốn
-    public static List<Seat> createSeats(int numSeats) {
-        List<Seat> seats = new ArrayList<>();
-        for (int i = 1; i <= numSeats; i++) {
-            seats.add(new Seat(i));
-        }
+//    public static List<Seat> createSeats(int numSeats) {
+//        List<Seat> seats = new ArrayList<>();
+//        for (int i = 1; i <= numSeats; i++) {
+//            seats.add(new Seat(i));
+//        }
+//
+//        Seat seat = new Seat(60);
+//        seat.setTinhTrangChoNgoi(1);
+//        seats.set(5, seat);
+//        return seats;
+//    }
 
-        Seat seat = new Seat(60);
-        seat.setTinhTrangVe(1);
-        seats.set(5, seat);
+    public static List<Seat> createSeats(Map<Integer, Integer> dsChoNgoi) {
+        List<Seat> seats = new ArrayList<>();
+
+        for(Map.Entry<Integer, Integer> entry : dsChoNgoi.entrySet()) {
+            Integer soSlot = entry.getKey();
+            Integer tinhTrang = entry.getValue();
+            seats.add(new Seat(soSlot, tinhTrang));
+        }
         return seats;
     }
 
@@ -110,11 +128,11 @@ public class Seat extends JPanel {
         this.isSelected = isSelected;
     }
 
-    public int getTinhTrangVe() {
-        return tinhTrangVe;
+    public int getTinhTrangChoNgoi() {
+        return tinhTrangChoNgoi;
     }
 
-    public void setTinhTrangVe(int tinhTrangVe) {
-        this.tinhTrangVe = tinhTrangVe;
+    public void setTinhTrangChoNgoi(int tinhTrangVe) {
+        this.tinhTrangChoNgoi = tinhTrangVe;
     }
 }

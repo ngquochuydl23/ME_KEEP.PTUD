@@ -1,5 +1,6 @@
 package dao;
 
+import com.mysql.cj.log.Log;
 import config.DatabaseUtil;
 import entity.Khoang;
 import entity.LoaiKhoang;
@@ -46,6 +47,10 @@ public class SlotDao implements IDao<SlotDao, String>{
 
     public List<Slot> laySlotTheoMaToaTauVaDsChoNgoi(String maToaTau, List<Integer> dsCho) {
         List<Slot> dsSlot = new ArrayList<>();
+
+        if (dsSlot.isEmpty())
+            return null;
+
         StringBuilder dsChoParam = new StringBuilder(dsCho.toString());
         dsChoParam.setCharAt(0,'(');
         dsChoParam.setCharAt(dsCho.toString().length() - 1,')');
@@ -55,6 +60,7 @@ public class SlotDao implements IDao<SlotDao, String>{
                     "WHERE khoang.MaToa = ? AND slot.SoSlot IN "+ dsChoParam +"\n" +
                     "ORDER BY slot.SoSlot ASC ";
 
+            Logger.getLogger(SlotDao.class.getName()).log(Level.INFO, sql);
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, maToaTau);
             ResultSet rs = pst.executeQuery();
@@ -90,8 +96,8 @@ public class SlotDao implements IDao<SlotDao, String>{
         return true;
     }
 
-    public Map<Integer, boolean> layTinhTrangChoNgoiTheoToaTau(String maToaTau) {
-        Map<Integer, boolean>  tinhTrangChoNgoi = new HashMap<Integer, boolean>();
+    public Map<Integer, Integer> layTinhTrangChoNgoiTheoToaTau(String maToaTau) {
+        Map<Integer, Integer>  tinhTrangChoNgoi = new HashMap<Integer, Integer>();
         try {
             String sql = "select slot.SoSlot, slot.TinhTrang  from quanlibanve.Slot slot\n" +
                     "LEFT JOIN Khoang khoang ON khoang.MaKhoang = slot.MaKhoang\n" +
@@ -104,7 +110,7 @@ public class SlotDao implements IDao<SlotDao, String>{
 
             while (rs.next()) {
                 int soSlot = rs.getInt("slot.SoSlot");
-                boolean tinhTrang = rs.getBoolean("slot.TinhTrang");
+                int tinhTrang = rs.getInt("slot.TinhTrang");
 
                 tinhTrangChoNgoi.put(soSlot, tinhTrang);
             }

@@ -55,7 +55,6 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
     private InputDate dateNgayDi, dateNgayVe;
     private SpinnerForm soLuongHanhKhach;
     private GaDao gaDao;
-    private TuyenDao tuyenDao;
     private ChuyenDao chuyenDao;
     private TauDao tauDao;
     private List<String> tenGaList;
@@ -73,13 +72,11 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         thanhToanDialog.setThanhToanListener(new ThanhToanListener() {
             @Override
             public void thanhToanThanhCong(HoaDon hoaDon) {
-                System.out.println(hoaDon);
                 resetForm();
             }
         });
         chuyenList = new ArrayList<>();
         tenGaList = new ArrayList<>();
-        tuyenDao = new TuyenDao();
         chuyenDao = new ChuyenDao();
         tauDao = new TauDao();
         gaDao = new GaDao();
@@ -155,6 +152,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         timKhachHangDialog.setTimKhachHangListener(new TimKhachHangListener() {
             @Override
             public void timThayhachhang(KhachHang khachHang) {
+                timKhachHangDialog.xoaDuLieu();
                 themKhachHangVaoHoaDon(khachHang);
             }
 
@@ -181,6 +179,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         khachHangDialog.setTaoKhachHangListener(new TaoKhachHangListener() {
             @Override
             public void taoKhachHangThanhCong(KhachHang khachHang) {
+                khachHangDialog.xoaDuLieu();
                 themKhachHangVaoHoaDon(khachHang);
             }
         });
@@ -205,18 +204,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         chucNangChinh.getToolbar("huy-ve").addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // int index = getRowSelected();
-                // if (index != -1) {
-                // if (JOptionPane.showConfirmDialog(
-                // null,
-                // "Bạn có chắc chắn muốn huỷ phiếu ?\nThao tác này không thể hoàn tác nên hãy
-                // suy nghĩ kĩ !",
-                // "Huỷ phiếu",
-                // JOptionPane.OK_CANCEL_OPTION,
-                // JOptionPane.INFORMATION_MESSAGE) == 0) {
-                //
-                // }
-                // }
+
             }
         });
 

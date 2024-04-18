@@ -101,18 +101,6 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
         btnKhMoi.addMouseListener(this);
         btnTim.addMouseListener(this);
 
-        // switch (type) {
-        // case "find":
-        // tenKH.setDisable();
-        // if (khResult != null) {
-        // setTenKH(khResult.getHoTen());
-        // setSdtKH(khResult.getSoDienThoai());
-        // }
-        //
-        // pnlButtom.add(btnTim);
-        // pnlButtom.add(btnKhMoi);
-        // break;
-        // }
         pnlButtom.add(btnSubmit);
         pnlButtom.add(btnHuyBo);
 
@@ -234,7 +222,7 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
         return new entity.KhachHang(maKhacHang, tenKhachHang, soDienThoai, LocalDateTime.now(), false);
     }
 
-    private void xoaDuLieu() {
+    public void xoaDuLieu() {
         btnSubmit.setVisible(true);
         titlePage.setLblTitle("Thêm khách hàng");
         btnSubmit.setText("Thêm khách hàng");
@@ -273,5 +261,11 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
         soDienThoaiTextField.setText(soDienThoai);
         tenKhachHangTextField.requestFocus();
         tenKhachHangTextField.getTxtForm().requestFocus();
+    }
+
+    @Override
+    public void setVisible(boolean b) {
+        xoaDuLieu();
+        super.setVisible(b);
     }
 }

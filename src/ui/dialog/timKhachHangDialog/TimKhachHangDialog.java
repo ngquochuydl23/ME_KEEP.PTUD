@@ -29,6 +29,7 @@ public class TimKhachHangDialog extends JDialog implements ActionListener, Windo
     public TimKhachHangDialog() {
         khachHangDao = new KhachHangDao();
         initComponents();
+        xoaDuLieu();
     }
 
     @Override
@@ -123,7 +124,7 @@ public class TimKhachHangDialog extends JDialog implements ActionListener, Windo
 
     }
 
-    private void xoaDuLieu() {
+    public void xoaDuLieu() {
         tiepTucBtn.setEnabled(false);
         tenKhachHangTextField.setText("");
         tenKhachHangTextField.setEnabled(false);
@@ -195,5 +196,10 @@ public class TimKhachHangDialog extends JDialog implements ActionListener, Windo
 
     public void setTimKhachHangListener(TimKhachHangListener timKhachHangListener) {
         this.timKhachHangListener = timKhachHangListener;
+    }
+
+    @Override
+    public void setVisible(boolean b) {
+        super.setVisible(b);
     }
 }

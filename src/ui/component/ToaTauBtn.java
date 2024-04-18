@@ -3,8 +3,7 @@ package ui.component;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Image;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -55,49 +54,54 @@ public class ToaTauBtn extends JButton {
     }
 
     private LoaiKhoang layLoaiKhoang() {
-
         return null;
     }
 
-    // Tạo một toa với 50 chỗ
-    public static ToaTauBtn createCarriageWith50Seats() {
+    public static ToaTauBtn createCarriageWith50Seats(Map<Integer, Integer> dsChoNgoi) {
         ToaTauBtn carriage = new ToaTauBtn(toaTau);
-        KhoangBtn cabin = (KhoangBtn) KhoangBtn.createFiftySeaterCabin();
+        KhoangBtn cabin = (KhoangBtn) KhoangBtn.createFiftySeaterCabin(dsChoNgoi);
         carriage.addCabin(cabin);
-
         return carriage;
     }
 
     // Tạo một toa với 8 khoang, mỗi khoang có 6 chỗ
-    public static ToaTauBtn createCarriageWith8Cabins6Seats() {
+    public static ToaTauBtn createCarriageWith8Cabins6Seats(Map<Integer, Integer> dsChoNgoi) {
         ToaTauBtn carriage = new ToaTauBtn(toaTau);
-        for (int i = 0; i < 8; i++) {
-            List<Seat> seats = new ArrayList<>();
-            for (int j = 0; j < 6; j++) {
-                seats.add(new Seat(j + 1)); // Tạo mới một đối tượng Seat cho mỗi ghế
+
+        Map<Integer, Integer> seatsOfEachCabin = new TreeMap<>();
+
+        for(Map.Entry<Integer, Integer> entry : dsChoNgoi.entrySet()) {
+            Integer soSlot = entry.getKey();
+            Integer tinhTrang = entry.getValue();
+
+            seatsOfEachCabin.put(soSlot, tinhTrang);
+
+            if (soSlot  % 4 == 0) {
+                carriage.addCabin(KhoangBtn.createFourSeaterCabin(seatsOfEachCabin));
+                seatsOfEachCabin.clear();
             }
-            KhoangBtn cabin = new KhoangBtn(seats);
-            cabin.updateSeatNumbers(i * 6 + 1); // Cập nhật số trên ghế cho mỗi cabin
-            carriage.addCabin(cabin);
         }
         return carriage;
     }
 
-    // Tạo một toa với 8 khoang, mỗi khoang có 4 chỗ
-    public static ToaTauBtn createCarriageWith8Cabins4Seats() {
+    // Tạo một toa với 4 khoang, mỗi khoang có 4 chỗ
+    public static ToaTauBtn createCarriageWith8Cabins4Seats(Map<Integer, Integer> dsChoNgoi) {
         ToaTauBtn carriage = new ToaTauBtn(toaTau);
-        for (int i = 0; i < 8; i++) {
-            List<Seat> seats = new ArrayList<>();
-            for (int j = 0; j < 4; j++) {
-                seats.add(new Seat(j + 1)); // Tạo mới một đối tượng Seat cho mỗi ghế
+        Map<Integer, Integer> seatsOfEachCabin = new TreeMap<>();
+        for(Map.Entry<Integer, Integer> entry : dsChoNgoi.entrySet()) {
+            Integer soSlot = entry.getKey();
+            Integer tinhTrang = entry.getValue();
+
+            seatsOfEachCabin.put(soSlot, tinhTrang);
+
+            if (soSlot  % 4 == 0) {
+                carriage.addCabin(KhoangBtn.createFourSeaterCabin(seatsOfEachCabin));
+                seatsOfEachCabin.clear();
             }
-            KhoangBtn cabin = new KhoangBtn(seats);
-            cabin.updateSeatNumbers(i * 4 + 1); // Cập nhật số trên ghế cho mỗi cabin
-            carriage.addCabin(cabin);
         }
         return carriage;
     }
-    
+
     public void addCabin(KhoangBtn cabin) {
         cabins.add(cabin);
     }
@@ -114,9 +118,9 @@ public class ToaTauBtn extends JButton {
         return totalSeats;
     }
 
-    public static void displayCarriageInfo(ToaTauBtn carriage) {
-        List<KhoangBtn> cabins = carriage.getCabins();
-        int totalSeats = carriage.getTotalNumberOfSeats();
+    public void displayCarriageInfo() {
+        List<KhoangBtn> cabins = getCabins();
+        int totalSeats = getTotalNumberOfSeats();
         System.out.println("Total number of seats: " + totalSeats);
         System.out.println("Number of cabins: " + cabins.size());
         for (int i = 0; i < cabins.size(); i++) {

@@ -1,6 +1,7 @@
 package ui.component;
 
 import java.util.List;
+import java.util.Map;
 
 public class KhoangBtn {
     private List<Seat> seats;
@@ -9,20 +10,20 @@ public class KhoangBtn {
     public KhoangBtn(List<Seat> seats) {
         this.seats = seats;
     }
-    
-    // Tạo một khoang với 4 chỗ ngồi
-    public static KhoangBtn createFourSeaterCabin() {
-        return new KhoangBtn(Seat.createSeats(4));
+
+
+    public static KhoangBtn createFourSeaterCabin(Map<Integer, Integer> dsChoNgoi) {
+        return new KhoangBtn(Seat.createSeats(dsChoNgoi));
     }
 
-    // Tạo một khoang với 6 chỗ ngồi
-    public static KhoangBtn createSixSeaterCabin() {
-        return new KhoangBtn(Seat.createSeats(6));
+
+    public static KhoangBtn createSixSeaterCabin(Map<Integer, Integer> dsChoNgoi) {
+        return new KhoangBtn(Seat.createSeats(dsChoNgoi));
     }
 
-    // Tạo một khoang với 50 chỗ ngồi
-    public static KhoangBtn createFiftySeaterCabin() {
-        return new KhoangBtn(Seat.createSeats(50));
+
+    public static KhoangBtn createFiftySeaterCabin(Map<Integer, Integer> dsChoNgoi) {
+        return new KhoangBtn(Seat.createSeats(dsChoNgoi));
     }
 
     // Trả về danh sách các chỗ ngồi trong khoang
