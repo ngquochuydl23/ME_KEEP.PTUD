@@ -22,7 +22,7 @@ public class Main extends JFrame {
         this.setSize(new Dimension(1400, 800));
         this.setLocationRelativeTo(null);
         this.setLayout(new BorderLayout(0, 0));
-        this.setTitle("Hệ thống quản lý kho hàng ");
+        this.setTitle("Quản lí bán vé tàu");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         menuTaskbar = new MenuTaskbar(this);

@@ -7,9 +7,7 @@ import entity.Slot;
 import entity.ToaTau;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -90,5 +88,29 @@ public class SlotDao implements IDao<SlotDao, String>{
             else return false;
         }
         return true;
+    }
+
+    public Map<Integer, boolean> layTinhTrangChoNgoiTheoToaTau(String maToaTau) {
+        Map<Integer, boolean>  tinhTrangChoNgoi = new HashMap<Integer, boolean>();
+        try {
+            String sql = "select slot.SoSlot, slot.TinhTrang  from quanlibanve.Slot slot\n" +
+                    "LEFT JOIN Khoang khoang ON khoang.MaKhoang = slot.MaKhoang\n" +
+                    "WHERE khoang.MaToa = ?\n" +
+                    "ORDER BY slot.SoSlot ASC";
+
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, maToaTau);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                int soSlot = rs.getInt("slot.SoSlot");
+                boolean tinhTrang = rs.getBoolean("slot.TinhTrang");
+
+                tinhTrangChoNgoi.put(soSlot, tinhTrang);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(SlotDao.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return tinhTrangChoNgoi;
     }
 }
