@@ -117,7 +117,7 @@ public class KhuyenMaiDao implements IDao<KhuyenMai, String> {
     public KhuyenMai themVoiKieuTraVe(KhuyenMai entity) {
         try {
             String sql = "INSERT INTO `KhuyenMai`(`maKhuyenMai`, `phanTramGiamGia`, `ghiChu`, `thoiGianBatDau`, `thoiGianKetThuc`) VALUES (?,?,?,?,?)";
-            PreparedStatement statement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement statement = con.prepareStatement(sql);
 
             statement.setString(1, entity.getMaKhuyenMai());
             statement.setDouble(2, entity.getPhanTramGiamGia());
@@ -125,15 +125,8 @@ public class KhuyenMaiDao implements IDao<KhuyenMai, String> {
             statement.setTimestamp(4, Timestamp.valueOf(entity.getThoiGianBatDau()));
             statement.setTimestamp(5, Timestamp.valueOf(entity.getThoiGianKetThuc()));
 
-            if (statement.executeUpdate() > 0) {
-                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        entity.setMaKhuyenMai(generatedKeys.getString(1));
-                        return entity;
-                    }
-                }
-            }
-            return null;
+            statement.executeUpdate();
+            return entity;
         } catch (SQLException ex) {
             Logger.getLogger(KhuyenMaiDao.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
             return null;
