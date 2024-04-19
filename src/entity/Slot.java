@@ -9,6 +9,7 @@ public class Slot {
     private int soSlot;
 
     private Khoang khoang;
+
     private int tinhTrang;
 
     public Slot() {}

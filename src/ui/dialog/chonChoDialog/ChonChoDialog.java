@@ -1,6 +1,6 @@
 package ui.dialog.chonChoDialog;
 
-import dao.KhoangDao;
+import dao.SlotDao;
 import entity.*;
 import ui.component.*;
 
@@ -14,27 +14,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ChonChoDialog extends JDialog {
     private ToaTauBtn toaTauBtn;
-    private SelectForm loaiKhoangCbx;
-    private SelectForm khoangCbx;
     private ButtonGroup btgToa;
     private JPanel topPanel;
     private Tau tau;
     private JPanel seatPanel;
     private ToaTauDao toaTauDao;
-    private KhoangDao khoangDao;
     private LoaiKhoangDao loaiKhoangDao;
     private List<ToaTau> danhSachToaTau;
-    private List<LoaiKhoang> danhSachLoaiKhoang;
     private LoaiKhoang loaiKhoang;
-    private List<Khoang> dsKhoang;
-
-    private ToaTau toaTauDangChon;
     private ChonChoNgoiListener chonChoNgoiListener;
-
+    private List<SlotBtn> dsChoNgoiDaChon;
+    private List<SlotBtn> danhSachSlot;
     private ToaTau toaDangChon;
+    private SlotDao slotDao;
 
     public ChonChoDialog() {
         setTitle("Chọn chỗ");
@@ -44,22 +40,24 @@ public class ChonChoDialog extends JDialog {
         setResizable(false);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
+        danhSachSlot = new ArrayList<>();
+        danhSachToaTau = new ArrayList<>();
+        dsChoNgoiDaChon = new ArrayList<>();
         toaTauDao = new ToaTauDao();
         loaiKhoangDao = new LoaiKhoangDao();
-        khoangDao = new KhoangDao();
-
-        doDuLieuLoaiKhoang();
+        slotDao = new SlotDao();
     }
 
     public void setTau(Tau tau) {
         this.tau = tau;
-
-        dsKhoang = new ArrayList<>();
+        dsChoNgoiDaChon.clear();
+        danhSachToaTau.clear();
         danhSachToaTau = toaTauDao.layToaTheoMaTau(this.tau.getMaTau());
         loaiKhoang = loaiKhoangDao.layLoaiKhoangTheoMaToa(danhSachToaTau.get(0).getMaToa());
+        toaDangChon = danhSachToaTau.get(0);
 
-        this.doToaTauLenUI();
+        layTinhTrangSlotTheoToaTau();
+        doToaTauLenUI();
         updateSeatPanel();
         pack();
     }
@@ -69,18 +67,11 @@ public class ChonChoDialog extends JDialog {
 
         btgToa = new ButtonGroup();
         topPanel = new JPanel();
-
-        loaiKhoangCbx = new SelectForm("Loại khoang");
-        // topPanel.add(loaiKhoangCbx);
-        // topPanel.add(khoangCbx);
-
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
-        // Panel chọn chỗ
 
         seatPanel = new JPanel();
         seatPanel.setLayout(new GridLayout(0, 4));
-        // updateSeatPanel();
 
         JScrollPane scrollPane = new JScrollPane(seatPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -93,11 +84,10 @@ public class ChonChoDialog extends JDialog {
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                luuChoNgoiDangChon();
                 if (chonChoNgoiListener != null) {
-                    System.out.println(toaDangChon.toString());
-                    chonChoNgoiListener.chonChoNgoiThanhCong(toaDangChon, layToanBoChoDangChon());
+                    chonChoNgoiListener.chonChoNgoiThanhCong(toaDangChon, dsChoNgoiDaChon);
                 }
-                // dispose();
             }
         });
 
@@ -118,18 +108,21 @@ public class ChonChoDialog extends JDialog {
     private void doToaTauLenUI() {
         for (ToaTau toaTau : danhSachToaTau) {
             final ToaTau currentToa = toaTau;
-            ToaTauBtn carriage = new ToaTauBtn(toaTau);
-            carriage.addActionListener(new ActionListener() {
+            ToaTauBtn toaTauBtn = new ToaTauBtn(toaTau);
+            toaTauBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     toaDangChon = currentToa;
                     loaiKhoang = loaiKhoangDao.layLoaiKhoangTheoMaToa(currentToa.getMaToa());
-                    layToanBoChoDangChon();
+
+                    luuChoNgoiDangChon();
+
+                    layTinhTrangSlotTheoToaTau();
                     updateSeatPanel();
                 }
             });
-            this.btgToa.add(carriage);
-            this.topPanel.add(carriage);
+            this.btgToa.add(toaTauBtn);
+            this.topPanel.add(toaTauBtn);
         }
 
         if (this.toaDangChon == null) {
@@ -137,79 +130,77 @@ public class ChonChoDialog extends JDialog {
         }
     }
 
-    // Phương thức để xóa lựa chọn trên các chỗ ngồi
+
     private void clearSeatSelection() {
+        danhSachSlot.clear();
+        danhSachToaTau.clear();
         Component[] components = seatPanel.getComponents();
         for (Component component : components) {
-            if (component instanceof Seat) {
-                ((Seat) component).clearSelection();
+            if (component instanceof SlotBtn) {
+                ((SlotBtn) component).clearSelection();
             }
         }
     }
 
-    // Cập nhật panel chọn chỗ dựa trên loại toa và khoang đã chọn
     private void updateSeatPanel() {
         String loaiToa = this.loaiKhoang.getMaLoaiKhoang();
         switch (loaiToa) {
             case "ghe-ngoi":
-                toaTauBtn = ToaTauBtn.createCarriageWith50Seats();
+                toaTauBtn = ToaTauBtn.taoToa1Khoang50Slot(toaDangChon, danhSachSlot);
                 break;
             case "giuong-nam-khoang-6":
-                toaTauBtn = ToaTauBtn.createCarriageWith8Cabins6Seats();
+                toaTauBtn = ToaTauBtn.taoToa4Khoang6Giuong(toaDangChon, danhSachSlot);
                 break;
             case "giuong-nam-khoang-4":
-                toaTauBtn = ToaTauBtn.createCarriageWith8Cabins4Seats();
+                toaTauBtn = ToaTauBtn.taoToa4Khoang4Giuong(toaDangChon, danhSachSlot);
                 break;
             default:
-                toaTauBtn = ToaTauBtn.createCarriageWith50Seats();
+                toaTauBtn = ToaTauBtn.taoToa1Khoang50Slot(toaDangChon, danhSachSlot);
                 return;
         }
-        seatPanel.removeAll(); // Xóa tất cả các ghế hiện tại trên panel
-        clearSeatSelection(); // Xóa lựa chọn trên các ghế
-        List<KhoangBtn> cabins = toaTauBtn.getCabins(); // Lấy danh sách cabins từ carriage
-
-        // Tạo layout với số cột phù hợp
+        seatPanel.removeAll();
+        List<KhoangBtn> dsKhoang = toaTauBtn.getDsKhoang();
         if (loaiToa.equals("giuong-nam-khoang-6") || loaiToa.equals("giuong-nam-khoang-4")) {
             GridLayout gridLayout = new GridLayout(0, 2);
-            gridLayout.setHgap(10); // Khoảng trống giữa các cột
-            gridLayout.setVgap(10); // Khoảng trống giữa các hàng
+            gridLayout.setHgap(10);
+            gridLayout.setVgap(10);
             seatPanel.setLayout(gridLayout);
+
         } else if (loaiToa.equals("ghe-ngoi")) {
             GridLayout gridLayout = new GridLayout(0, 4);
-            gridLayout.setHgap(10); // Khoảng trống giữa các cột
-            gridLayout.setVgap(10); // Khoảng trống giữa các hàng
+            gridLayout.setHgap(10);
+            gridLayout.setVgap(10);
             seatPanel.setLayout(gridLayout);
         }
 
-        for (KhoangBtn cabin : cabins) { // Lặp qua từng cabin
-            addSeatsToPanel(cabin.getSeats()); // Thêm tất cả các ghế của cabin vào panel
-
+        for (KhoangBtn khoangBtn : dsKhoang) {
+            for (SlotBtn slotBtn : khoangBtn.getDsSlotBtn()) {
+                seatPanel.add(slotBtn);
+            }
             seatPanel.add(new JPanel());
             seatPanel.add(new JPanel());
         }
+
+
         revalidate();
         repaint();
     }
 
-    private void addSeatsToPanel(List<Seat> seats) {
-        for (Seat seat : seats) {
-            seatPanel.add(seat);
+    public void luuChoNgoiDangChon() {
+        List<SlotBtn> dsChoNgoi = new ArrayList<>();
+        for (KhoangBtn khoangBtn : toaTauBtn.getDsKhoang()) {
+            dsChoNgoi.addAll(khoangBtn.getDsSlotBtn());
+        }
+
+        for (SlotBtn slotBtn : dsChoNgoi) {
+            String maSlot = slotBtn.getSlot().getMaSlot();
+            dsChoNgoiDaChon.removeIf(item -> item.getSlot().getMaSlot().equals(maSlot));
+            if (slotBtn.isSelected()) {
+                dsChoNgoiDaChon.add(slotBtn);
+            }
         }
     }
 
-    public List<Integer> layToanBoChoDangChon() {
-        List<Seat> dsChoNgoi = new ArrayList<>();
-        for (KhoangBtn cabin : toaTauBtn.getCabins()) {
-            dsChoNgoi = cabin.getSeats();
-        }
-        List<Integer> dsCho = new ArrayList<>();
-        for (Seat seat : dsChoNgoi) {
-            if (seat.isSelected()) {
-                dsCho.add(seat.getSeatNumber());
-            }
-        }
-        return dsCho;
-    }
 
     public void setChonChoNgoiListener(ChonChoNgoiListener chonChoNgoiListener) {
         this.chonChoNgoiListener = chonChoNgoiListener;
@@ -217,13 +208,39 @@ public class ChonChoDialog extends JDialog {
 
     @Override
     public void setVisible(boolean b) {
-        clearSeatSelection();
+
         super.setVisible(b);
+        clearSeatSelection();
     }
 
-    private void doDuLieuLoaiKhoang() {
-        danhSachLoaiKhoang = loaiKhoangDao.layHet();
-        loaiKhoangCbx.setCbItems(danhSachLoaiKhoang.stream().map(item -> (String) item.getTenLoaiKhoang()).toList());
-    }
+    private void layTinhTrangSlotTheoToaTau() {
+        if (toaDangChon != null) {
+            danhSachSlot.clear();
+            List<SlotBtn> choDangChonTrongToa = dsChoNgoiDaChon
+                    .stream()
+                    .filter(slotBtn -> slotBtn.getMaToaTau().equals(toaDangChon.getMaToa()))
+                    .toList();
 
+            danhSachSlot.addAll(slotDao
+                    .layTinhTrangChoNgoiTheoToaTau(toaDangChon.getMaToa())
+                    .stream()
+                    .map(item -> {
+                        String maSlot = item.getMaSlot();
+                        AtomicBoolean selected = new AtomicBoolean(false);
+                        choDangChonTrongToa
+                                .stream()
+                                .filter(dangChon -> dangChon.getSlot().getMaSlot().equals(maSlot))
+                                .findAny()
+                                .ifPresent(dangChon -> selected.set(true));
+
+                        return new SlotBtn(toaDangChon.getMaToa(), item, selected.get());
+
+                    })
+                    .toList());
+
+
+
+
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package dao;
 
+import com.mysql.cj.log.Log;
 import config.DatabaseUtil;
 import entity.Khoang;
 import entity.LoaiKhoang;
@@ -7,9 +8,7 @@ import entity.Slot;
 import entity.ToaTau;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,6 +47,10 @@ public class SlotDao implements IDao<SlotDao, String>{
 
     public List<Slot> laySlotTheoMaToaTauVaDsChoNgoi(String maToaTau, List<Integer> dsCho) {
         List<Slot> dsSlot = new ArrayList<>();
+
+        if (dsSlot.isEmpty())
+            return null;
+
         StringBuilder dsChoParam = new StringBuilder(dsCho.toString());
         dsChoParam.setCharAt(0,'(');
         dsChoParam.setCharAt(dsCho.toString().length() - 1,')');
@@ -57,6 +60,7 @@ public class SlotDao implements IDao<SlotDao, String>{
                     "WHERE khoang.MaToa = ? AND slot.SoSlot IN "+ dsChoParam +"\n" +
                     "ORDER BY slot.SoSlot ASC ";
 
+            Logger.getLogger(SlotDao.class.getName()).log(Level.INFO, sql);
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, maToaTau);
             ResultSet rs = pst.executeQuery();
@@ -75,20 +79,43 @@ public class SlotDao implements IDao<SlotDao, String>{
         return dsSlot;
     }
 
-    public boolean capNhatHetSlot(Connection conn, String maToaTau, List<Integer> dsSoSlot) throws SQLException {
-        for (Integer soSlot: dsSoSlot) {
+    public boolean capNhatHetSlot(Connection conn,  List<Slot> dsChoDaChon) throws SQLException {
+        for (Slot slot : dsChoDaChon) {
             String sql = "UPDATE quanlibanve.Slot slot\n" +
-                    "LEFT JOIN Khoang khoang ON khoang.MaKhoang = slot.MaKhoang\n" +
                     "SET slot.TinhTrang = 0\n" +
-                    "WHERE khoang.MaToa = ? AND slot.SoSlot = ?";
+                    "WHERE slot.MaSlot = ?";
             PreparedStatement pst =  conn.prepareStatement(sql);
-            pst.setString(1, maToaTau);
-            pst.setInt(2, soSlot);
+            pst.setString(1, slot.getMaSlot());
 
             if (pst.executeUpdate() > 0)
                 continue;
             else return false;
         }
         return true;
+    }
+
+    public List<Slot> layTinhTrangChoNgoiTheoToaTau(String maToaTau) {
+        List<Slot> dsSlot = new ArrayList<>();
+        try {
+            String sql = "select slot.MaSlot, slot.SoSlot, slot.TinhTrang, slot.MaKhoang from quanlibanve.Slot slot\n" +
+                    "LEFT JOIN Khoang khoang ON khoang.MaKhoang = slot.MaKhoang\n" +
+                    "WHERE khoang.MaToa = ?\n" +
+                    "ORDER BY slot.SoSlot ASC";
+
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, maToaTau);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                String maSlot = rs.getString("slot.MaSlot");
+                int soSlot = rs.getInt("slot.SoSlot");
+                int tinhTrang = rs.getInt("slot.TinhTrang");
+                String maKhoang = rs.getString("slot.MaKhoang");
+                dsSlot.add(new Slot( maSlot,  soSlot,  new Khoang(maKhoang),  tinhTrang));
+            }
+        } catch (Exception e) {
+            Logger.getLogger(SlotDao.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return dsSlot;
     }
 }

@@ -3,8 +3,9 @@ package ui.component;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Image;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.*;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -13,16 +14,18 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import entity.LoaiKhoang;
+import entity.Slot;
 import entity.ToaTau;
 
 public class ToaTauBtn extends JButton {
-    private List<KhoangBtn> cabins;
-    private static ToaTau toaTau;
+    private List<KhoangBtn> khoangBtns;
+    private ToaTau toaTau;
 
     public ToaTauBtn(ToaTau toaTau) {
-        ToaTauBtn.toaTau = toaTau;
-        cabins = new ArrayList<>();
+        this.toaTau = toaTau;
+        khoangBtns = new ArrayList<>();
         initComponent(toaTau.getTenToa());
+
     }
 
     private void initComponent(String tenToa) {
@@ -54,84 +57,66 @@ public class ToaTauBtn extends JButton {
 
     }
 
-    private LoaiKhoang layLoaiKhoang() {
-
-        return null;
-    }
-
-    // Tạo một toa với 50 chỗ
-    public static ToaTauBtn createCarriageWith50Seats() {
+    public static ToaTauBtn taoToa1Khoang50Slot(ToaTau toaTau, List<SlotBtn> dsBtnSlot) {
         ToaTauBtn carriage = new ToaTauBtn(toaTau);
-        KhoangBtn cabin = (KhoangBtn) KhoangBtn.createFiftySeaterCabin();
-        carriage.addCabin(cabin);
-
+        String maKhoang = dsBtnSlot
+                .getFirst()
+                .getSlot()
+                .getKhoang()
+                .getMaKhoang();
+        carriage.themKhoangTau(new KhoangBtn(maKhoang, toaTau, dsBtnSlot));
         return carriage;
     }
 
-    // Tạo một toa với 8 khoang, mỗi khoang có 6 chỗ
-    public static ToaTauBtn createCarriageWith8Cabins6Seats() {
-        ToaTauBtn carriage = new ToaTauBtn(toaTau);
-        for (int i = 0; i < 8; i++) {
-            List<Seat> seats = new ArrayList<>();
-            for (int j = 0; j < 6; j++) {
-                seats.add(new Seat(j + 1)); // Tạo mới một đối tượng Seat cho mỗi ghế
+    public static ToaTauBtn taoToa4Khoang6Giuong(ToaTau toaTau, List<SlotBtn> dsBtnSlot) {
+        ToaTauBtn toaTauBtn = new ToaTauBtn(toaTau);
+
+        List<SlotBtn> seatsOfEachCabin = new ArrayList<>();
+
+        for(SlotBtn slotBtn : dsBtnSlot) {
+            Slot slot = slotBtn.getSlot();
+            seatsOfEachCabin.add(slotBtn);
+
+            if (slot.getSoSlot()  % 6 == 0) {
+                toaTauBtn.themKhoangTau(new KhoangBtn(slot.getKhoang().getMaKhoang(),toaTau, new ArrayList<>(seatsOfEachCabin)));
+                seatsOfEachCabin.clear();
             }
-            KhoangBtn cabin = new KhoangBtn(seats);
-            cabin.updateSeatNumbers(i * 6 + 1); // Cập nhật số trên ghế cho mỗi cabin
-            carriage.addCabin(cabin);
         }
-        return carriage;
+        return toaTauBtn;
     }
 
-    // Tạo một toa với 8 khoang, mỗi khoang có 4 chỗ
-    public static ToaTauBtn createCarriageWith8Cabins4Seats() {
-        ToaTauBtn carriage = new ToaTauBtn(toaTau);
-        for (int i = 0; i < 8; i++) {
-            List<Seat> seats = new ArrayList<>();
-            for (int j = 0; j < 4; j++) {
-                seats.add(new Seat(j + 1)); // Tạo mới một đối tượng Seat cho mỗi ghế
+    public static ToaTauBtn taoToa4Khoang4Giuong(ToaTau toaTau, List<SlotBtn> dsBtnSlot) {
+        ToaTauBtn toaTauBtn = new ToaTauBtn(toaTau);
+
+        List<SlotBtn> seatsOfEachCabin = new ArrayList<>();
+
+        for(SlotBtn slotBtn : dsBtnSlot) {
+            Slot slot = slotBtn.getSlot();
+            seatsOfEachCabin.add(slotBtn);
+
+            if (slot.getSoSlot()  % 4 == 0) {
+                toaTauBtn.themKhoangTau(new KhoangBtn(slot.getKhoang().getMaKhoang(),toaTau, new ArrayList<>(seatsOfEachCabin)));
+                seatsOfEachCabin.clear();
             }
-            KhoangBtn cabin = new KhoangBtn(seats);
-            cabin.updateSeatNumbers(i * 4 + 1); // Cập nhật số trên ghế cho mỗi cabin
-            carriage.addCabin(cabin);
         }
-        return carriage;
-    }
-    
-    public void addCabin(KhoangBtn cabin) {
-        cabins.add(cabin);
+        return toaTauBtn;
     }
 
-    public List<KhoangBtn> getCabins() {
-        return cabins;
+    public void themKhoangTau(KhoangBtn cabin) {
+        khoangBtns.add(cabin);
     }
 
-    public int getTotalNumberOfSeats() {
-        int totalSeats = 0;
-        for (KhoangBtn cabin : cabins) {
-            totalSeats += cabin.getNumberOfSeats();
-        }
-        return totalSeats;
+    public List<KhoangBtn> getDsKhoang() {
+        return khoangBtns;
     }
 
-    public static void displayCarriageInfo(ToaTauBtn carriage) {
-        List<KhoangBtn> cabins = carriage.getCabins();
-        int totalSeats = carriage.getTotalNumberOfSeats();
-        System.out.println("Total number of seats: " + totalSeats);
-        System.out.println("Number of cabins: " + cabins.size());
-        for (int i = 0; i < cabins.size(); i++) {
-            KhoangBtn cabin = cabins.get(i);
-            int cabinNumber = i + 1;
-            System.out.println("Cabin " + cabinNumber + ":");
-            System.out.println("   Number of seats: " + cabin.getNumberOfSeats());
-        }
-    }
+
 
     public ToaTau getToaTau() {
         return toaTau;
     }
 
     public void setToaTau(ToaTau toaTau) {
-        ToaTauBtn.toaTau = toaTau;
-    }  
+        this.toaTau = toaTau;
+    }
 }

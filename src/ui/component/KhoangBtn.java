@@ -1,52 +1,29 @@
 package ui.component;
 
+import entity.Slot;
+import entity.ToaTau;
+
 import java.util.List;
+import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
 public class KhoangBtn {
-    private List<Seat> seats;
+    private String maKhoang;
+    private List<SlotBtn> dsSlotBtn;
+    private ToaTau toaTau;
 
-    // Constructor nhận một danh sách ghế khi khởi tạo khoang
-    public KhoangBtn(List<Seat> seats) {
-        this.seats = seats;
-    }
-    
-    // Tạo một khoang với 4 chỗ ngồi
-    public static KhoangBtn createFourSeaterCabin() {
-        return new KhoangBtn(Seat.createSeats(4));
+    public KhoangBtn(String maKhoang, ToaTau toaTau, List<SlotBtn> dsBtnSlot) {
+        this.maKhoang = maKhoang;
+        this.toaTau = toaTau;
+        this.dsSlotBtn = dsBtnSlot;
     }
 
-    // Tạo một khoang với 6 chỗ ngồi
-    public static KhoangBtn createSixSeaterCabin() {
-        return new KhoangBtn(Seat.createSeats(6));
+    public List<SlotBtn> getDsSlotBtn() {
+        return dsSlotBtn;
     }
 
-    // Tạo một khoang với 50 chỗ ngồi
-    public static KhoangBtn createFiftySeaterCabin() {
-        return new KhoangBtn(Seat.createSeats(50));
-    }
 
-    // Trả về danh sách các chỗ ngồi trong khoang
-    public List<Seat> getSeats() {
-        return seats;
-    }
-
-    // Trả về số lượng chỗ ngồi trong khoang
-    public int getNumberOfSeats() {
-        return seats.size();
-    }
-    
-    public void updateSeatNumbers(int startSeatNumber) {
-        for (int i = 0; i < seats.size(); i++) {
-            Seat seat = seats.get(i);
-            seat.setSeatNumber(startSeatNumber + i);
-        }
-    }
-    
-    // Trả về chỗ ngồi tại một vị trí cụ thể trong khoang
-    public Seat getSeat(int seatNumber) {
-        if (seatNumber > 0 && seatNumber <= seats.size()) {
-            return seats.get(seatNumber - 1);
-        }
-        return null;
+    public String getMaKhoang() {
+        return maKhoang;
     }
 }

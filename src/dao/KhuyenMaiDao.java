@@ -99,7 +99,7 @@ public class KhuyenMaiDao implements IDao<KhuyenMai, String> {
     public boolean sua(KhuyenMai entity) {
         try {
             String sql = "UPDATE `KhuyenMai` SET `phanTramGiamGia`=?,`ghiChu`=?,`thoiGianBatDau`=?,`thoiGianKetThuc` WHERE maKhuyenMai=?";
-            PreparedStatement pst =  con.prepareStatement(sql);
+            PreparedStatement pst = con.prepareStatement(sql);
             pst.setDouble(1, entity.getPhanTramGiamGia());
             pst.setString(2, entity.getGhiChu());
             pst.setTimestamp(3, Timestamp.valueOf(entity.getThoiGianBatDau()));
@@ -113,4 +113,24 @@ public class KhuyenMaiDao implements IDao<KhuyenMai, String> {
             return false;
         }
     }
+
+    public KhuyenMai themVoiKieuTraVe(KhuyenMai entity) {
+        try {
+            String sql = "INSERT INTO `KhuyenMai`(`maKhuyenMai`, `phanTramGiamGia`, `ghiChu`, `thoiGianBatDau`, `thoiGianKetThuc`) VALUES (?,?,?,?,?)";
+            PreparedStatement statement = con.prepareStatement(sql);
+
+            statement.setString(1, entity.getMaKhuyenMai());
+            statement.setDouble(2, entity.getPhanTramGiamGia());
+            statement.setString(3, entity.getGhiChu());
+            statement.setTimestamp(4, Timestamp.valueOf(entity.getThoiGianBatDau()));
+            statement.setTimestamp(5, Timestamp.valueOf(entity.getThoiGianKetThuc()));
+
+            statement.executeUpdate();
+            return entity;
+        } catch (SQLException ex) {
+            Logger.getLogger(KhuyenMaiDao.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            return null;
+        }
+    }
+
 }

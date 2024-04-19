@@ -2,6 +2,7 @@ package dao;
 
 import config.DatabaseUtil;
 import entity.KhachHang;
+
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,10 +30,11 @@ public class KhachHangDao implements IDao<KhachHang, Integer> {
                 int maKhachHang = rs.getInt("maKhachHang");
                 String hoTen = rs.getString("hoTen");
                 String soDienThoai = rs.getString("soDienThoai");
+                String soCMND = rs.getString("CMND");
                 LocalDateTime thoiGianDangKy = rs.getTimestamp("thoiGianDangKy").toLocalDateTime();
                 boolean laKhachHangThanThiet = rs.getBoolean("laKhachHangThanThiet");
 
-                return new KhachHang(maKhachHang, hoTen, soDienThoai, thoiGianDangKy, laKhachHangThanThiet);
+                return new KhachHang(maKhachHang, hoTen, soDienThoai, thoiGianDangKy, laKhachHangThanThiet, soCMND);
             }
         } catch (Exception e) {
             Logger.getLogger(KhachHangDao.class.getName()).log(Level.SEVERE, null, e);
@@ -52,10 +54,11 @@ public class KhachHangDao implements IDao<KhachHang, Integer> {
                 int maKhachHang = rs.getInt("maKhachHang");
                 String hoTen = rs.getString("hoTen");
                 String soDienThoai = rs.getString("soDienThoai");
+                String soCMND = rs.getString("CMND");
                 LocalDateTime thoiGianDangKy = rs.getTimestamp("thoiGianDangKy").toLocalDateTime();
                 boolean laKhachHangThanThiet = rs.getBoolean("laKhachHangThanThiet");
 
-                dsKhachHang.add(new KhachHang(maKhachHang, hoTen, soDienThoai, thoiGianDangKy, laKhachHangThanThiet));
+                dsKhachHang.add(new KhachHang(maKhachHang, hoTen, soDienThoai, thoiGianDangKy, laKhachHangThanThiet, soCMND));
             }
         } catch (Exception e) {
             Logger.getLogger(KhachHangDao.class.getName()).log(Level.SEVERE, e.getMessage(), e);
@@ -66,13 +69,14 @@ public class KhachHangDao implements IDao<KhachHang, Integer> {
     @Override
     public boolean them(KhachHang entity) {
         try {
-            String sql = "INSERT INTO `KhachHang`(`hoTen`, `soDienThoai`, `thoiGianDangKy`, `laKhachHangThanThiet`) VALUES (?,?,?,?)";
+            String sql = "INSERT INTO `KhachHang`(`hoTen`, `soDienThoai`, `thoiGianDangKy`, `laKhachHangThanThiet`, `CMND`) VALUES (?,?,?,?,?)";
             PreparedStatement statement = con.prepareStatement(sql);
 
             statement.setString(1, entity.getHoTen());
             statement.setString(2, entity.getSoDienThoai());
             statement.setTimestamp(3, Timestamp.valueOf(entity.getThoiGianDangKy()));
             statement.setBoolean(4, false);
+            statement.setString(5, entity.getSoCMND());
 
             return statement.executeUpdate() > 0;
         } catch (SQLException ex) {
@@ -83,14 +87,18 @@ public class KhachHangDao implements IDao<KhachHang, Integer> {
 
     public KhachHang themVoiKieuTraVe(KhachHang entity) {
         try {
-            String sql = "INSERT INTO `KhachHang`(`hoTen`, `soDienThoai`, `thoiGianDangKy`, `laKhachHangThanThiet`) VALUES (?,?,?,?)";
+            String sql = "INSERT INTO `KhachHang`(`hoTen`, `soDienThoai`, `thoiGianDangKy`, `laKhachHangThanThiet`, `CMND`) VALUES (?,?,?,?,?)";
             PreparedStatement statement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             statement.setString(1, entity.getHoTen());
             statement.setString(2, entity.getSoDienThoai());
-            statement.setTimestamp(3, Timestamp.valueOf(entity.getThoiGianDangKy()));
+            
+            // Set thoiGianDangKy to current timestamp
+            LocalDateTime currentTime = LocalDateTime.now();
+            statement.setTimestamp(3, Timestamp.valueOf(currentTime));
+            
             statement.setBoolean(4, false);
-
+            statement.setString(5, entity.getSoCMND());
 
             if (statement.executeUpdate() > 0) {
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
@@ -106,7 +114,6 @@ public class KhachHangDao implements IDao<KhachHang, Integer> {
             return null;
         }
     }
-
     @Override
     public boolean xoa(Integer id) {
         try {
@@ -123,16 +130,16 @@ public class KhachHangDao implements IDao<KhachHang, Integer> {
     @Override
     public boolean sua(KhachHang entity) {
         try {
-            Connection connect = DatabaseUtil.getConnection();
-            String sql = "UPDATE `KhachHang` SET `hoTen`=?,`soDienThoai`=?,`laKhachHangThanThiet`=? WHERE maKhachHang=?";
-            PreparedStatement pst = connect.prepareStatement(sql);
+            String sql = "UPDATE `KhachHang` SET `hoTen`=?, `soDienThoai`=?, `laKhachHangThanThiet`=?, `CMND`=? WHERE maKhachHang=?";
+            PreparedStatement pst = con.prepareStatement(sql);
 
             pst.setString(1, entity.getHoTen());
             pst.setString(2, entity.getSoDienThoai());
             pst.setBoolean(3, entity.laKhachHangThanThiet());
+            pst.setString(4, entity.getSoCMND());
 
             // set where
-            pst.setInt(4, entity.getMaKhachHang());
+            pst.setInt(5, entity.getMaKhachHang());
             return pst.executeUpdate() > 0;
         } catch (SQLException ex) {
             Logger.getLogger(KhachHangDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -151,10 +158,11 @@ public class KhachHangDao implements IDao<KhachHang, Integer> {
                 int maKhachHang = rs.getInt("maKhachHang");
                 String hoTen = rs.getString("hoTen");
                 String soDienThoai = rs.getString("soDienThoai");
+                String soCMND = rs.getString("CMND");
                 LocalDateTime thoiGianDangKy = rs.getTimestamp("thoiGianDangKy").toLocalDateTime();
                 boolean laKhachHangThanThiet = rs.getBoolean("laKhachHangThanThiet");
 
-                return new KhachHang(maKhachHang, hoTen, soDienThoai, thoiGianDangKy, laKhachHangThanThiet);
+                return new KhachHang(maKhachHang, hoTen, soDienThoai, thoiGianDangKy, laKhachHangThanThiet, soCMND);
             }
         } catch (Exception e) {
             Logger.getLogger(KhachHangDao.class.getName()).log(Level.SEVERE, null, e);
