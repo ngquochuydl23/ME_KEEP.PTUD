@@ -294,7 +294,7 @@ public class KhachHangPanel extends JPanel implements ItemListener {
                 break;
             case "Số CMND":
                 for (entity.KhachHang i : danhSachKhachHang) {
-                    if (i.getSoCMND().toLowerCase().contains(text)) {
+                    if (i.getCMND().toLowerCase().contains(text)) {
                         result.add(i);
                     }
                 }
@@ -311,7 +311,7 @@ public class KhachHangPanel extends JPanel implements ItemListener {
                     khachHang.getSoDienThoai(),
                     khachHang.laKhachHangThanThiet() ? "Có" : "Không",
                     khachHang.getThoiGianDangKy(),
-                    khachHang.getSoCMND()
+                    khachHang.getCMND()
             });
         }
     }
@@ -328,7 +328,7 @@ public class KhachHangPanel extends JPanel implements ItemListener {
                     khachHang.getSoDienThoai(),
                     khachHang.laKhachHangThanThiet() ? "Có" : "Không",
                     khachHang.getThoiGianDangKy(),
-                    khachHang.getSoCMND()
+                    khachHang.getCMND()
             });
         }
     }

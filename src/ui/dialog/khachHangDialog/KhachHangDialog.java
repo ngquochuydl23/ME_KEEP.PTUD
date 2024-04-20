@@ -203,7 +203,7 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
 
         titlePage.setLblTitle("Cập nhật thông tin");
         btnSubmit.setText("Cập nhật thông tin");
-        soCMNDTextField.setText(khachHang.getSoCMND());
+        soCMNDTextField.setText(khachHang.getCMND());
         soDienThoaiTextField.setText(khachHang.getSoDienThoai());
         tenKhachHangTextField.setText(khachHang.getHoTen());
         maKhachHangTextField.setText(String.valueOf(khachHang.getMaKhachHang()));
@@ -263,7 +263,7 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
         tenKhachHangTextField.setText(khachHang.getHoTen());
         tenKhachHangTextField.setEditable(false); // Vô hiệu hóa chỉnh sửa
         
-        soCMNDTextField.setText(khachHang.getSoCMND());
+        soCMNDTextField.setText(khachHang.getCMND());
         soCMNDTextField.setEditable(false); // Vô hiệu hóa chỉnh sửa
 
         maKhachHangTextField.setText(String.valueOf(khachHang.getMaKhachHang()));

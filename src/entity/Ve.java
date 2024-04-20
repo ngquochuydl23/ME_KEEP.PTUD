@@ -1,6 +1,9 @@
 package entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
+import java.util.Locale;
 import java.util.Objects;
 
 public class Ve {
@@ -15,6 +18,9 @@ public class Ve {
 
     private Tau tau;
 
+    private String hoTenNguoiDi;
+    private String cccdNguoiDi;
+    private int namSinhNguoiDi;
 
     public Ve() {
 
@@ -24,12 +30,15 @@ public class Ve {
         this.maVe = maVe;
     }
 
-    public Ve(String maVe, Slot slot, KhachHang khachHang, Tuyen tuyen, Tau tau) {
+    public Ve(String maVe, Slot slot, KhachHang khachHang, Tuyen tuyen, Tau tau, String hoTenNguoiDi, String cccdNguoiDi, int namSinhNguoiDi) {
         this.maVe = maVe;
         this.slot = slot;
         this.khachHang = khachHang;
         this.tuyen = tuyen;
         this.tau = tau;
+        this.hoTenNguoiDi = hoTenNguoiDi;
+        this.cccdNguoiDi = cccdNguoiDi;
+        this.namSinhNguoiDi = namSinhNguoiDi;
     }
 
     public String getMaVe() {
@@ -72,17 +81,42 @@ public class Ve {
         this.tau = tau;
     }
 
+
+    public String getHoTenNguoiDi() {
+        return hoTenNguoiDi;
+    }
+
+    public void setHoTenNguoiDi(String hoTenNguoiDi) {
+        this.hoTenNguoiDi = hoTenNguoiDi;
+    }
+
+    public String getCccdNguoiDi() {
+        return cccdNguoiDi;
+    }
+
+    public void setCccdNguoiDi(String cccdNguoiDi) {
+        this.cccdNguoiDi = cccdNguoiDi;
+    }
+
+    public int getNamSinhNguoiDi() {
+        return namSinhNguoiDi;
+    }
+
+    public void setNamSinhNguoiDi(int namSinhNguoiDi) {
+        this.namSinhNguoiDi = namSinhNguoiDi;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ve ve = (Ve) o;
-        return Objects.equals(maVe, ve.maVe) && Objects.equals(slot, ve.slot) && Objects.equals(khachHang, ve.khachHang) && Objects.equals(tuyen, ve.tuyen) && Objects.equals(tau, ve.tau);
+        return namSinhNguoiDi == ve.namSinhNguoiDi && Objects.equals(maVe, ve.maVe) && Objects.equals(slot, ve.slot) && Objects.equals(khachHang, ve.khachHang) && Objects.equals(tuyen, ve.tuyen) && Objects.equals(tau, ve.tau) && Objects.equals(hoTenNguoiDi, ve.hoTenNguoiDi) && Objects.equals(cccdNguoiDi, ve.cccdNguoiDi);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(maVe, slot, khachHang, tuyen, tau);
+        return Objects.hash(maVe, slot, khachHang, tuyen, tau, hoTenNguoiDi, cccdNguoiDi, namSinhNguoiDi);
     }
 
     @Override
@@ -93,6 +127,9 @@ public class Ve {
                 ", khachHang=" + khachHang +
                 ", tuyen=" + tuyen +
                 ", tau=" + tau +
+                ", hoTenNguoiDi='" + hoTenNguoiDi + '\'' +
+                ", cccdNguoiDi='" + cccdNguoiDi + '\'' +
+                ", namSinhNguoiDi=" + namSinhNguoiDi +
                 '}';
     }
 
@@ -110,5 +147,10 @@ public class Ve {
         }
 
         return giaVe;
+    }
+
+    public boolean laNguoiLon() {
+
+        return (LocalDate.now().getYear() - namSinhNguoiDi) >= 18;
     }
 }

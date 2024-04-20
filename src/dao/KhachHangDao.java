@@ -30,11 +30,11 @@ public class KhachHangDao implements IDao<KhachHang, Integer> {
                 int maKhachHang = rs.getInt("maKhachHang");
                 String hoTen = rs.getString("hoTen");
                 String soDienThoai = rs.getString("soDienThoai");
-                String soCMND = rs.getString("CMND");
+                String CMND = rs.getString("CMND");
                 LocalDateTime thoiGianDangKy = rs.getTimestamp("thoiGianDangKy").toLocalDateTime();
                 boolean laKhachHangThanThiet = rs.getBoolean("laKhachHangThanThiet");
 
-                return new KhachHang(maKhachHang, hoTen, soDienThoai, thoiGianDangKy, laKhachHangThanThiet, soCMND);
+                return new KhachHang(maKhachHang, hoTen, soDienThoai, thoiGianDangKy, laKhachHangThanThiet, CMND);
             }
         } catch (Exception e) {
             Logger.getLogger(KhachHangDao.class.getName()).log(Level.SEVERE, null, e);
@@ -54,11 +54,11 @@ public class KhachHangDao implements IDao<KhachHang, Integer> {
                 int maKhachHang = rs.getInt("maKhachHang");
                 String hoTen = rs.getString("hoTen");
                 String soDienThoai = rs.getString("soDienThoai");
-                String soCMND = rs.getString("CMND");
+                String CMND = rs.getString("CMND");
                 LocalDateTime thoiGianDangKy = rs.getTimestamp("thoiGianDangKy").toLocalDateTime();
                 boolean laKhachHangThanThiet = rs.getBoolean("laKhachHangThanThiet");
 
-                dsKhachHang.add(new KhachHang(maKhachHang, hoTen, soDienThoai, thoiGianDangKy, laKhachHangThanThiet, soCMND));
+                dsKhachHang.add(new KhachHang(maKhachHang, hoTen, soDienThoai, thoiGianDangKy, laKhachHangThanThiet, CMND));
             }
         } catch (Exception e) {
             Logger.getLogger(KhachHangDao.class.getName()).log(Level.SEVERE, e.getMessage(), e);
@@ -76,7 +76,7 @@ public class KhachHangDao implements IDao<KhachHang, Integer> {
             statement.setString(2, entity.getSoDienThoai());
             statement.setTimestamp(3, Timestamp.valueOf(entity.getThoiGianDangKy()));
             statement.setBoolean(4, false);
-            statement.setString(5, entity.getSoCMND());
+            statement.setString(5, entity.getCMND());
 
             return statement.executeUpdate() > 0;
         } catch (SQLException ex) {
@@ -98,7 +98,7 @@ public class KhachHangDao implements IDao<KhachHang, Integer> {
             statement.setTimestamp(3, Timestamp.valueOf(currentTime));
             
             statement.setBoolean(4, false);
-            statement.setString(5, entity.getSoCMND());
+            statement.setString(5, entity.getCMND());
 
             if (statement.executeUpdate() > 0) {
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
@@ -136,7 +136,7 @@ public class KhachHangDao implements IDao<KhachHang, Integer> {
             pst.setString(1, entity.getHoTen());
             pst.setString(2, entity.getSoDienThoai());
             pst.setBoolean(3, entity.laKhachHangThanThiet());
-            pst.setString(4, entity.getSoCMND());
+            pst.setString(4, entity.getCMND());
 
             // set where
             pst.setInt(5, entity.getMaKhachHang());

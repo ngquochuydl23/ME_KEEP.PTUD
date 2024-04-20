@@ -28,7 +28,8 @@ import ui.component.ButtonCustom;
 import ui.component.HeaderTitle;
 import ui.component.InputForm;
 import ui.component.SlotBtn;
-import ui.dialog.ChiTietVeDialog;
+import ui.dialog.chiTietVeDialog.CapNhatVeListener;
+import ui.dialog.chiTietVeDialog.ChiTietVeDialog;
 
 public class ThanhToanDialog extends JDialog {
     private HeaderTitle titlePage;
@@ -36,6 +37,7 @@ public class ThanhToanDialog extends JDialog {
     private JPanel pnlButtom;
     private ButtonCustom tiepTucBtn, btnHuyBo;
     private InputForm tenKhachHangTextField;
+    private InputForm cmndKhachHangTextField;
     private InputForm maKhachHangTextField;
     private InputForm soDienThoaiTextField;
     private InputForm soTienTamTinhTextField;
@@ -51,20 +53,34 @@ public class ThanhToanDialog extends JDialog {
     private double tongTien;
     private double tongTienGiam;
     private TuyenDao tuyenDao;
-    private SlotDao slotDao;
     private LoaiKhoangDao loaiKhoangDao;
     private List<Ve> danhSachVe;
     private double tongTienTamTinh;
     private NhanVien nhanVien;
-    private ToaTau toaTau;
     Locale locale = new Locale("vi", "VN");
     NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
     private ThanhToanListener thanhToanListener;
+    private ToaTau toaTau;
+    private ChiTietVeDialog chiTietVeDialog;
+    private int soVeDaCapNhat = 0;
 
     public ThanhToanDialog() {
+        chiTietVeDialog = new ChiTietVeDialog();
+        chiTietVeDialog.setCapNhatVeListener(new CapNhatVeListener() {
+            @Override
+            public void capNhatVe(Ve ve) {
+                int row = veTable.getSelectedRow();
+                if (row >= 0) {
+                    soVeDaCapNhat++;
+                    danhSachVe.set(row, ve);
+                    veModel.setValueAt(ve.getHoTenNguoiDi(), row, 1);
+                    veModel.setValueAt(ve.getCccdNguoiDi(), row, 2);
+                }
+            }
+        });
+
         dsChoDaChon = new ArrayList<>();
         danhSachVe = new ArrayList<>();
-        slotDao = new SlotDao();
         hoaDonDao = new HoaDonDao();
         tuyenDao = new TuyenDao();
         loaiKhoangDao = new LoaiKhoangDao();
@@ -128,6 +144,12 @@ public class ThanhToanDialog extends JDialog {
                 .getTxtForm()
                 .setEnabled(false);
 
+
+        cmndKhachHangTextField = new InputForm("Chứng minh nhân dân", 400, 70);
+        cmndKhachHangTextField
+                .getTxtForm()
+                .setEnabled(false);
+
         JPanel maHoTenKHPanel = new JPanel(new FlowLayout());
         maHoTenKHPanel.setBackground(Color.white);
         maHoTenKHPanel.add(maKhachHangTextField);
@@ -140,13 +162,14 @@ public class ThanhToanDialog extends JDialog {
         khachHangPanel.setBorder(new TitledBorder("Thông tin khách hàng"));
         khachHangPanel.add(maHoTenKHPanel);
         khachHangPanel.add(soDienThoaiTextField);
+        khachHangPanel.add(cmndKhachHangTextField);
 
         JPanel khVaTien = new JPanel(new FlowLayout());
         khVaTien.setBackground(Color.white);
         khVaTien.add(khachHangPanel);
         khVaTien.add(tienBox);
 
-        veModel = new DefaultTableModel("Mã vé;Chỗ ngồi;Tên toa;Giá vé;Mô tả".split(";"), 0);
+        veModel = new DefaultTableModel("Mã vé;Tên người đi;CCCD người đi;Chỗ ngồi;Tên toa;Giá vé".split(";"), 0);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
@@ -212,7 +235,7 @@ public class ThanhToanDialog extends JDialog {
         maKhachHangTextField.getTxtForm().setText(String.valueOf(khachHang.getMaKhachHang()));
         tenKhachHangTextField.getTxtForm().setText(khachHang.getHoTen());
         soDienThoaiTextField.getTxtForm().setText(khachHang.getSoDienThoai());
-
+        cmndKhachHangTextField.getTxtForm().setText(khachHang.getCMND());
         Tuyen tuyen = tuyenDao.timTuyenTheoTenGa(tenGaDi, tenGaDen);
         while (veModel.getRowCount() > 0)
             veModel.removeRow(0);
@@ -228,7 +251,7 @@ public class ThanhToanDialog extends JDialog {
             String maGaDi = tuyen.getGaDi().getMaGa();
             String maGaDen = tuyen.getGaDen().getMaGa();
             String maVe = maGaDi +"-"+ maGaDen + "-" + slot.getMaSlot() + "-" + new Timestamp(date.getTime());
-            Ve ve = new Ve(maVe, slot, khachHang, tuyen, tau);
+            Ve ve = new Ve(maVe, slot, khachHang, tuyen, tau, null, null, 0);
             LoaiKhoang loaiKhoang = loaiKhoangDao.layLoaiKhoangTheoMaToa(toaTau.getMaToa());
             double giaVe = ve.tinhGiaBanVe(loaiKhoang.getMaLoaiKhoang());
             tongTienTamTinh += giaVe;
@@ -238,7 +261,10 @@ public class ThanhToanDialog extends JDialog {
                 public void mouseClicked(MouseEvent e) {
                     int row = veTable.getSelectedRow();
                     if (row >= 0) {
-                        new ChiTietVeDialog().setVisible(true);
+
+
+                        chiTietVeDialog.setVe(loaiKhoang, toaTau, danhSachVe.get(row));
+                        chiTietVeDialog.setVisible(true);
                     }
                 }
 
@@ -264,10 +290,11 @@ public class ThanhToanDialog extends JDialog {
             });
             veModel.addRow(new String[]{
                     maVe,
+                    ve.getHoTenNguoiDi() != null ? ve.getHoTenNguoiDi() : "Chưa có",
+                    ve.getCccdNguoiDi() != null ? ve.getCccdNguoiDi() : "Chưa có",
                     String.valueOf(slot.getSoSlot()),
                     toaTau.getTenToa(),
-                    String.valueOf(giaVe),
-                    ""
+                    String.valueOf(giaVe)
             });
         }
 
@@ -279,12 +306,13 @@ public class ThanhToanDialog extends JDialog {
 
     private void xoaDuLieu() {
         danhSachVe.clear();
+        toaTau = null;
         khachHang = null;
 
         maKhachHangTextField.setText("");
         tenKhachHangTextField.setText("");
         soDienThoaiTextField.setText("");
-
+        cmndKhachHangTextField.setText("");
         soTienTamTinhTextField.setText("");
         tongTienTextField.setText("");
     }
@@ -298,11 +326,9 @@ public class ThanhToanDialog extends JDialog {
     @Override
     public void setVisible(boolean b) {
         super.setVisible(b);
-
         if (!b) {
             xoaDuLieu();
         }
-
     }
 
     private void tinhTongTien() {
@@ -312,6 +338,12 @@ public class ThanhToanDialog extends JDialog {
     }
 
     private void taoHoaDonTuVe()  {
+
+        if (soVeDaCapNhat < danhSachVe.size()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng cập nhật đủ vé trước khi thanh toán");
+            return;
+        }
+
         try {
             Date date= new Date();
 
@@ -335,8 +367,7 @@ public class ThanhToanDialog extends JDialog {
                 dsChiTietHoaDon.add(chiTietHoaDon);
             }
 
-
-            if (hoaDonDao.taoHoaDon(toaTau.getMaToa(), dsChoDaChon, hoaDon, dsChiTietHoaDon, danhSachVe)) {
+            if (hoaDonDao.taoHoaDon(dsChoDaChon, hoaDon, dsChiTietHoaDon, danhSachVe)) {
                 JOptionPane.showMessageDialog(this, "Thanh toán thành công!");
                 if (thanhToanListener != null){
                     thanhToanListener.thanhToanThanhCong(hoaDon);

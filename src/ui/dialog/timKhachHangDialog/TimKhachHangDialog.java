@@ -23,6 +23,8 @@ public class TimKhachHangDialog extends JDialog implements ActionListener, Windo
     private InputForm tenKhachHangTextField;
     private InputForm soDienThoaiTextField;
     private InputForm maKhachHangTextField;
+
+    private InputForm cccdTextField;
     private KhachHangDao khachHangDao;
     private KhachHang khachHang;
 
@@ -89,10 +91,17 @@ public class TimKhachHangDialog extends JDialog implements ActionListener, Windo
         maKhachHangTextField
                 .getTxtForm()
                 .setEnabled(false);
+
+        cccdTextField = new InputForm("Chứng minh nhân dân", 450, 80);
+        cccdTextField
+                .getTxtForm()
+                .setEnabled(false);
+
         pnlMain.add(soDienThoaiTextField);
 
         pnlMain.add(maKhachHangTextField);
         pnlMain.add(tenKhachHangTextField);
+        pnlMain.add(cccdTextField);
 
         pnlButtom = new JPanel(new FlowLayout());
         pnlButtom.setBorder(new EmptyBorder(10, 0, 10, 0));
@@ -130,6 +139,8 @@ public class TimKhachHangDialog extends JDialog implements ActionListener, Windo
         tenKhachHangTextField.setEnabled(false);
         soDienThoaiTextField.setText("");
         maKhachHangTextField.setText("");
+        cccdTextField.setText("");
+        cccdTextField.setEnabled(false);
         maKhachHangTextField.setEnabled(false);
         khachHang = null;
     }
@@ -175,6 +186,7 @@ public class TimKhachHangDialog extends JDialog implements ActionListener, Windo
             soDienThoaiTextField.setText(khachHang.getSoDienThoai());
             maKhachHangTextField.setText(String.valueOf(khachHang.getMaKhachHang()));
             tenKhachHangTextField.setText(khachHang.getHoTen());
+            cccdTextField.setText(khachHang.getCMND());
             tiepTucBtn.setEnabled(true);
         }
 

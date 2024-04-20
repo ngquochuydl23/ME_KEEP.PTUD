@@ -84,10 +84,7 @@ public class HoaDonDao implements IDao<HoaDon, String> {
                 LocalDateTime thoiGianDangKy = rs.getTimestamp("ThoiGianDangKy").toLocalDateTime();
                 boolean laKhachHangThanThiet = rs.getBoolean("LaKhachHangThanThiet");
 
-                // Tạo đối tượng KhachHang từ thông tin lấy được
                 KhachHang khachHang = new KhachHang(maKhachHang, hoTenKhachHang, soDienThoaiKhachHang, thoiGianDangKy, laKhachHangThanThiet);
-
-                // Thêm đối tượng HoaDon vào danh sách
                 dsHoaDon.add(new HoaDon(maHoaDon, thoiGianTaoHoaDon, ghiChu, vat, tongTien, tamTinh, tongTienGiam, khachHang, new NhanVien(maNhanVien), new KhuyenMai(maKhuyenMai)));
             }
         } catch (Exception e) {
@@ -115,7 +112,7 @@ public class HoaDonDao implements IDao<HoaDon, String> {
     }
 
 
-    public boolean taoHoaDon(String maToaTau,
+    public boolean taoHoaDon(
                              List<Slot> dsChoDaChon,
                              HoaDon entity,
                              List<ChiTietHoaDon> dsChiTietHoaDon,
@@ -144,7 +141,7 @@ public class HoaDonDao implements IDao<HoaDon, String> {
                 System.out.println("Bước 2. Chuyển trạng thái thành hết chỗ");
             }
 
-            PreparedStatement veStmt = con.prepareStatement("INSERT INTO quanlibanve.Ve (MaVe, MaKhachHang, MaTuyen, MaTau, MaSlot, TinhTrangVe) VALUES(?, ?, ?, ?, ?, ?)");
+            PreparedStatement veStmt = con.prepareStatement("INSERT INTO quanlibanve.Ve (MaVe, MaKhachHang, MaTuyen, MaTau, MaSlot, TinhTrangVe, HoTenNguoiDi, CCCDNguoiDi, NguoiLon, NamSinhNguoiDi) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             for (Ve ve : dsVe) {
                 veStmt.setString(1, ve.getMaVe());
                 veStmt.setInt(2, ve.getKhachHang().getMaKhachHang());
@@ -152,6 +149,10 @@ public class HoaDonDao implements IDao<HoaDon, String> {
                 veStmt.setString(4, ve.getTau().getMaTau());
                 veStmt.setString(5, ve.getSlot().getMaSlot());
                 veStmt.setInt(6, 1);
+                veStmt.setString(7, ve.getHoTenNguoiDi());
+                veStmt.setString(8, ve.getCccdNguoiDi());
+                veStmt.setInt(9, ve.laNguoiLon() ? 1 : 0);
+                veStmt.setInt(10, ve.getNamSinhNguoiDi());
                 veStmt.addBatch();
             }
             veStmt.executeBatch();

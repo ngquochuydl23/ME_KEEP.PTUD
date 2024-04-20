@@ -7,7 +7,7 @@ public class KhachHang {
     private int maKhachHang;
     private String hoTen;
     private String soDienThoai;
-    private String soCMND;
+    private String CMND;
     private LocalDateTime thoiGianDangKy;
     private boolean laKhachHangThanThiet;
 
@@ -26,11 +26,11 @@ public class KhachHang {
         this.laKhachHangThanThiet = laKhachHangThanThiet;
     }
     
-    public KhachHang(int maKhachHang, String hoTen, String soDienThoai, String soCMND) {
+    public KhachHang(int maKhachHang, String hoTen, String soDienThoai, String CMND) {
 		this.maKhachHang = maKhachHang;
 		this.hoTen = hoTen;
 		this.soDienThoai = soDienThoai;
-		this.soCMND = soCMND;
+		this.CMND = CMND;
 	}
 
 	public KhachHang(int maKhachHang, String hoTen, String soDienThoai, LocalDateTime thoiGianDangKy,
@@ -43,11 +43,11 @@ public class KhachHang {
     }
 	
     public KhachHang(int maKhachHang, String hoTen, String soDienThoai, LocalDateTime thoiGianDangKy,
-			boolean laKhachHangThanThiet, String soCMND) {
+			boolean laKhachHangThanThiet, String CMND) {
 		this.maKhachHang = maKhachHang;
 		this.hoTen = hoTen;
 		this.soDienThoai = soDienThoai;
-		this.soCMND = soCMND;
+		this.CMND = CMND;
 		this.thoiGianDangKy = thoiGianDangKy;
 		this.laKhachHangThanThiet = laKhachHangThanThiet;
 	}
@@ -92,12 +92,12 @@ public class KhachHang {
         this.laKhachHangThanThiet = laKhachHangThanThiet;
     }
     
-    public String getSoCMND() {
-		return soCMND;
+    public String getCMND() {
+		return CMND;
 	}
 
-	public void setSoCMND(String soCMND) {
-		this.soCMND = soCMND;
+	public void setSoCMND(String CMND) {
+		this.CMND = CMND;
 	}
 
 	public boolean isLaKhachHangThanThiet() {
@@ -110,7 +110,7 @@ public class KhachHang {
                 "maKhachHang=" + maKhachHang +
                 ", hoTen='" + hoTen + '\'' +
                 ", soDienThoai='" + soDienThoai + '\'' +
-                ", soCMND='" + soCMND + '\''+
+                ", CMND='" + CMND + '\''+
                 ", thoiGianDangKy=" + thoiGianDangKy +
                 ", laKhachHangThanThiet=" + laKhachHangThanThiet +
                 '}';
