@@ -7,6 +7,7 @@ public class KhachHang {
     private int maKhachHang;
     private String hoTen;
     private String soDienThoai;
+    private String soCMND;
     private LocalDateTime thoiGianDangKy;
     private boolean laKhachHangThanThiet;
 
@@ -24,8 +25,15 @@ public class KhachHang {
         this.thoiGianDangKy = thoiGianDangKy;
         this.laKhachHangThanThiet = laKhachHangThanThiet;
     }
+    
+    public KhachHang(int maKhachHang, String hoTen, String soDienThoai, String soCMND) {
+		this.maKhachHang = maKhachHang;
+		this.hoTen = hoTen;
+		this.soDienThoai = soDienThoai;
+		this.soCMND = soCMND;
+	}
 
-    public KhachHang(int maKhachHang, String hoTen, String soDienThoai, LocalDateTime thoiGianDangKy,
+	public KhachHang(int maKhachHang, String hoTen, String soDienThoai, LocalDateTime thoiGianDangKy,
             boolean laKhachHangThanThiet) {
         this.maKhachHang = maKhachHang;
         this.hoTen = hoTen;
@@ -33,8 +41,18 @@ public class KhachHang {
         this.thoiGianDangKy = thoiGianDangKy;
         this.laKhachHangThanThiet = laKhachHangThanThiet;
     }
+	
+    public KhachHang(int maKhachHang, String hoTen, String soDienThoai, LocalDateTime thoiGianDangKy,
+			boolean laKhachHangThanThiet, String soCMND) {
+		this.maKhachHang = maKhachHang;
+		this.hoTen = hoTen;
+		this.soDienThoai = soDienThoai;
+		this.soCMND = soCMND;
+		this.thoiGianDangKy = thoiGianDangKy;
+		this.laKhachHangThanThiet = laKhachHangThanThiet;
+	}
 
-    public int getMaKhachHang() {
+	public int getMaKhachHang() {
         return maKhachHang;
     }
 
@@ -73,13 +91,26 @@ public class KhachHang {
     public void setLaKhachHangThanThiet(boolean laKhachHangThanThiet) {
         this.laKhachHangThanThiet = laKhachHangThanThiet;
     }
+    
+    public String getSoCMND() {
+		return soCMND;
+	}
 
-    @Override
+	public void setSoCMND(String soCMND) {
+		this.soCMND = soCMND;
+	}
+
+	public boolean isLaKhachHangThanThiet() {
+		return laKhachHangThanThiet;
+	}
+
+	@Override
     public String toString() {
         return "KhachHang{" +
                 "maKhachHang=" + maKhachHang +
                 ", hoTen='" + hoTen + '\'' +
                 ", soDienThoai='" + soDienThoai + '\'' +
+                ", soCMND='" + soCMND + '\''+
                 ", thoiGianDangKy=" + thoiGianDangKy +
                 ", laKhachHangThanThiet=" + laKhachHangThanThiet +
                 '}';

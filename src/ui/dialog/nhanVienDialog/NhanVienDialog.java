@@ -322,7 +322,7 @@ public class NhanVienDialog extends JDialog {
         setVisible(true);
 
         dangChinhSua = false;
-        titlePage.setLblTitle("Sửa");
+        titlePage.setLblTitle("Xem chi tiết nhân viên");
         disableForm();
         hoTenInputForm.setText(nhanVien.getHoTen());
         sdtInputForm.setText(nhanVien.getSoDienThoai());

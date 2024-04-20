@@ -25,6 +25,7 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
     private InputForm tenKhachHangTextField;
     private InputForm soDienThoaiTextField;
     private InputForm maKhachHangTextField;
+    private InputForm soCMNDTextField;
     private KhachHangDao khachHangDao;
     private KhachHang khachHang;
     private TaoKhachHangListener taoKhachHangListener;
@@ -71,21 +72,23 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
 
     public void initComponents() {
         addWindowListener(this);
-        setSize(new Dimension(500, 500));
+        setSize(new Dimension(600, 600));
         setLayout(new BorderLayout(0, 0));
 
         titlePage = new HeaderTitle("Thêm khách hàng");
-        pnlMain = new JPanel(new GridLayout(3, 1, 20, 0));
+        pnlMain = new JPanel(new GridLayout(4, 1, 20, 0));
         pnlMain.setBackground(Color.white);
 
         tenKhachHangTextField = new InputForm("Tên khách hàng");
         soDienThoaiTextField = new InputForm("Số điện thoại");
         maKhachHangTextField = new InputForm("Mã khách hàng");
+        soCMNDTextField = new InputForm("Số CMND");
         maKhachHangTextField.getTxtForm().setEnabled(false);
 
         pnlMain.add(maKhachHangTextField);
         pnlMain.add(soDienThoaiTextField);
         pnlMain.add(tenKhachHangTextField);
+        pnlMain.add(soCMNDTextField);
 
         pnlButtom = new JPanel(new FlowLayout());
         pnlButtom.setBorder(new EmptyBorder(10, 0, 10, 0));
@@ -117,6 +120,7 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
     boolean kiemTraField() {
         String soDienThoai = soDienThoaiTextField.getText().trim();
         String tenKhachHang = tenKhachHangTextField.getText().trim();
+        String soCMND = soCMNDTextField.getText().trim();
 
         if (Validation.isEmpty(soDienThoai)
                 || !Validation.kiemTraSoDienThoai(soDienThoai) && soDienThoai.length() != 10) {
@@ -134,6 +138,11 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
                     "Cảnh báo !",
                     JOptionPane.WARNING_MESSAGE);
             return false;
+        } else if (Validation.isEmpty(soCMND)) {
+        	JOptionPane.showMessageDialog(this, 
+        			"Số CMND không được rỗng", 
+        			"Cảnh báo !", 
+        			JOptionPane.WARNING_MESSAGE);
         }
         return true;
     }
@@ -194,6 +203,7 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
 
         titlePage.setLblTitle("Cập nhật thông tin");
         btnSubmit.setText("Cập nhật thông tin");
+        soCMNDTextField.setText(khachHang.getSoCMND());
         soDienThoaiTextField.setText(khachHang.getSoDienThoai());
         tenKhachHangTextField.setText(khachHang.getHoTen());
         maKhachHangTextField.setText(String.valueOf(khachHang.getMaKhachHang()));
@@ -218,15 +228,16 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
 
         String tenKhachHang = tenKhachHangTextField.getText().trim();
         String soDienThoai = soDienThoaiTextField.getText().trim();
+        String soCMND = soCMNDTextField.getText().trim();
 
-        return new entity.KhachHang(maKhacHang, tenKhachHang, soDienThoai, LocalDateTime.now(), false);
+        return new KhachHang(maKhacHang, tenKhachHang, soDienThoai, soCMND);
     }
 
     public void xoaDuLieu() {
         btnSubmit.setVisible(true);
         titlePage.setLblTitle("Thêm khách hàng");
         btnSubmit.setText("Thêm khách hàng");
-
+        
         tenKhachHangTextField.setText("");
         tenKhachHangTextField.setEditable(true);
 
@@ -235,23 +246,29 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
 
         maKhachHangTextField.setText("");
         maKhachHangTextField.setEditable(true);
-        khachHang = null;
+        
+        soCMNDTextField.setText("");
+        soCMNDTextField.setEditable(true);
+        btnSubmit.setVisible(true);
     }
 
     public void xemKhachHang(KhachHang khachHang) {
         this.khachHang = khachHang;
-        titlePage.setLblTitle("Xem khách hàng");
-        btnSubmit.setText("Cập nhật thông tin");
-        btnSubmit.setVisible(false);
+        btnSubmit.setVisible(false); // Ẩn nút "Thêm khách hàng" khi xem chi tiết
 
+        titlePage.setLblTitle("Xem khách hàng");
         soDienThoaiTextField.setText(khachHang.getSoDienThoai());
-        soDienThoaiTextField.setEditable(false);
+        soDienThoaiTextField.setEditable(false); // Vô hiệu hóa chỉnh sửa
 
         tenKhachHangTextField.setText(khachHang.getHoTen());
-        tenKhachHangTextField.setEditable(false);
+        tenKhachHangTextField.setEditable(false); // Vô hiệu hóa chỉnh sửa
+        
+        soCMNDTextField.setText(khachHang.getSoCMND());
+        soCMNDTextField.setEditable(false); // Vô hiệu hóa chỉnh sửa
 
         maKhachHangTextField.setText(String.valueOf(khachHang.getMaKhachHang()));
-        maKhachHangTextField.setEditable(false);
+        maKhachHangTextField.setEditable(false); // Vô hiệu hóa chỉnh sửa
+
         invalidate();
         validate();
         repaint();
@@ -261,6 +278,8 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
         soDienThoaiTextField.setText(soDienThoai);
         tenKhachHangTextField.requestFocus();
         tenKhachHangTextField.getTxtForm().requestFocus();
+        soCMNDTextField.requestFocus();
+        soCMNDTextField.getTxtForm().requestFocus();
     }
 
     @Override

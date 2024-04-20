@@ -85,7 +85,7 @@ public class KhachHangPanel extends JPanel implements ItemListener {
         tableKhachHang.setDefaultEditor(Object.class, null);
         scrollTableKhachHang = new JScrollPane();
         tblModel = new DefaultTableModel();
-        tblModel.setColumnIdentifiers("Mã khách hàng;Tên khách hàng;Số điện thoại;Khách hàng thân thiết;Ngày tham gia".split(";"));
+        tblModel.setColumnIdentifiers("Mã khách hàng;Tên khách hàng;Số điện thoại;Khách hàng thân thiết;Ngày tham gia; Số CMND".split(";"));
         tableKhachHang.setModel(tblModel);
         tableKhachHang.setFocusable(false);
         scrollTableKhachHang.setViewportView(tableKhachHang);
@@ -96,6 +96,7 @@ public class KhachHangPanel extends JPanel implements ItemListener {
         tableKhachHang.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
         tableKhachHang.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         tableKhachHang.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        tableKhachHang.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
         tableKhachHang.setAutoCreateRowSorter(true);
         TableSorter.configureTableColumnSorter(tableKhachHang, 0, TableSorter.INTEGER_COMPARATOR);
 
@@ -138,6 +139,7 @@ public class KhachHangPanel extends JPanel implements ItemListener {
                 .addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                    	khachHangDialog.xoaDuLieu();
                         khachHangDialog.setVisible(true);
                     }
                 });
@@ -149,6 +151,7 @@ public class KhachHangPanel extends JPanel implements ItemListener {
                     public void actionPerformed(ActionEvent e) {
                         KhachHang khachHang = layKhachHangDangChon();
                         if (khachHang != null) {
+                        	khachHangDialog.xoaDuLieu();
                             khachHangDialog.setKhachHang(khachHang);
                             khachHangDialog.setVisible(true);
                         }
@@ -162,7 +165,8 @@ public class KhachHangPanel extends JPanel implements ItemListener {
                     public void actionPerformed(ActionEvent e) {
                         KhachHang khachHang = layKhachHangDangChon();
                         if (khachHang != null) {
-                            khachHangDialog.xemKhachHang(khachHang);
+                        	khachHangDialog.xoaDuLieu();
+                            khachHangDialog.xemKhachHang(layKhachHangDangChon());
                             khachHangDialog.setVisible(true);
                         }
                     }
@@ -255,6 +259,7 @@ public class KhachHangPanel extends JPanel implements ItemListener {
                         result.add(i);
                     }
                 }
+                break;
 
             case "Mã khách hàng":
                 for (entity.KhachHang i : danhSachKhachHang) {
@@ -262,6 +267,7 @@ public class KhachHangPanel extends JPanel implements ItemListener {
                         result.add(i);
                     }
                 }
+                break;
 
             case "Tên khách hàng":
                 for (entity.KhachHang i : danhSachKhachHang) {
@@ -269,6 +275,7 @@ public class KhachHangPanel extends JPanel implements ItemListener {
                         result.add(i);
                     }
                 }
+                break;
 
             case "Khách hàng thân thiết":
                 for (entity.KhachHang i : danhSachKhachHang) {
@@ -276,6 +283,7 @@ public class KhachHangPanel extends JPanel implements ItemListener {
                         result.add(i);
                     }
                 }
+                break;
 
             case "Số điện thoại":
                 for (entity.KhachHang i : danhSachKhachHang) {
@@ -283,6 +291,14 @@ public class KhachHangPanel extends JPanel implements ItemListener {
                         result.add(i);
                     }
                 }
+                break;
+            case "Số CMND":
+                for (entity.KhachHang i : danhSachKhachHang) {
+                    if (i.getSoCMND().toLowerCase().contains(text)) {
+                        result.add(i);
+                    }
+                }
+                break;
         }
         while (tblModel.getRowCount() > 0) {
             tblModel.removeRow(0);
@@ -294,7 +310,8 @@ public class KhachHangPanel extends JPanel implements ItemListener {
                     khachHang.getHoTen(),
                     khachHang.getSoDienThoai(),
                     khachHang.laKhachHangThanThiet() ? "Có" : "Không",
-                    khachHang.getThoiGianDangKy()
+                    khachHang.getThoiGianDangKy(),
+                    khachHang.getSoCMND()
             });
         }
     }
@@ -310,18 +327,23 @@ public class KhachHangPanel extends JPanel implements ItemListener {
                     khachHang.getHoTen(),
                     khachHang.getSoDienThoai(),
                     khachHang.laKhachHangThanThiet() ? "Có" : "Không",
-                    khachHang.getThoiGianDangKy()
+                    khachHang.getThoiGianDangKy(),
+                    khachHang.getSoCMND()
             });
         }
     }
 
     public KhachHang layKhachHangDangChon() {
         int index = tableKhachHang.getSelectedRow();
+        
         if (index == -1) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một khách hàng");
+            return null; // Trả về null nếu không có khách hàng nào được chọn
+        } else {
+            return danhSachKhachHang.get(index);
         }
-        return danhSachKhachHang.get(index);
     }
+
 
     public void importExcel() {
         File excelFile;

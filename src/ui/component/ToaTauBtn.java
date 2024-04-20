@@ -29,6 +29,7 @@ public class ToaTauBtn extends JButton implements MouseListener {
         this.toaTau = toaTau;
         khoangBtns = new ArrayList<>();
         initComponent(toaTau.getTenToa());
+
     }
 
     private void initComponent(String tenToa) {
