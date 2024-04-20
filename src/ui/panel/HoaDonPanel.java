@@ -1,5 +1,6 @@
 package ui.panel;
 
+import helper.Formater;
 import ui.component.*;
 import entity.HoaDon;
 import entity.KhachHang;
@@ -19,14 +20,13 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
+import java.util.*;
 import java.util.List;
 import java.util.stream.Stream;
 
-public final class HoaDonPanel extends JPanel{
+public final class HoaDonPanel extends JPanel {
 
     private PanelBorderRadius main, functionBar, box;
     private JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
@@ -40,8 +40,8 @@ public final class HoaDonPanel extends JPanel{
     private List<HoaDon> danhSachHoaDon;
 
     public HoaDonPanel() {
-    	danhSachHoaDon = new ArrayList<HoaDon>();
-    	hoaDonDAO = new HoaDonDao();
+        danhSachHoaDon = new ArrayList<HoaDon>();
+        hoaDonDAO = new HoaDonDao();
         initComponent();
         layDanhSachNhaGa();
         doDuLieuVaoBang();
@@ -143,11 +143,11 @@ public final class HoaDonPanel extends JPanel{
                 });
 
         soDienThoaiInputForm.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        layDanhSachHoaDonTheoTieuChi();
-                    }
-                });
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                layDanhSachHoaDonTheoTieuChi();
+            }
+        });
 
         chucNangChinh
                 .getToolbar("chi-tiet")
@@ -261,29 +261,33 @@ public final class HoaDonPanel extends JPanel{
     private void xuatLichSuTraVeExcel() {
         try {
             JTableExporter.exportJTableToExcel(tableHoaDon);
-                   // Logger.getLogger(PhieuNhap.class.getName()).log(Level.INFO, "Xuất lịch sửa trả vé thành công");
+            // Logger.getLogger(PhieuNhap.class.getName()).log(Level.INFO, "Xuất lịch sửa trả vé thành công");
         } catch (IOException ex) {
-          //  Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
+            //  Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     private void layDanhSachLichSu() {
         danhSachHoaDon = new ArrayList<>();
     }
-    
+
     public void doDuLieuVaoBang() {
-    	while (tblModel.getRowCount() > 0) {
-    		tblModel.removeRow(0);;
-    	}
+        while (tblModel.getRowCount() > 0) {
+            tblModel.removeRow(0);
+            ;
+        }
+
+
         danhSachHoaDon = hoaDonDAO.layHet();
         // Duyệt qua danh sách hóa đơn và thêm từng hóa đơn vào bảng
         for (HoaDon hoaDon : danhSachHoaDon) {
-        	tblModel.addRow( new Object[] {
-        			 hoaDon.getMaHoaDon(),
-                     hoaDon.getKhachHang().getHoTen(), // Thay thế bằng phương thức lấy tên khách hàng của bạn
-                     hoaDon.getTongTien(), // Thay thế bằng phương thức lấy tổng tiền của bạn
-                     hoaDon.getThoiGianTaoHoaDon(), // Thay thế bằng phương thức lấy thời gian tạo hóa đơn của bạn
-                     hoaDon.getGhiChu() //
-        	});
+            tblModel.addRow(new Object[]{
+                    hoaDon.getMaHoaDon(),
+                    hoaDon.getKhachHang().getHoTen(), // Thay thế bằng phương thức lấy tên khách hàng của bạn
+                    Formater.FormatVND(hoaDon.getTongTien()), // Thay thế bằng phương thức lấy tổng tiền của bạn
+                    Formater.FormatTime(hoaDon.getThoiGianTaoHoaDon()), // Thay thế bằng phương thức lấy thời gian tạo hóa đơn của bạn
+                    hoaDon.getGhiChu() //
+            });
         }
     }
 }

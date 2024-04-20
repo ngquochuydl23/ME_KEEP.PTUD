@@ -15,6 +15,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ChonChoDialog extends JDialog {
     private ToaTauBtn toaTauBtn;
@@ -109,6 +111,10 @@ public class ChonChoDialog extends JDialog {
         for (ToaTau toaTau : danhSachToaTau) {
             final ToaTau currentToa = toaTau;
             ToaTauBtn toaTauBtn = new ToaTauBtn(toaTau);
+
+            if (toaDangChon.getMaToa().equals(toaTauBtn.getToaTau().getMaToa())) {
+                toaTauBtn.setSeleted(false);
+            }
             toaTauBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -119,6 +125,10 @@ public class ChonChoDialog extends JDialog {
 
                     layTinhTrangSlotTheoToaTau();
                     updateSeatPanel();
+
+
+                    topPanel.revalidate();
+                    topPanel.repaint();
                 }
             });
             this.btgToa.add(toaTauBtn);
@@ -129,7 +139,6 @@ public class ChonChoDialog extends JDialog {
             this.toaDangChon = this.danhSachToaTau.get(0);
         }
     }
-
 
     private void clearSeatSelection() {
         danhSachSlot.clear();
