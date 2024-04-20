@@ -232,7 +232,6 @@ public class ThanhToanDialog extends JDialog {
             LoaiKhoang loaiKhoang = loaiKhoangDao.layLoaiKhoangTheoMaToa(toaTau.getMaToa());
             double giaVe = ve.tinhGiaBanVe(loaiKhoang.getMaLoaiKhoang());
             tongTienTamTinh += giaVe;
-
             danhSachVe.add(ve);
             veTable.addMouseListener(new MouseListener() {
                 @Override
@@ -317,7 +316,7 @@ public class ThanhToanDialog extends JDialog {
             Date date= new Date();
 
             hoaDon = new HoaDon(
-                    "HoaDon"+"-kh-"+khachHang.getMaKhachHang() +"-" + new Timestamp(date.getTime()),
+                    "HD"+"-KH"+khachHang.getMaKhachHang() +"-" + new Timestamp(date.getTime()),
                     LocalDateTime.now(),
                     "",
                     0.1,

@@ -116,11 +116,8 @@ public class ChonChoDialog extends JDialog {
                     loaiKhoang = loaiKhoangDao.layLoaiKhoangTheoMaToa(currentToa.getMaToa());
 
                     luuChoNgoiDangChon();
-
                     layTinhTrangSlotTheoToaTau();
                     updateSeatPanel();
-
-
                 }
             });
             this.btgToa.add(toaTauBtn);

@@ -141,16 +141,17 @@ public class HoaDonDao implements IDao<HoaDon, String> {
             }
 
             if (slotDao.capNhatHetSlot(con, dsChoDaChon)) {
-                System.out.println("Bước 2. Chuyển trạng thái thành hết vé");
+                System.out.println("Bước 2. Chuyển trạng thái thành hết chỗ");
             }
 
-            PreparedStatement veStmt = con.prepareStatement("INSERT INTO quanlibanve.Ve (MaVe, MaKhachHang, MaTuyen, MaTau, MaSlot) VALUES(?, ?, ?, ?, ?)");
+            PreparedStatement veStmt = con.prepareStatement("INSERT INTO quanlibanve.Ve (MaVe, MaKhachHang, MaTuyen, MaTau, MaSlot, TinhTrangVe) VALUES(?, ?, ?, ?, ?, ?)");
             for (Ve ve : dsVe) {
                 veStmt.setString(1, ve.getMaVe());
                 veStmt.setInt(2, ve.getKhachHang().getMaKhachHang());
                 veStmt.setString(3, ve.getTuyen().getMaTuyen());
                 veStmt.setString(4, ve.getTau().getMaTau());
                 veStmt.setString(5, ve.getSlot().getMaSlot());
+                veStmt.setInt(6, 1);
                 veStmt.addBatch();
             }
             veStmt.executeBatch();
