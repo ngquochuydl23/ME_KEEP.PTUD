@@ -9,10 +9,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-/**
- *
- * @author Tran Nhat Sinh
- */
 public class HeaderTitle extends JPanel{
     private JLabel lblTitle;
     

@@ -4,6 +4,7 @@ package ui.component;
 import ui.DangNhapForm;
 import ui.dialog.TaiKhoanCuaToiPanel;
 import ui.Main;
+import ui.dialog.traVeDialog.TraVeDialog;
 import ui.panel.*;
 
 import java.awt.*;
@@ -27,6 +28,7 @@ public class MenuTaskbar extends JPanel {
             {"Nhân viên", "staff.svg", "nhanvien"},
             {"Khuyến mãi", "discount.svg", "khuyenmai"},
 //            {"Thống kê", "statistical.svg", "thongke"},
+            {"Hủy vé", "log_out.svg", "huyve"},
             {"Đăng xuất", "log_out.svg", "dangxuat"},
             {"Bán vé", "import.svg", "banve"}
     };
@@ -181,6 +183,13 @@ public class MenuTaskbar extends JPanel {
 //            }
 //        });
         listitem[7].addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mousePressed(MouseEvent evt) {
+                new TraVeDialog().setVisible(true);
+            }
+        });
+        listitem[8].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
                 if (JOptionPane.showConfirmDialog(
@@ -194,7 +203,8 @@ public class MenuTaskbar extends JPanel {
                 }
             }
         });
-        listitem[8].addMouseListener(new MouseAdapter() {
+
+        listitem[9].addMouseListener(new MouseAdapter() {
 
             @Override
             public void mousePressed(MouseEvent evt) {
@@ -216,10 +226,6 @@ public class MenuTaskbar extends JPanel {
                 listitem[i].setForeground(FontColor);
             }
         }
-    }
-
-    public void resetChange() {
-        //this.nhanVienDTO = new NhanVienDAO().selectById(String.valueOf(nhanVienDTO.getManv()));
     }
 
     public void in4(JPanel infoPanel) {
