@@ -94,6 +94,21 @@ public class SlotDao implements IDao<SlotDao, String>{
         return true;
     }
 
+    public boolean capNhatConSlot(Connection conn,  List<Slot> dsChoDaChon) throws SQLException {
+        for (Slot slot : dsChoDaChon) {
+            String sql = "UPDATE quanlibanve.Slot slot\n" +
+                    "SET slot.TinhTrang = 1\n" +
+                    "WHERE slot.MaSlot = ?";
+            PreparedStatement pst =  conn.prepareStatement(sql);
+            pst.setString(1, slot.getMaSlot());
+
+            if (pst.executeUpdate() > 0)
+                continue;
+            else return false;
+        }
+        return true;
+    }
+
     public List<Slot> layTinhTrangChoNgoiTheoToaTau(String maToaTau) {
         List<Slot> dsSlot = new ArrayList<>();
         try {

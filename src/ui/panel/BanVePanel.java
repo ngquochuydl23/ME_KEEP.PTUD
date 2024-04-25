@@ -11,7 +11,6 @@ import ui.dialog.chonChoDialog.ChonChoDialog;
 import dao.ChuyenDao;
 import dao.GaDao;
 import dao.TauDao;
-import dao.TuyenDao;
 import helper.JTableExporter;
 import ui.dialog.chonChoDialog.ChonChoNgoiListener;
 import ui.dialog.khachHangDialog.KhachHangDialog;
@@ -42,7 +41,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public final class BanVe extends JPanel implements PropertyChangeListener, ItemListener, MouseListener {
+public final class BanVePanel extends JPanel implements PropertyChangeListener, ItemListener, MouseListener {
 
     private PanelBorderRadius main, functionBar, box;
     private JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
@@ -67,7 +66,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
     private ThanhToanDialog thanhToanDialog;
     private ToaTau toaTauChon;
 
-    public BanVe() {
+    public BanVePanel() {
         thanhToanDialog = new ThanhToanDialog();
         thanhToanDialog.setThanhToanListener(new ThanhToanListener() {
             @Override
@@ -214,7 +213,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
                 try {
                     JTableExporter.exportJTableToExcel(tableChuyenTau);
                 } catch (IOException ex) {
-                    Logger.getLogger(Chuyen.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(BanVePanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });

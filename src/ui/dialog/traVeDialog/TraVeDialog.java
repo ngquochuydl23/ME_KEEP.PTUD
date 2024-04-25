@@ -4,6 +4,7 @@ import dao.*;
 import entity.*;
 import helper.Formater;
 import models.TraVeModel;
+import singleton.NhanVienSuDungSingleton;
 import ui.component.ButtonCustom;
 import ui.component.HeaderTitle;
 import ui.component.InputForm;
@@ -25,6 +26,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
@@ -46,16 +48,17 @@ public class TraVeDialog extends JDialog {
     private JTable veTable;
     private DefaultTableModel veModel;
     private KhachHang khachHang;
+    private LichSuTraVeDao lichSuTraVeDao;
     private VeDao veDao;
     private List<TraVeModel> danhSachTraVe;
 
 
     public TraVeDialog() {
 
-
+        veDao = new VeDao();
         danhSachTraVe = new ArrayList<>();
         khachHangDao = new KhachHangDao();
-        veDao = new VeDao();
+        lichSuTraVeDao = new LichSuTraVeDao();
         initComponents();
     }
 
@@ -63,7 +66,7 @@ public class TraVeDialog extends JDialog {
         setSize(new Dimension(900, 700));
         setLayout(new BorderLayout(0, 0));
 
-        titlePage = new HeaderTitle("Tạo hóa đơn");
+        titlePage = new HeaderTitle("Trả vé");
         pnlMain = new JPanel(new BorderLayout());
         pnlMain.setBackground(Color.white);
 
@@ -107,7 +110,7 @@ public class TraVeDialog extends JDialog {
         khachHangPanel.add(maHoTenKHPanel);
         khachHangPanel.add(cmndKhachHangTextField);
 
-        veModel = new DefaultTableModel("Mã vé;Tên người đi;Chỗ ngồi;Giá vé;Thời gian khởi hành;Số tiền hoàn trả".split(";"), 0);
+        veModel = new DefaultTableModel("Mã vé;Tên người đi;Chỗ ngồi;Giá vé;Thời gian khởi hành;Loại trả vé;Phí trả vé".split(";"), 0);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
@@ -224,9 +227,20 @@ public class TraVeDialog extends JDialog {
                     String.valueOf(ve.getSlot().getSoSlot()),
                     Formater.FormatVND(duDinhTraVe.getDonGia()),
                     duDinhTraVe.getThoiGianKhoiHanh().toString(),
-                    Formater.FormatVND(duDinhTraVe.tinhGiaTriHoanTien())
+                    loaiHoanTien(duDinhTraVe.tinhLoaiTraVe()),
+                    Formater.FormatVND(duDinhTraVe.tinhPhiTraVe())
             });
         }
+    }
+
+
+    private String loaiHoanTien(String loaiHoanVe) {
+        if (loaiHoanVe.equals("tra-truoc-24h-phi-20k")) {
+            return "Phí trả vé 20.000đ";
+        } else if (loaiHoanVe.equals( "tra-tu-4-24h-phi-20k")) {
+            return "Phí trả vé 20% của số tiền mua vé";
+        }
+        return "Không hoàn tiền";
     }
 
     private void huyVeDangChon() {
@@ -248,9 +262,16 @@ public class TraVeDialog extends JDialog {
                 dsVeDuocChon.add(danhSachTraVe.get(i));
             }
 
-            /// them vào lịch sử trả vé
-            /// set tinh trang ve là đã hủy ve.TinhTrangVe = 0
-            /// set tinh trang slot là slot.TinhTrang = 1
+            try {
+                NhanVien nhanVienThucHien = NhanVienSuDungSingleton.layThongTinNhanVienHienTai();
+                if (!dsVeDuocChon.isEmpty() && lichSuTraVeDao.huyVe(dsVeDuocChon, khachHang, nhanVienThucHien)) {
+                    JOptionPane.showMessageDialog(this, "Hủy vé thành công.");
+                    xoaDuLieu();
+                    dispose();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -171,4 +171,19 @@ public class VeDao implements IDao<Ve, String> {
         }
         return dsTraVeModel;
     }
+
+    public boolean capNhatThanhVeDaHuy(Connection conn,  List<Ve> dsVeCanHuy) throws SQLException {
+        for (Ve ve : dsVeCanHuy) {
+            String sql = "UPDATE quanlibanve.Ve ve\n" +
+                    "SET ve.TinhTrangVe = 0\n" +
+                    "WHERE ve.MaVe = ?";
+            PreparedStatement pst =  conn.prepareStatement(sql);
+            pst.setString(1, ve.getMaVe());
+
+            if (pst.executeUpdate() > 0)
+                continue;
+            else return false;
+        }
+        return true;
+    }
 }

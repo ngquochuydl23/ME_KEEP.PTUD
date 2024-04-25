@@ -1,5 +1,7 @@
 package entity;
 
+import org.bridj.cpp.mfc.CString;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -8,7 +10,12 @@ public class LichSuTraVe {
     private LocalDateTime thoiGianTraVe;
     private String ghiChu;
 
+    private double phiTraVe;
+    private String loaiTraVe;
+
     private KhachHang khachHang;
+
+    private NhanVien nhanVienThucHien;
 
     private Ve ve;
 
@@ -18,12 +25,32 @@ public class LichSuTraVe {
         this.maLichSuTraVe = maLichSuTraVe;
     }
 
-    public LichSuTraVe(int maLichSuTraVe, LocalDateTime thoiGianTraVe, String ghiChu, KhachHang khachHang, Ve ve) {
+
+    public LichSuTraVe(int maLichSuTraVe, LocalDateTime thoiGianTraVe, String ghiChu, double phiTraVe, String loaiTraVe, KhachHang khachHang, NhanVien nhanVienThucHien, Ve ve) {
         this.maLichSuTraVe = maLichSuTraVe;
         this.thoiGianTraVe = thoiGianTraVe;
         this.ghiChu = ghiChu;
+        this.phiTraVe = phiTraVe;
+        this.loaiTraVe = loaiTraVe;
         this.khachHang = khachHang;
+        this.nhanVienThucHien = nhanVienThucHien;
         this.ve = ve;
+    }
+
+    public double getPhiTraVe() {
+        return phiTraVe;
+    }
+
+    public void setPhiTraVe(double phiTraVe) {
+        this.phiTraVe = phiTraVe;
+    }
+
+    public String getLoaiTraVe() {
+        return loaiTraVe;
+    }
+
+    public void setLoaiTraVe(String loaiTraVe) {
+        this.loaiTraVe = loaiTraVe;
     }
 
     public int getMaLichSuTraVe() {
@@ -75,6 +102,14 @@ public class LichSuTraVe {
                 ", khachHang=" + khachHang +
                 ", ve=" + ve +
                 '}';
+    }
+
+    public NhanVien getNhanVienThucHien() {
+        return nhanVienThucHien;
+    }
+
+    public void setNhanVienThucHien(NhanVien nhanVienThucHien) {
+        this.nhanVienThucHien = nhanVienThucHien;
     }
 
     @Override

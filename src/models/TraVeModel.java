@@ -53,11 +53,10 @@ public class TraVeModel {
         this.thoiGianKhoiHanh = thoiGianKhoiHanh;
     }
 
-    public double tinhGiaTriHoanTien() {
+    public double tinhPhiTraVe() {
 
         Duration duration = Duration.between(LocalDateTime.now(), thoiGianKhoiHanh);
         long hours = duration.getSeconds() / 3600;
-
         if (hours > 24) {
             return 20000;
         } else if (hours > 4 && hours <= 24) {
@@ -66,6 +65,16 @@ public class TraVeModel {
         return 0;
     }
 
+    public String tinhLoaiTraVe() {
+        Duration duration = Duration.between(LocalDateTime.now(), thoiGianKhoiHanh);
+        long hours = duration.getSeconds() / 3600;
+        if (hours > 24) {
+            return "tra-truoc-24h-phi-20k";
+        } else if (hours > 4 && hours <= 24) {
+            return "tra-tu-4-24h-phi-20k";
+        }
+        return "tra-sau-4h-khong-hoan-tien";
+    }
 
     @Override
     public String toString() {
