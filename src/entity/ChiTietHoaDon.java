@@ -8,11 +8,19 @@ public class ChiTietHoaDon {
     private HoaDon hoaDon;
 
 
-    public ChiTietHoaDon(HoaDon hoaDon, Ve ve) {
+    public ChiTietHoaDon(HoaDon hoaDon, Ve ve, Double donGia) {
         this.hoaDon = hoaDon;
         this.ve = ve;
+        this.donGia = donGia;
     }
 
+    public double getDonGia() {
+        return donGia;
+    }
+
+    public void setDonGia(double donGia) {
+        this.donGia = donGia;
+    }
 
     public Ve getVe() {
         return ve;

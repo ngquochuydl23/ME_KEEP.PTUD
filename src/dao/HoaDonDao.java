@@ -158,10 +158,11 @@ public class HoaDonDao implements IDao<HoaDon, String> {
             veStmt.executeBatch();
             System.out.println("Inserted Vé.");
 
-            PreparedStatement cthdStmt = con.prepareStatement("INSERT INTO quanlibanve.ChiTietHoaDon (MaHoaDon, MaVe) VALUES(?, ?)");
+            PreparedStatement cthdStmt = con.prepareStatement("INSERT INTO quanlibanve.ChiTietHoaDon (MaHoaDon, MaVe, DonGia) VALUES(?, ?, ?)");
             for (ChiTietHoaDon chiTietHoaDon : dsChiTietHoaDon) {
                 cthdStmt.setString(1, entity.getMaHoaDon());
                 cthdStmt.setString(2, chiTietHoaDon.getVe().getMaVe());
+                cthdStmt.setDouble(3, chiTietHoaDon.getDonGia());
                 cthdStmt.addBatch();
             }
 

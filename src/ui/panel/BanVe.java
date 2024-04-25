@@ -355,8 +355,8 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
                     JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày đi", "Lỗi !", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
-                if (ngayDi != null && !ngayDi.before(new Date())) {
-                    JOptionPane.showMessageDialog(this, "Ngày đi phải trước ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+                if (ngayDi.before(new Date())) {
+                    JOptionPane.showMessageDialog(this, "Ngày đi phải sau hoặc trong ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
                     dateNgayDi.getDateChooser().setCalendar(null);
                 }
                 return true;
