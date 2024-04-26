@@ -139,10 +139,10 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
                     JOptionPane.WARNING_MESSAGE);
             return false;
         } else if (Validation.isEmpty(soCMND)) {
-        	JOptionPane.showMessageDialog(this, 
-        			"Số CMND không được rỗng", 
-        			"Cảnh báo !", 
-        			JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Số CMND không được rỗng",
+                    "Cảnh báo !",
+                    JOptionPane.WARNING_MESSAGE);
         }
         return true;
     }
@@ -237,7 +237,7 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
         btnSubmit.setVisible(true);
         titlePage.setLblTitle("Thêm khách hàng");
         btnSubmit.setText("Thêm khách hàng");
-        
+
         tenKhachHangTextField.setText("");
         tenKhachHangTextField.setEditable(true);
 
@@ -246,7 +246,7 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
 
         maKhachHangTextField.setText("");
         maKhachHangTextField.setEditable(true);
-        
+
         soCMNDTextField.setText("");
         soCMNDTextField.setEditable(true);
         btnSubmit.setVisible(true);
@@ -262,7 +262,7 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
 
         tenKhachHangTextField.setText(khachHang.getHoTen());
         tenKhachHangTextField.setEditable(false); // Vô hiệu hóa chỉnh sửa
-        
+
         soCMNDTextField.setText(khachHang.getCMND());
         soCMNDTextField.setEditable(false); // Vô hiệu hóa chỉnh sửa
 
@@ -278,13 +278,13 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
         soDienThoaiTextField.setText(soDienThoai);
         tenKhachHangTextField.requestFocus();
         tenKhachHangTextField.getTxtForm().requestFocus();
-        soCMNDTextField.requestFocus();
-        soCMNDTextField.getTxtForm().requestFocus();
     }
 
     @Override
     public void setVisible(boolean b) {
-        xoaDuLieu();
+        if (!b) {
+            xoaDuLieu();
+        }
         super.setVisible(b);
     }
 }

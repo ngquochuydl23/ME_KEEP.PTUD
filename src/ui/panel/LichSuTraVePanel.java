@@ -1,6 +1,8 @@
 package ui.panel;
 
 
+import dao.LichSuTraVeDao;
+import helper.Formater;
 import ui.component.*;
 
 
@@ -38,13 +40,14 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
     JScrollPane scrollTableLichSuTraVe;
 
     private DefaultTableModel tblModel;
-    private SelectForm gaDenComboBox, gaDiCombox;
     private InputDate thoiGianTraVe;
     private InputForm soDienThoaiInputForm;
     private List<LichSuTraVe> danhSachLichSuTraVe;
-
+    private LichSuTraVeDao lichSuTraVeDao;
 
     public LichSuTraVePanel() {
+        lichSuTraVeDao = new LichSuTraVeDao();
+        danhSachLichSuTraVe = new ArrayList<>();
         initComponent();
         layDanhSachNhaGa();
         layDanhSachLichSu();
@@ -84,7 +87,7 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
         tableLichSuTraVe = new JTable();
         scrollTableLichSuTraVe = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] headerCols = "Mã vé;Tên khách hàng;Chỗ ngồi;Thời gian trả vé;Ghi chú".split(";");
+        String[] headerCols = "Mã vé;Tên khách hàng;Chỗ ngồi;Phí trả vé;Thời gian trả vé".split(";");
         tblModel.setColumnIdentifiers(headerCols);
         tableLichSuTraVe.setModel(tblModel);
         tableLichSuTraVe.setDefaultEditor(Object.class, null);
@@ -129,29 +132,12 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
         box.setBorder(new EmptyBorder(0, 5, 150, 5));
         contentCenter.add(box, BorderLayout.WEST);
 
-        gaDenComboBox = new SelectForm("Ga đi");
-        gaDiCombox = new SelectForm("Ga đến");
 
         thoiGianTraVe = new InputDate("Thời gian trả vé");
 
         soDienThoaiInputForm = new InputForm("Số điện thoại khách hàng");
         soDienThoaiInputForm.setEditable(true);
         soDienThoaiInputForm.requestFocus();
-
-
-        //PlainDocument doc_min = (PlainDocument) moneyMin.getTxtForm().getDocument();
-        //doc_min.setDocumentFilter(new NumericDocumentFilter());
-
-
-//        dateStart.getDateChooser().addPropertyChangeListener(this);
-//        dateEnd.getDateChooser().addPropertyChangeListener(this);
-        //moneyMin.getTxtForm().addKeyListener(this);
-//        moneyMin.getTxtForm().addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(java.awt.event.MouseEvent e) {
-//                System.out.println("TextField được click");
-//            }
-//        });
 
         chucNangChinh
                 .getToolbar("chi-tiet")
@@ -160,8 +146,6 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
                     public void actionPerformed(ActionEvent e) {
                         if (!kiemTraChonDong())
                             return;
-
-
                     }
                 });
 
@@ -183,8 +167,6 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
                     }
                 });
 
-        box.add(gaDiCombox);
-        box.add(gaDenComboBox);
         box.add(soDienThoaiInputForm);
         box.add(thoiGianTraVe);
 
@@ -195,23 +177,7 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
         main.add(scrollTableLichSuTraVe);
     }
 
-    public void Fillter() throws ParseException {
-//        if (validateSelectDate()) {
-//            int type = search.cbxChoose.getSelectedIndex();
-//            // int mancc = cbxNhaCungCap.getSelectedIndex() == 0 ? 0
-//            // : nccBUS.getByIndex(cbxNhaCungCap.getSelectedIndex() - 1).getMancc();
-//            // int manv = cbxNhanVien.getSelectedIndex() == 0 ? 0
-//            // : nvBUS.getByIndex(cbxNhanVien.getSelectedIndex() - 1).getManv();
-//            String input = search.txtSearchForm.getText() != null ? search.txtSearchForm.getText() : "";
-//            Date time_start = dateStart.getDate() != null ? dateStart.getDate() : new Date(0);
-//            Date time_end = dateEnd.getDate() != null ? dateEnd.getDate() : new Date(System.currentTimeMillis());
-//            String min_price = moneyMin.getText();
-//            // this.listPhieu = phieunhapBUS.fillerPhieuNhap(type, input, mancc, manv,
-//            // time_start, time_end, min_price,
-//            // max_price);
-//            loadDataTalbe(listPhieu);
-//        }
-    }
+
 
     public void resetForm() {
 
@@ -235,32 +201,6 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
         return true;
     }
 
-    public boolean validateSelectDate() throws ParseException {
-//        Date time_start = dateStart.getDate();
-//        Date time_end = dateEnd.getDate();
-//
-//        Date current_date = new Date();
-//        if (time_start != null && time_start.after(current_date)) {
-//            JOptionPane.showMessageDialog(this, "Ngày bắt đầu không được lớn hơn ngày hiện tại", "Lỗi !",
-//                    JOptionPane.ERROR_MESSAGE);
-//            dateStart.getDateChooser().setCalendar(null);
-//            return false;
-//        }
-//        if (time_end != null && time_end.after(current_date)) {
-//            JOptionPane.showMessageDialog(this, "Ngày kết thúc không được lớn hơn ngày hiện tại", "Lỗi !",
-//                    JOptionPane.ERROR_MESSAGE);
-//            dateEnd.getDateChooser().setCalendar(null);
-//            return false;
-//        }
-//        if (time_start != null && time_end != null && time_start.after(time_end)) {
-//            JOptionPane.showMessageDialog(this, "Ngày kết thúc phải lớn hơn ngày bắt đầu", "Lỗi !",
-//                    JOptionPane.ERROR_MESSAGE);
-//            dateEnd.getDateChooser().setCalendar(null);
-//            return false;
-//        }
-        return true;
-    }
-
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -271,29 +211,17 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
 
     @Override
     public void keyReleased(KeyEvent e) {
-        try {
-            Fillter();
-        } catch (ParseException ex) {
-            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        try {
-            Fillter();
-        } catch (ParseException ex) {
-            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
     }
 
     @Override
     public void itemStateChanged(ItemEvent e) {
-        try {
-            Fillter();
-        } catch (ParseException ex) {
-            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
     }
 
     private void layDanhSachNhaGa() {
@@ -306,27 +234,23 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
     private void xuatLichSuTraVeExcel() {
         try {
             JTableExporter.exportJTableToExcel(tableLichSuTraVe);
-            Logger.getLogger(BanVe.class.getName()).log(Level.INFO, "Xuất lịch sửa trả vé thành công");
+            Logger.getLogger(LichSuTraVePanel.class.getName()).log(Level.INFO, "Xuất lịch sửa trả vé thành công");
         } catch (IOException ex) {
-            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LichSuTraVePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void layDanhSachLichSu() {
-        danhSachLichSuTraVe = new ArrayList<>();
-       // Ve ve = new Ve( "tphcm-quynhon",  20,  1000000,  null,  1,  new LoaiKhoang("giuong-nam-khoang-4"), null);
-       // entity.KhachHang kh = new entity.KhachHang(1, "Owen Shaw", "0868684961", LocalDateTime.now(), false);
-      //  LichSuTraVe ls = new LichSuTraVe(1, LocalDateTime.of(2023, 03, 23, 12, 30, 50), "Khong co", kh, ve);
-        danhSachLichSuTraVe.add(null);
+        danhSachLichSuTraVe = lichSuTraVeDao.layHet();
 
         for (LichSuTraVe item : danhSachLichSuTraVe) {
-//            tblModel.addRow(new String[] {
-//                    item.getVe().getMaVe(),
-//                    item.getKhachHang().getHoTen(),
-//                    String.valueOf(item.getVe().getChoNgoi()),
-//                    item.getThoiGianTraVe().toString(),
-//                    item.getGhiChu()
-//            });
+            tblModel.addRow(new String[] {
+                    item.getVe().getMaVe(),
+                    item.getKhachHang().getHoTen(),
+                    String.valueOf(item.getVe().getSlot().getSoSlot()),
+                    Formater.FormatVND(item.getPhiTraVe()),
+                    Formater.FormatTime(item.getThoiGianTraVe())
+            });
         }
     }
 }

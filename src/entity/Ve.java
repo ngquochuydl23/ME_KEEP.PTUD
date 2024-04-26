@@ -6,7 +6,7 @@ import java.time.Period;
 import java.util.Locale;
 import java.util.Objects;
 
-public class Ve {
+public class Ve implements Comparable<Ve>{
 
     private String maVe;
 
@@ -19,8 +19,12 @@ public class Ve {
     private Tau tau;
 
     private String hoTenNguoiDi;
+
     private String cccdNguoiDi;
+
     private int namSinhNguoiDi;
+
+    private int tinhTrangVe;
 
     public Ve() {
 
@@ -30,7 +34,7 @@ public class Ve {
         this.maVe = maVe;
     }
 
-    public Ve(String maVe, Slot slot, KhachHang khachHang, Tuyen tuyen, Tau tau, String hoTenNguoiDi, String cccdNguoiDi, int namSinhNguoiDi) {
+    public Ve(String maVe, Slot slot, KhachHang khachHang, Tuyen tuyen, Tau tau, String hoTenNguoiDi, String cccdNguoiDi, int namSinhNguoiDi, int tinhTrangVe) {
         this.maVe = maVe;
         this.slot = slot;
         this.khachHang = khachHang;
@@ -39,6 +43,7 @@ public class Ve {
         this.hoTenNguoiDi = hoTenNguoiDi;
         this.cccdNguoiDi = cccdNguoiDi;
         this.namSinhNguoiDi = namSinhNguoiDi;
+        this.tinhTrangVe = tinhTrangVe;
     }
 
     public String getMaVe() {
@@ -55,6 +60,14 @@ public class Ve {
 
     public void setSlot(Slot slot) {
         this.slot = slot;
+    }
+
+    public int getTinhTrangVe() {
+        return tinhTrangVe;
+    }
+
+    public void setTinhTrangVe(int tinhTrangVe) {
+        this.tinhTrangVe = tinhTrangVe;
     }
 
     public KhachHang getKhachHang() {
@@ -106,17 +119,18 @@ public class Ve {
         this.namSinhNguoiDi = namSinhNguoiDi;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ve ve = (Ve) o;
-        return namSinhNguoiDi == ve.namSinhNguoiDi && Objects.equals(maVe, ve.maVe) && Objects.equals(slot, ve.slot) && Objects.equals(khachHang, ve.khachHang) && Objects.equals(tuyen, ve.tuyen) && Objects.equals(tau, ve.tau) && Objects.equals(hoTenNguoiDi, ve.hoTenNguoiDi) && Objects.equals(cccdNguoiDi, ve.cccdNguoiDi);
+        return Objects.equals(maVe, ve.maVe);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(maVe, slot, khachHang, tuyen, tau, hoTenNguoiDi, cccdNguoiDi, namSinhNguoiDi);
+        return Objects.hash(maVe);
     }
 
     @Override
@@ -152,5 +166,10 @@ public class Ve {
     public boolean laNguoiLon() {
 
         return (LocalDate.now().getYear() - namSinhNguoiDi) >= 18;
+    }
+
+    @Override
+    public int compareTo(Ve o) {
+        return getMaVe().compareTo(o.getMaVe());
     }
 }

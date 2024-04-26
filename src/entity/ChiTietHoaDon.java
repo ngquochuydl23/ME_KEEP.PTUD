@@ -9,6 +9,7 @@ public class ChiTietHoaDon {
     public ChiTietHoaDon(HoaDon hoaDon, Ve ve) {
         this.hoaDon = hoaDon;
         this.ve = ve;
+        // this.donGia = donGia;
     }
 
     public Ve getVe() {

@@ -2,8 +2,6 @@ package ui.panel;
 
 import ui.component.*;
 import entity.LichSuTraVe;
-import entity.LoaiKhoang;
-import entity.Ve;
 import helper.JTableExporter;
 
 import javax.swing.*;
@@ -268,7 +266,7 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
         try {
             Fillter();
         } catch (ParseException ex) {
-            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BanVePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -277,7 +275,7 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
         try {
             Fillter();
         } catch (ParseException ex) {
-            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BanVePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -286,7 +284,7 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
         try {
             Fillter();
         } catch (ParseException ex) {
-            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BanVePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -300,9 +298,9 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
     private void xuatLichSuTraVeExcel() {
         try {
             JTableExporter.exportJTableToExcel(tableLichSuTraVe);
-            Logger.getLogger(BanVe.class.getName()).log(Level.INFO, "Xuất lịch sửa trả vé thành công");
+            Logger.getLogger(BanVePanel.class.getName()).log(Level.INFO, "Xuất lịch sửa trả vé thành công");
         } catch (IOException ex) {
-            Logger.getLogger(BanVe.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BanVePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

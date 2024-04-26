@@ -251,7 +251,7 @@ public class ThanhToanDialog extends JDialog {
             String maGaDi = tuyen.getGaDi().getMaGa();
             String maGaDen = tuyen.getGaDen().getMaGa();
             String maVe = maGaDi +"-"+ maGaDen + "-" + slot.getMaSlot() + "-" + new Timestamp(date.getTime());
-            Ve ve = new Ve(maVe, slot, khachHang, tuyen, tau, null, null, 0);
+            Ve ve = new Ve(maVe, slot, khachHang, tuyen, tau, null, null, 0, 1);
             LoaiKhoang loaiKhoang = loaiKhoangDao.layLoaiKhoangTheoMaToa(toaTau.getMaToa());
             double giaVe = ve.tinhGiaBanVe(loaiKhoang.getMaLoaiKhoang());
             tongTienTamTinh += giaVe;
@@ -363,6 +363,8 @@ public class ThanhToanDialog extends JDialog {
 
             List<ChiTietHoaDon> dsChiTietHoaDon = new ArrayList<>();
             for (Ve ve: danhSachVe) {
+                LoaiKhoang loaiKhoang = loaiKhoangDao.layLoaiKhoangTheoMaToa(toaTau.getMaToa());
+                double giaVe = ve.tinhGiaBanVe(loaiKhoang.getMaLoaiKhoang());
                 ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon(hoaDon, ve);
                 dsChiTietHoaDon.add(chiTietHoaDon);
             }

@@ -208,7 +208,7 @@ public class MenuTaskbar extends JPanel {
 
             @Override
             public void mousePressed(MouseEvent evt) {
-                main.setPanel(new BanVe());
+                main.setPanel(new BanVePanel());
             }
         });
     }
