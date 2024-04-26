@@ -189,7 +189,7 @@ public final class BanVe extends JPanel implements PropertyChangeListener, ItemL
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        chucNangChinh = new ChucNangChinh(new String[]{"tim", "chi-tiet", "huy-ve", "xuat-excel"});
+        chucNangChinh = new ChucNangChinh(new String[]{"tim", "chi-tiet", "huy-ve", "xuat-excel", "in"});
 
         chucNangChinh.getToolbar("tim").addActionListener(new ActionListener() {
             @Override

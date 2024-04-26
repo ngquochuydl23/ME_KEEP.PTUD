@@ -28,8 +28,8 @@ import ui.component.ButtonCustom;
 import ui.component.HeaderTitle;
 import ui.component.InputForm;
 import ui.component.SlotBtn;
-import ui.dialog.chiTietVeDialog.CapNhatVeListener;
 import ui.dialog.chiTietVeDialog.ChiTietVeDialog;
+import ui.dialog.chiTietVeDialog.CapNhatVeListener;
 
 public class ThanhToanDialog extends JDialog {
     private HeaderTitle titlePage;
