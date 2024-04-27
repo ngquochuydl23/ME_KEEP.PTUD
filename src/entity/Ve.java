@@ -1,9 +1,6 @@
 package entity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.Locale;
 import java.util.Objects;
 
 public class Ve implements Comparable<Ve>{

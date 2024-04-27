@@ -25,6 +25,7 @@ public class DatabaseUtil {
         }
     }
     public static Connection getConnection() {
+        System.out.println(connection.toString());
         return connection;
     }
 }

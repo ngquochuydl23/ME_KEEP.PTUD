@@ -12,7 +12,13 @@ public class Slot {
 
     private int tinhTrang;
 
-    public Slot() {}
+    public Slot() {
+    }
+
+    public Slot(String maSlot, int soSlot) {
+        this.maSlot = maSlot;
+        this.soSlot = soSlot;
+    }
 
     public Slot(String maSlot, int soSlot, Khoang khoang, int tinhTrang) {
         this.maSlot = maSlot;
@@ -55,17 +61,19 @@ public class Slot {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Slot slot = (Slot) o;
-        return maSlot == slot.maSlot && soSlot == slot.soSlot && tinhTrang == slot.tinhTrang && Objects.equals(khoang, slot.khoang);
+        return maSlot == slot.maSlot && soSlot == slot.soSlot && tinhTrang == slot.tinhTrang
+                && Objects.equals(khoang, slot.khoang);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(maSlot, soSlot, khoang, tinhTrang);
     }
-
 
     @Override
     public String toString() {

@@ -6,7 +6,9 @@ import entity.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,38 +23,71 @@ public class HoaDonDao implements IDao<HoaDon, String> {
 
     @Override
     public HoaDon layTheoMa(String id) {
-//        try {
-//            String sql = "SELECT * FROM HoaDon WHERE maHoaDon=?";
-//            PreparedStatement pst = con.prepareStatement(sql);
-//            pst.setString(1, id);
-//            ResultSet rs = pst.executeQuery();
-//
-//            while (rs.next()) {
-//                String maHoaDon = rs.getString("maHoaDon");
-//                LocalDateTime thoiGianTaoHoaDon = rs.getTimestamp("thoiGianTaoHoaDon").toLocalDateTime();
-//                String ghiChu = rs.getString("ghiChu");
-//                double thueVat = rs.getDouble("thueVat");
-//                double tienKhachDua = rs.getDouble("tienKhachDua");
-//
-//                int maKhachHang = rs.getInt("maKhachHang");
-//                int maNhanVien = rs.getInt("maNhanVien");
-//
-//                String maKhuyenMai = rs.getString("maKhuyenMai");
-//
-//                return new HoaDon(
-//                        maHoaDon,
-//                        thoiGianTaoHoaDon,
-//                        ghiChu,
-//                        thueVat,
-//                        tienKhachDua,
-//                        new KhachHang(maKhachHang),
-//                        new NhanVien(maNhanVien),
-//                        new KhuyenMai(maKhuyenMai)
-//                );
-//            }
-//        } catch (Exception e) {
-//            Logger.getLogger(VeDao.class.getName()).log(Level.SEVERE, null, e);
-//        }
+        try {
+            String sql = "SELECT *, kh.HoTen AS HoTenKhachHang, \r\n" + //
+                    "nv.HoTen AS HoTenNhanVien, \r\n" + //
+                    "nv.SoDienThoai AS SDTNhanVien,\r\n" + //
+                    "kh.SoDienThoai AS SDTKhachHang, \r\n" + //
+                    "km.GhiChu AS GhiChuKhuyenMai \r\n" + // "
+                    "FROM HoaDon hd  LEFT JOIN KhachHang kh ON kh.MaKhachHang = hd.MaKhachHang \r\n" + //
+                    "LEFT JOIN NhanVien nv ON hd.MaNhanVien = nv.MaNhanVien \r\n" + //
+                    "LEFT JOIN  KhuyenMai km ON hd.MaKhuyenMai = km.MaKhuyenMai WHERE maHoaDon = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, id);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                String maHoaDon = rs.getString("maHoaDon");
+                LocalDateTime thoiGianTaoHoaDon = rs.getTimestamp("thoiGianTaoHoaDon").toLocalDateTime();
+                String ghiChu = rs.getString("ghiChu");
+                double vat = rs.getDouble("VAT");
+                double tongTien = rs.getDouble("tongTien");
+                double tamTinh = rs.getDouble("tamTinh");
+                double tongTienGiam = rs.getDouble("tongTienGiam");
+
+                // KhachHang
+                int maKhachHang = rs.getInt("maKhachHang");
+                String hoTen = rs.getString("hoTenKhachHang");
+                String soDienThoai = rs.getString("SDTKhachHang");
+                String cmnd = rs.getString("CMND");
+                LocalDateTime thoigianDKi = LocalDateTime.ofInstant(
+                        new Date(rs.getDate("thoiGianDangKy").getTime()).toInstant(), ZoneId.systemDefault());
+                boolean laKhachHangThanThiet = rs.getBoolean("LaKhachHangThanThiet");
+                KhachHang khachHang = new KhachHang(maKhachHang, hoTen, soDienThoai, thoigianDKi, laKhachHangThanThiet,
+                        cmnd);
+
+                // Nhan Vien
+                int maNhanVien = rs.getInt("maNhanVien");
+                String hoTenNV = rs.getString("hoTenNhanVien");
+                String soDienThoaiNV = rs.getString("SDTNhanVien");
+                String email = rs.getString("email");
+                LocalDate ngayDangKy = LocalDate.ofInstant(new Date(rs.getDate("ngayDangKy").getTime()).toInstant(),
+                        ZoneId.systemDefault());
+                LocalDate ngaySinh = LocalDate.ofInstant(new Date(rs.getDate("ngaySinh").getTime()).toInstant(),
+                        ZoneId.systemDefault());
+                int trangThai = rs.getInt("trangThai");
+                int gioiTinh = rs.getInt("gioiTinh");
+                String vaiTro = rs.getString("VaiTro");
+                NhanVien nhanVien = new NhanVien(maNhanVien, hoTenNV, gioiTinh, soDienThoaiNV, ngayDangKy, ngaySinh,
+                        trangThai, soDienThoaiNV, email, vaiTro);
+
+                // KhuyenMai
+                String maKhuyenMai = rs.getString("maKhuyenMai");
+                double phanTramGiamGia = rs.getDouble("phanTramGiamGia");
+                String ghiChuKM = rs.getString("GhiChuKhuyenMai");
+                LocalDateTime thoiGianBatDau = LocalDateTime.ofInstant(
+                        new Date(rs.getDate("ThoiGianBatDau").getTime()).toInstant(), ZoneId.systemDefault());
+                LocalDateTime thoiGianKetThuc = LocalDateTime.ofInstant(
+                        new Date(rs.getDate("ThoiGianKetThuc").getTime()).toInstant(), ZoneId.systemDefault());
+                KhuyenMai khuyenMai = new KhuyenMai(maKhuyenMai, phanTramGiamGia, ghiChuKM, thoiGianBatDau,
+                        thoiGianKetThuc);
+
+                return new HoaDon(maHoaDon, thoiGianTaoHoaDon, ghiChu, vat, tongTien, tamTinh, tongTienGiam, khachHang,
+                        nhanVien, khuyenMai);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(VeDao.class.getName()).log(Level.SEVERE, null, e);
+        }
         return null;
     }
 
@@ -84,8 +119,10 @@ public class HoaDonDao implements IDao<HoaDon, String> {
                 LocalDateTime thoiGianDangKy = rs.getTimestamp("ThoiGianDangKy").toLocalDateTime();
                 boolean laKhachHangThanThiet = rs.getBoolean("LaKhachHangThanThiet");
 
-                KhachHang khachHang = new KhachHang(maKhachHang, hoTenKhachHang, soDienThoaiKhachHang, thoiGianDangKy, laKhachHangThanThiet);
-                dsHoaDon.add(new HoaDon(maHoaDon, thoiGianTaoHoaDon, ghiChu, vat, tongTien, tamTinh, tongTienGiam, khachHang, new NhanVien(maNhanVien), new KhuyenMai(maKhuyenMai)));
+                KhachHang khachHang = new KhachHang(maKhachHang, hoTenKhachHang, soDienThoaiKhachHang, thoiGianDangKy,
+                        laKhachHangThanThiet);
+                dsHoaDon.add(new HoaDon(maHoaDon, thoiGianTaoHoaDon, ghiChu, vat, tongTien, tamTinh, tongTienGiam,
+                        khachHang, new NhanVien(maNhanVien), new KhuyenMai(maKhuyenMai)));
             }
         } catch (Exception e) {
             Logger.getLogger(HoaDonDao.class.getName()).log(Level.SEVERE, null, e);
@@ -93,8 +130,6 @@ public class HoaDonDao implements IDao<HoaDon, String> {
         return dsHoaDon;
     }
 
-
-    
     @Override
     public boolean them(HoaDon entity) {
 
@@ -111,18 +146,16 @@ public class HoaDonDao implements IDao<HoaDon, String> {
         return false;
     }
 
-
     public boolean taoHoaDon(
-                             List<Slot> dsChoDaChon,
-                             HoaDon entity,
-                             List<ChiTietHoaDon> dsChiTietHoaDon,
-                             List<Ve> dsVe) throws SQLException {
+            List<Slot> dsChoDaChon,
+            HoaDon entity,
+            List<ChiTietHoaDon> dsChiTietHoaDon,
+            List<Ve> dsVe) throws SQLException {
         SlotDao slotDao = new SlotDao();
         try {
             con.setAutoCommit(false);
             String sql = "INSERT INTO quanlibanve.HoaDon (MaHoaDon, ThoiGianTaoHoaDon, GhiChu, VAT, MaKhachHang, MaNhanVien, MaKhuyenMai, TongTien, TamTinh, TongTienGiam) VALUES(?, curtime(), ?, ?, ?, ?, NULL, ?, ?, ?)";
             PreparedStatement hoaDonStmt = con.prepareStatement(sql);
-
 
             hoaDonStmt.setString(1, entity.getMaHoaDon());
             hoaDonStmt.setString(2, entity.getGhiChu());
@@ -141,7 +174,8 @@ public class HoaDonDao implements IDao<HoaDon, String> {
                 System.out.println("Bước 2. Chuyển trạng thái thành hết chỗ");
             }
 
-            PreparedStatement veStmt = con.prepareStatement("INSERT INTO quanlibanve.Ve (MaVe, MaKhachHang, MaTuyen, MaTau, MaSlot, TinhTrangVe, HoTenNguoiDi, CCCDNguoiDi, NguoiLon, NamSinhNguoiDi) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement veStmt = con.prepareStatement(
+                    "INSERT INTO quanlibanve.Ve (MaVe, MaKhachHang, MaTuyen, MaTau, MaSlot, TinhTrangVe, HoTenNguoiDi, CCCDNguoiDi, NguoiLon, NamSinhNguoiDi) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             for (Ve ve : dsVe) {
                 veStmt.setString(1, ve.getMaVe());
                 veStmt.setInt(2, ve.getKhachHang().getMaKhachHang());
@@ -158,7 +192,8 @@ public class HoaDonDao implements IDao<HoaDon, String> {
             veStmt.executeBatch();
             System.out.println("Inserted Vé.");
 
-            PreparedStatement cthdStmt = con.prepareStatement("INSERT INTO quanlibanve.ChiTietHoaDon (MaHoaDon, MaVe, DonGia) VALUES(?, ?, ?)");
+            PreparedStatement cthdStmt = con
+                    .prepareStatement("INSERT INTO quanlibanve.ChiTietHoaDon (MaHoaDon, MaVe, DonGia) VALUES(?, ?, ?)");
             for (ChiTietHoaDon chiTietHoaDon : dsChiTietHoaDon) {
                 cthdStmt.setString(1, entity.getMaHoaDon());
                 cthdStmt.setString(2, chiTietHoaDon.getVe().getMaVe());
@@ -180,6 +215,6 @@ public class HoaDonDao implements IDao<HoaDon, String> {
             runtimeEx.printStackTrace();
 
             return false;
-        }   
+        }
     }
 }
