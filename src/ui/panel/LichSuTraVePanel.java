@@ -25,8 +25,12 @@ import java.io.IOException;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -122,7 +126,7 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        ChucNangChinh chucNangChinh = new ChucNangChinh(new String[]{"chi-tiet", "nhap-excel", "xuat-excel"});
+        ChucNangChinh chucNangChinh = new ChucNangChinh(new String[]{"tim","chi-tiet", "nhap-excel", "xuat-excel"});
         functionBar.add(chucNangChinh);
         contentCenter.add(functionBar, BorderLayout.NORTH);
 
@@ -139,6 +143,23 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
         soDienThoaiInputForm.setEditable(true);
         soDienThoaiInputForm.requestFocus();
 
+        chucNangChinh
+        		.getToolbar("tim")
+        		.addActionListener(new ActionListener() {
+		            @Override
+		            public void actionPerformed(ActionEvent e) {
+		
+		                if (!validation() || !validateSelectDate()) return;
+		                
+		                clearDanhSachLichSu();
+		                try {
+							layLichSuTraVeTaiDong();
+						} catch (ParseException e1) {
+							e1.printStackTrace();
+						}
+		            }
+        		});
+        
         chucNangChinh
                 .getToolbar("chi-tiet")
                 .addActionListener(new ActionListener() {
@@ -183,15 +204,15 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
 
     }
 
-    private LichSuTraVe layLichSuTraVeTaiDong() {
-        int row = tableLichSuTraVe.getSelectedRow();
-        int maLichSuTraVe = Integer.parseInt(tblModel.getValueAt(row, 0).toString());
-
-        return danhSachLichSuTraVe.stream()
-                .filter(item -> item.getMaLichSuTraVe() == maLichSuTraVe)
-                .findAny()
-                .orElse(null);
-    }
+//    private LichSuTraVe layLichSuTraVeTaiDong() {
+//        int row = tableLichSuTraVe.getSelectedRow();
+//        int maLichSuTraVe = Integer.parseInt(tblModel.getValueAt(row, 0).toString());
+//
+//        return danhSachLichSuTraVe.stream()
+//                .filter(item -> item.getMaLichSuTraVe() == maLichSuTraVe)
+//                .findAny()
+//                .orElse(null);
+//    }
 
     private boolean kiemTraChonDong() {
         if (tableLichSuTraVe.getSelectedRow() < 0) {
@@ -252,5 +273,48 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
                     Formater.FormatTime(item.getThoiGianTraVe())
             });
         }
+    }
+    private void layLichSuTraVeTaiDong() throws ParseException {
+        danhSachLichSuTraVe = lichSuTraVeDao.layTheoSoDienThoai(soDienThoaiInputForm.getText(), thoiGianTraVe.getDateAsLocalDate());
+		tblModel.setRowCount(0);
+
+		for (LichSuTraVe item : danhSachLichSuTraVe) {
+		    tblModel.addRow(new String[] {
+		            item.getVe().getMaVe(),
+		            item.getKhachHang().getHoTen(),
+		            String.valueOf(item.getVe().getSlot().getSoSlot()),
+		            Formater.FormatVND(item.getPhiTraVe()),
+		            Formater.FormatTime(item.getThoiGianTraVe())
+		    });
+		}
+    }
+
+    private boolean validation() {
+        String soDienThoai = soDienThoaiInputForm.getText();
+        if (soDienThoai.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập số điện thoại khách hàng");
+            return false;
+        }
+        return true;
+    }
+    
+    public void clearDanhSachLichSu() {
+        danhSachLichSuTraVe.clear();
+        tblModel.setRowCount(0); 
+    }
+    
+    private boolean validateSelectDate() {
+        Date selectedDate;
+		try {
+			selectedDate = thoiGianTraVe.getDate();
+	        if (selectedDate == null) {
+	            JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày thời gian trả vé");
+	            return false;
+	        }
+	        return true;
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return false;
+		}
     }
 }

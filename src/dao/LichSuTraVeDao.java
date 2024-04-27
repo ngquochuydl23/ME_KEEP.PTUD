@@ -8,9 +8,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,6 +85,59 @@ public class LichSuTraVeDao implements IDao<LichSuTraVe, Integer> {
         }
         return dsLichSuTraVe;
     }
+
+    public List<LichSuTraVe> layTheoSoDienThoai(String soDienThoai, LocalDate thoiGianTV) {
+        List<LichSuTraVe> dsLichSuTheoSDT = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM quanlibanve.LichSuTraVe ls " +
+                         "LEFT JOIN KhachHang kh ON kh.MaKhachHang = ls.MaKhachHang " +
+                         "LEFT JOIN Ve ve ON ve.MaVe = ls.MaVe " +
+                         "LEFT JOIN Slot slot ON slot.MaSlot = ve.MaSlot " +
+                         "WHERE kh.SoDienThoai = ? AND ls.ThoiGianTraVe >= ? " +
+                         "ORDER BY ls.ThoiGianTraVe DESC";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, soDienThoai);
+            Timestamp timestamp = Timestamp.valueOf(thoiGianTV.atStartOfDay());
+            pst.setTimestamp(2, timestamp);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                int maLichSuTraVe = rs.getInt("MaLichSuTraVe");
+                LocalDateTime thoiGianTraVe = rs.getTimestamp("ThoiGianTraVe").toLocalDateTime();
+                String ghiChu = rs.getString("GhiChu");
+                int maNhanVien = rs.getInt("MaNhanVienThucHien");
+
+                int maKhachHang = rs.getInt("kh.MaKhachHang");
+                String hoTen = rs.getString("kh.HoTen");
+                String soDienThoaiKH = rs.getString("kh.SoDienThoai");
+                String cmnd = rs.getString("kh.CMND");
+                KhachHang khachHang = new KhachHang(maKhachHang, hoTen, soDienThoaiKH, cmnd);
+
+                String maSlot = rs.getString("slot.MaSlot");
+                int soSlot = rs.getInt("slot.SoSlot");
+                int tinhTrang = rs.getInt("slot.TinhTrang");
+                String maKhoang = rs.getString("slot.MaKhoang");
+                Slot slot = new Slot(maSlot, soSlot, new Khoang(maKhoang), tinhTrang);
+
+                String maVe = rs.getString("ve.MaVe");
+                String hoTenNguoiDi = rs.getString("ve.HoTenNguoiDi");
+                String cccdNguoiDi = rs.getString("ve.CCCDNguoiDi");
+                int namSinhNguoiDi = rs.getInt("ve.NamSinhNguoiDi");
+                int tinhTrangVe = rs.getInt("ve.TinhTrangVe");
+                Ve ve = new Ve(maVe, slot, khachHang, null, null, hoTenNguoiDi, cccdNguoiDi, namSinhNguoiDi, tinhTrangVe);
+
+                double phiTraVe = rs.getDouble("ls.PhiTraVe");
+                String loaiTraVe = rs.getString("ls.LoaiTraVe");
+
+                dsLichSuTheoSDT.add(new LichSuTraVe(maLichSuTraVe, thoiGianTraVe, ghiChu, phiTraVe, loaiTraVe, khachHang, new NhanVien(maNhanVien), ve));
+            }
+        } catch (Exception e) {
+            Logger.getLogger(LichSuTraVeDao.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return dsLichSuTheoSDT;
+    }
+
+
 
     @Override
     public boolean them(LichSuTraVe entity) throws SQLException {
