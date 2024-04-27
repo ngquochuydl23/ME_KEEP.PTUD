@@ -11,9 +11,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,16 +87,20 @@ public class LichSuTraVeDao implements IDao<LichSuTraVe, Integer> {
     public List<LichSuTraVe> layTheoSoDienThoai(String soDienThoai, LocalDate thoiGianTV) {
         List<LichSuTraVe> dsLichSuTheoSDT = new ArrayList<>();
         try {
+        	LocalDateTime startOfDay = thoiGianTV.atStartOfDay();
+            LocalDateTime endOfDay = thoiGianTV.atStartOfDay().plusDays(1).minusSeconds(1);
+
             String sql = "SELECT * FROM quanlibanve.LichSuTraVe ls " +
                          "LEFT JOIN KhachHang kh ON kh.MaKhachHang = ls.MaKhachHang " +
                          "LEFT JOIN Ve ve ON ve.MaVe = ls.MaVe " +
                          "LEFT JOIN Slot slot ON slot.MaSlot = ve.MaSlot " +
-                         "WHERE kh.SoDienThoai = ? AND ls.ThoiGianTraVe >= ? " +
+                         "WHERE kh.SoDienThoai = ? AND ls.ThoiGianTraVe BETWEEN ? AND ? " +
                          "ORDER BY ls.ThoiGianTraVe DESC";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, soDienThoai);
-            Timestamp timestamp = Timestamp.valueOf(thoiGianTV.atStartOfDay());
-            pst.setTimestamp(2, timestamp);
+            pst.setTimestamp(2, Timestamp.valueOf(startOfDay));
+            pst.setTimestamp(3, Timestamp.valueOf(endOfDay));
+
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
