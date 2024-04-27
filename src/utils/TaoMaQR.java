@@ -1,5 +1,6 @@
 package utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -13,6 +14,8 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.util.HashMap;
 import java.util.Map;
+
+
 
 public class TaoMaQR {
     private static final String QR_CODE_IMAGE_PATH = "./MyQRCode.png";
@@ -33,7 +36,8 @@ public class TaoMaQR {
         BitMatrix bitMatrix = new QRCodeWriter().encode(json, BarcodeFormat.QR_CODE, 200, 200, hints);
 
         Path path = FileSystems.getDefault().getPath(filePath);
-        MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
+
+        MatrixToImageWriter.writeToFile(bitMatrix, "PNG", new File(filePath));
         System.out.println("QR Code generated successfully at: " + filePath);
     }
 }
