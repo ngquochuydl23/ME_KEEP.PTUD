@@ -3,10 +3,9 @@ package entity;
 import java.util.Objects;
 
 public class ChiTietHoaDon {
-    private double donGia;
+    private double donGia;   //đâsdsadsadsdada
     private Ve ve;
     private HoaDon hoaDon;
-
 
     public ChiTietHoaDon(HoaDon hoaDon, Ve ve, Double donGia) {
         this.hoaDon = hoaDon;
@@ -40,7 +39,7 @@ public class ChiTietHoaDon {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) return true;  //đâsdsadsadsdada  //đâsdsadsadsdada  //đâsdsadsadsdada  //đâsdsadsadsdada  //đâsdsadsadsdada  //đâsdsadsadsdada
         if (o == null || getClass() != o.getClass()) return false;
         ChiTietHoaDon that = (ChiTietHoaDon) o;
         return Double.compare(that.donGia, donGia) == 0 && Objects.equals(ve, that.ve) && Objects.equals(hoaDon, that.hoaDon);
