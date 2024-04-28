@@ -3,7 +3,6 @@ package ui.dialog.chiTietVeDialog;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import entity.Khoang;
 import entity.LoaiKhoang;
 import entity.ToaTau;
 import entity.Ve;
@@ -17,7 +16,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ChiTietVeDialog extends JDialog implements ActionListener {
-    private InputForm maVeField, choNgoiField, toaTauField, giaVeField, hoTenNguoiDiTextField, cccdNguoiDi, namSinhNguoiDi;
+    private InputForm maVeField, choNgoiField, toaTauField, giaVeField, hoTenNguoiDiTextField, cccdNguoiDi,
+            namSinhNguoiDi;
     private ButtonCustom luuButton, xoaTrangButton, tatButton;
     private HeaderTitle titlePage;
     private JPanel pnlButtom;
@@ -60,7 +60,6 @@ public class ChiTietVeDialog extends JDialog implements ActionListener {
         pnlMain.add(cccdNguoiDi);
         pnlMain.add(namSinhNguoiDi);
 
-
         pnlButtom = new JPanel(new FlowLayout());
         pnlButtom.setBorder(new EmptyBorder(10, 0, 10, 0));
         pnlButtom.setBackground(Color.white);
@@ -78,7 +77,8 @@ public class ChiTietVeDialog extends JDialog implements ActionListener {
         pnlButtom.add(tatButton);
 
         add(titlePage, BorderLayout.NORTH);
-        add(new JScrollPane(pnlMain, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
+        add(new JScrollPane(pnlMain, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER),
+                BorderLayout.CENTER);
         add(pnlButtom, BorderLayout.SOUTH);
         setLocationRelativeTo(null);
 
@@ -87,7 +87,6 @@ public class ChiTietVeDialog extends JDialog implements ActionListener {
 
     private void xoaDuLieu() {
         ve = null;
-
 
         maVeField.setText("");
         choNgoiField.setText("");
@@ -124,7 +123,6 @@ public class ChiTietVeDialog extends JDialog implements ActionListener {
         choNgoiField.setText(String.valueOf(ve.getSlot().getSoSlot()));
         toaTauField.setText(toaTau.getTenToa());
         giaVeField.setText(Formater.FormatVND(ve.tinhGiaBanVe(loaiKhoang.getMaLoaiKhoang())));
-
 
         hoTenNguoiDiTextField.setText(ve.getHoTenNguoiDi() != null ? ve.getHoTenNguoiDi() : "");
         cccdNguoiDi.setText(ve.getCccdNguoiDi() != null ? ve.getCccdNguoiDi() : "");
