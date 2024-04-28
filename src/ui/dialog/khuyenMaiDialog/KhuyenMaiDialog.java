@@ -237,7 +237,7 @@ public class KhuyenMaiDialog extends JDialog implements WindowListener, MouseLis
 
     public void xemKhuyenMai(KhuyenMai khuyenMai) {
         this.khuyenMai = khuyenMai;
-        titlePage.setLblTitle("Xem khách hàng");
+        titlePage.setLblTitle("Xem khuyến mãi");
         btnSubmit.setText("Cập nhật thông tin");
         btnSubmit.setVisible(false);
 
@@ -288,8 +288,8 @@ public class KhuyenMaiDialog extends JDialog implements WindowListener, MouseLis
                         suaKhuyenMaiListener.suaKhuyenMaiThanhCong(layThongTinKhuyenMaiTuField());
                     }
                     Logger.getLogger(KhuyenMaiDialog.class.getName()).log(Level.INFO,
-                            "Cập nhật thông tin khách hàng thành công!");
-                    JOptionPane.showMessageDialog(this, "Cập nhật thông tin khách hàng thành công!");
+                            "Cập nhật thông tin khuyến mãi thành công!");
+                    JOptionPane.showMessageDialog(this, "Cập nhật thông tin khuyến mãi thành công!");
                     xoaDuLieu();
                     dispose();
                 }

@@ -28,8 +28,8 @@ import ui.component.ButtonCustom;
 import ui.component.HeaderTitle;
 import ui.component.InputForm;
 import ui.component.SlotBtn;
-import ui.dialog.chiTietVeDialog.CapNhatVeListener;
 import ui.dialog.chiTietVeDialog.ChiTietVeDialog;
+import ui.dialog.chiTietVeDialog.CapNhatVeListener;
 
 public class ThanhToanDialog extends JDialog {
     private HeaderTitle titlePage;
@@ -365,7 +365,7 @@ public class ThanhToanDialog extends JDialog {
             for (Ve ve: danhSachVe) {
                 LoaiKhoang loaiKhoang = loaiKhoangDao.layLoaiKhoangTheoMaToa(toaTau.getMaToa());
                 double giaVe = ve.tinhGiaBanVe(loaiKhoang.getMaLoaiKhoang());
-                ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon(hoaDon, ve, giaVe);
+                ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon(hoaDon, ve);
                 dsChiTietHoaDon.add(chiTietHoaDon);
             }
 

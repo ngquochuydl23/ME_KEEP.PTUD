@@ -14,6 +14,11 @@ public class ToaTau {
         this.maToa = maToa;
     }
 
+    public ToaTau(String maToa, String tenToa) {
+        this.maToa = maToa;
+        this.tenToa = tenToa;
+    }
+
     public ToaTau(String maToa, String tenToa, Tau tau) {
         this.maToa = maToa;
         this.tenToa = tenToa;
@@ -55,8 +60,10 @@ public class ToaTau {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         ToaTau toaTau = (ToaTau) o;
         return Objects.equals(maToa, toaTau.maToa);
     }

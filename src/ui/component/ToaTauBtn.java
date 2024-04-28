@@ -68,7 +68,7 @@ public class ToaTauBtn extends JButton implements MouseListener {
     public static ToaTauBtn taoToa1Khoang50Slot(ToaTau toaTau, List<SlotBtn> dsBtnSlot) {
         ToaTauBtn carriage = new ToaTauBtn(toaTau);
         String maKhoang = dsBtnSlot
-                .getFirst()
+                .get(0)
                 .getSlot()
                 .getKhoang()
                 .getMaKhoang();
