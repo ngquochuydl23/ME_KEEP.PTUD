@@ -91,7 +91,7 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
         tableLichSuTraVe = new JTable();
         scrollTableLichSuTraVe = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] headerCols = "Mã vé;Tên khách hàng;Chỗ ngồi;Phí trả vé;Thời gian trả vé".split(";");
+        String[] headerCols = "Mã vé;Tên người đi;Chỗ ngồi;Phí trả vé;Thời gian trả vé".split(";");
         tblModel.setColumnIdentifiers(headerCols);
         tableLichSuTraVe.setModel(tblModel);
         tableLichSuTraVe.setDefaultEditor(Object.class, null);
@@ -267,7 +267,7 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
         for (LichSuTraVe item : danhSachLichSuTraVe) {
             tblModel.addRow(new String[] {
                     item.getVe().getMaVe(),
-                    item.getKhachHang().getHoTen(),
+                    item.getVe().getHoTenNguoiDi(),
                     String.valueOf(item.getVe().getSlot().getSoSlot()),
                     Formater.FormatVND(item.getPhiTraVe()),
                     Formater.FormatTime(item.getThoiGianTraVe())

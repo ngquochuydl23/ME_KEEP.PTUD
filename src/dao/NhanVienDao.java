@@ -7,6 +7,8 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -217,5 +219,31 @@ public class NhanVienDao implements IDao<NhanVien, Integer> {
             return null;
         }
         return null;
+    }
+
+    public Map<String, Long> thongKeBanHangTheoNhanVien(LocalDate from, LocalDate to) {
+        Map<String, Long> mapDataset = new TreeMap<String, Long>();
+
+        try {
+            String sql = "SELECT nv.MaNhanVien, nv.HoTen, SUM(hd.TongTien) as TongDoanhSo FROM NhanVien nv \n" +
+                    "LEFT JOIN HoaDon hd ON hd.MaNhanVien = nv.MaNhanVien\n" +
+                    "WHERE (hd.ThoiGianTaoHoaDon BETWEEN ? AND ?)\n" +
+                    "GROUP BY nv.MaNhanVien, nv.HoTen ";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setDate(1, Date.valueOf(from));
+            pst.setDate(2, Date.valueOf(to));
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                int maNhanVien = rs.getInt("MaNhanVien");
+                String hoTen = rs.getString("HoTen");
+                long tongDoanhSo = rs.getLong("TongDoanhSo");
+                mapDataset.put(hoTen, tongDoanhSo);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(NhanVienDao.class.getName()).log(Level.SEVERE, null, e);
+        }
+
+        return mapDataset;
     }
 }

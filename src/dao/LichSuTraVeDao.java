@@ -94,7 +94,7 @@ public class LichSuTraVeDao implements IDao<LichSuTraVe, Integer> {
                          "LEFT JOIN KhachHang kh ON kh.MaKhachHang = ls.MaKhachHang " +
                          "LEFT JOIN Ve ve ON ve.MaVe = ls.MaVe " +
                          "LEFT JOIN Slot slot ON slot.MaSlot = ve.MaSlot " +
-                         "WHERE kh.SoDienThoai = ? AND ls.ThoiGianTraVe BETWEEN ? AND ? " +
+                         "WHERE kh.SoDienThoai = ? OR ls.ThoiGianTraVe BETWEEN ? AND ? " +
                          "ORDER BY ls.ThoiGianTraVe DESC";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, soDienThoai);
