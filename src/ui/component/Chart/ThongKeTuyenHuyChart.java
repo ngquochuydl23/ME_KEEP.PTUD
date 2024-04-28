@@ -1,6 +1,7 @@
 package ui.component.Chart;
 
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
+import dao.LichSuTraVeDao;
 import dao.NhanVienDao;
 import models.ThongKeNhanVienModel;
 import org.jfree.chart.ChartFactory;
@@ -18,26 +19,28 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.util.Map;
 
-public class ThongKeDoanhSoBanNhanVienChart extends JPanel {
+public class ThongKeTuyenHuyChart extends JPanel {
 
     private JFreeChart chart;
     private CategoryPlot plot;
-    private NhanVienDao nhanVienDao;
+    private LichSuTraVeDao lichSuTraVeDao;
     private DefaultCategoryDataset dataset;
 
-    public ThongKeDoanhSoBanNhanVienChart() {
+    public ThongKeTuyenHuyChart() {
         setSize(new Dimension(getWidth(), 400));
-        nhanVienDao = new NhanVienDao();
+        lichSuTraVeDao = new LichSuTraVeDao();
         dataset = new DefaultCategoryDataset();
         chart = ChartFactory.createBarChart(
-                "Thống kê nhân viên bán hàng",
-                "Tên nhân viên",
-                "Doanh số bán của nhân viên đó",
+                "Thống kê số lượng hủy vé của mỗi chuyến",
+                "Tuyến tàu",
+                "Số lượng của vé đã hủy theo tuyến",
                 dataset, PlotOrientation.VERTICAL, false, false, false);
 
-        TextTitle textTitle = new TextTitle("Thống kê nhân viên bán hàng");
+        TextTitle textTitle = new TextTitle("Thống kê số lượng hủy vé của mỗi chuyến");
         textTitle.setFont(new Font(FlatRobotoFont.FAMILY, 1, 16));;
         chart.setTitle(textTitle);
+
+
         chart.setBorderPaint(Color.white);
         chart.setBorderVisible(false);
         chart.setBackgroundPaint(Color.white);
@@ -65,7 +68,7 @@ public class ThongKeDoanhSoBanNhanVienChart extends JPanel {
 
     public void loadDataset(LocalDate from, LocalDate to) {
         dataset.clear();
-        Map<String, Long> mapDataset = nhanVienDao.thongKeBanHangTheoNhanVien(from, to);
+        Map<String, Long> mapDataset = lichSuTraVeDao.thongKeSoLuongHuyVeTheoTuyen(from, to);
 
         for(Map.Entry<String, Long> entry : mapDataset.entrySet()) {
             dataset.addValue(entry.getValue(), "Tên nhân viên", entry.getKey());

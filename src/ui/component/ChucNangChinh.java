@@ -42,6 +42,7 @@ public final class ChucNangChinh extends JToolBar {
         btn.put("tim", new ButtonToolBar("TÌM CHUYẾN", "search.svg", "find"));
         btn.put("tim-khach-hang", new ButtonToolBar("KHÁCH HÀNG", "customer-bigger.svg", "find"));
         btn.put("in", new ButtonToolBar("IN HÓA ĐƠN", "printer-svgrepo-com.svg", "create"));
+        btn.put("thongke", new ButtonToolBar("THỐNG KÊ", "    statistical.svg", "create"));
     }
 
     public ButtonToolBar getToolbar(String title) {

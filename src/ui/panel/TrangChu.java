@@ -1,105 +1,122 @@
 package ui.panel;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
+import ui.component.ButtonCustom;
+import ui.component.Chart.ThongKeDoTuoiDiTauChart;
+import ui.component.Chart.ThongKeDoanhSoBanNhanVienChart;
+import ui.component.Chart.ThongKeDoanhSoVeDaBanVaHuyChart;
+import ui.component.Chart.ThongKeTuyenHuyChart;
+import ui.component.InputDate;
 import ui.component.PanelShadow;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import ui.dialog.timKhachHangDialog.TimKhachHangDialog;
 
 public class TrangChu extends JPanel {
 
-    JPanel top, center, bar1, bar2;
-    PanelShadow content[];
-    JPanel info[];
-    JLabel title, subTit, infoDetail[], objDetail[], objDetail1[], infoIcon[];
-        String[][] getSt = {
-        {"Tính chính xác", "tinhchinhxac_128px.svg", "<html>Mua bán vé tàu uy tín<br>đưa hành khách đến nơi,<br> về đến chốn</html>"},
-        {"Tính bảo mật", "tinhbaomat_128px.svg", "<html>Bảo mật thông tin khách hàng<br> Điều này giúp tăng uy tín cho <br> quầy Khu Vé.</html>"}
-    };
-    Color MainColor = new Color(255, 255, 255);
-    Color FontColor = new Color(96, 125, 139);
-    Color BackgroundColor = new Color(240, 247, 250);
-    Color HowerFontColor = new Color(225, 230, 232);
+    private ButtonCustom btnXem, btnReset;
+    private InputDate ngayBatDauInputDate;
+    private InputDate ngayKetThucInputDate;
+    private ThongKeDoanhSoBanNhanVienChart thongKeNhanVienPanel;
+    private ThongKeDoTuoiDiTauChart thongKeDoTuoiDiTauChart;
+    private ThongKeTuyenHuyChart thongKeTuyenHuyChart;
+    private ThongKeDoanhSoVeDaBanVaHuyChart thongKeDoanhSoVeDaBanVaHuyChart;
 
     private void initComponent() {
-        this.setBackground(new Color(24, 24, 24));
-        this.setBounds(0, 200, 300, 1200);
-        this.setLayout(new BorderLayout(0, 0));
-        this.setOpaque(true);
+        setBackground(Color.white);
+        setBounds(0, 200, 300, 1200);
+        setLayout(new BorderLayout(0, 0));
+        setOpaque(true);
 
-        top = new JPanel();
-        top.setBackground(MainColor);
-        top.setPreferredSize(new Dimension(1100, 200));
-        top.setLayout(new FlowLayout(1, 0, 10));
+        ngayBatDauInputDate = new InputDate("Ngày bắt đầu");
+        ngayKetThucInputDate = new InputDate("Ngày kết thúc");
+        ngayBatDauInputDate.setDate(LocalDate.now().minusDays(31));
+        ngayKetThucInputDate.setDate(LocalDate.now());
 
-        JLabel slogan = new JLabel();
-        slogan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/banner.jpg")));
-        top.add(slogan);
+        btnXem = new ButtonCustom("Xem thống kê", "success", 14);
+        btnXem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dungBieuDo();
+            }
+        });
 
-        this.add(top, BorderLayout.NORTH);
+        btnReset = new ButtonCustom("Reset", "danger", 14);
+        btnReset.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ngayBatDauInputDate.setDate(LocalDate.now().minusDays(31));
+                ngayKetThucInputDate.setDate(LocalDate.now());
 
-        center = new JPanel();
-        center.setBackground(BackgroundColor);
-        center.setPreferredSize(new Dimension(1100, 800));
-        center.setLayout(new FlowLayout(1, 50, 50));
+                dungBieuDo();
+            }
+        });
+        FlowLayout layout = new FlowLayout();
+        layout.setAlignment(FlowLayout.LEFT);
+        JPanel header = new JPanel(layout);
+        header.add(ngayBatDauInputDate);
+        header.add(ngayKetThucInputDate);
+        header.add(btnXem);
+        header.add(btnReset);
+        header.setBackground(Color.WHITE);
 
-        content = new PanelShadow[getSt.length];
-        info = new JPanel[3];
-        infoDetail = new JLabel[3];
-        objDetail = new JLabel[3];
-        objDetail1 = new JLabel[3];
+        thongKeDoanhSoVeDaBanVaHuyChart = new ThongKeDoanhSoVeDaBanVaHuyChart();
+        thongKeNhanVienPanel = new ThongKeDoanhSoBanNhanVienChart();
+        thongKeDoTuoiDiTauChart = new ThongKeDoTuoiDiTauChart();
+        thongKeTuyenHuyChart = new ThongKeTuyenHuyChart();
 
-        infoIcon = new JLabel[3];
+        JPanel chartGridGroup = new JPanel(new GridLayout(0 , 3, 10, 10));
 
-        for (int i = 0; i < getSt.length; i++) {
-              
-              content[i] = new PanelShadow(getSt[i][1], getSt[i][0], getSt[i][2]);
-              center.add(content[i]);
-//            content[i] = new PanelShadow();
-//            content[i].setPreferredSize(new Dimension(300, 450));
-//            content[i].setBackground(MainColor);
-//            content[i].setLayout(new FlowLayout(1, 0, 10));
-//
-//            info[i] = new JPanel();
-//            info[i].setPreferredSize(new Dimension(250, 150));
-//            info[i].setBackground(BackgroundColor);
-//            info[i].setLayout(null);
-//
-//            infoIcon[i] = new JLabel();
-//            infoIcon[i].setBounds(60, 20, 120, 120);
-//            infoIcon[i].setIcon(new javax.swing.ImageIcon(getClass().getResource(iconArr[i])));
-//            info[i].add(infoIcon[i]);
-//
-//            content[i].add(info[i]);
-//
-//            infoDetail[i] = new JLabel(tkArr[i]);
-//            infoDetail[i].setPreferredSize(new Dimension(190, 60));
-//            infoDetail[i].setFont(new Font("Segoe UI", Font.BOLD, 16));
-//            content[i].add(infoDetail[i]);
-//
-//            objDetail[i] = new JLabel(obj1Arr[i]);
-//            objDetail[i].setPreferredSize(new Dimension(220, 20));
-//            objDetail[i].setFont(new Font("Segoe UI", Font.PLAIN, 15));
-//            content[i].add(objDetail[i]);
-//
-//            objDetail[i] = new JLabel(obj2Arr[i]);
-//            objDetail[i].setPreferredSize(new Dimension(220, 20));
-//            objDetail[i].setFont(new Font("Segoe UI", Font.PLAIN, 15));
-//            content[i].add(objDetail[i]);
-//
-//            center.add(content[i]);
+        chartGridGroup.add(thongKeDoanhSoVeDaBanVaHuyChart);
+        chartGridGroup.add(thongKeDoTuoiDiTauChart);
+        chartGridGroup.add(thongKeTuyenHuyChart);
+        chartGridGroup.add(new ThongKeDoanhSoBanNhanVienChart());
+        chartGridGroup.add(new ThongKeDoanhSoBanNhanVienChart());
+        chartGridGroup.add(thongKeNhanVienPanel);
 
-        }
 
-        this.add(center, BorderLayout.CENTER);
 
+        add(header, BorderLayout.NORTH);
+        add(chartGridGroup, BorderLayout.CENTER);
     }
 
     public TrangChu() {
         initComponent();
         FlatIntelliJLaf.registerCustomDefaultsSource("style");
         FlatIntelliJLaf.setup();
+
+        dungBieuDo();
     }
 
+    private void dungBieuDo() {
+        try {
+            thongKeNhanVienPanel.loadDataset(
+                    ngayBatDauInputDate.getDateAsLocalDate(),
+                    ngayKetThucInputDate.getDateAsLocalDate()
+            );
 
+            thongKeDoTuoiDiTauChart.loadDataset(
+                    ngayBatDauInputDate.getDateAsLocalDate(),
+                    ngayKetThucInputDate.getDateAsLocalDate()
+            );
+
+            thongKeTuyenHuyChart.loadDataset(
+                    ngayBatDauInputDate.getDateAsLocalDate(),
+                    ngayKetThucInputDate.getDateAsLocalDate()
+            );
+
+            thongKeDoanhSoVeDaBanVaHuyChart.loadDataset(
+                    ngayBatDauInputDate.getDateAsLocalDate(),
+                    ngayKetThucInputDate.getDateAsLocalDate()
+            );
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }

@@ -4,11 +4,9 @@ import config.DatabaseUtil;
 import entity.NhanVien;
 
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -222,12 +220,12 @@ public class NhanVienDao implements IDao<NhanVien, Integer> {
     }
 
     public Map<String, Long> thongKeBanHangTheoNhanVien(LocalDate from, LocalDate to) {
-        Map<String, Long> mapDataset = new TreeMap<String, Long>();
+        Map<String, Long> mapDataset = new HashMap<>();
 
         try {
             String sql = "SELECT nv.MaNhanVien, nv.HoTen, SUM(hd.TongTien) as TongDoanhSo FROM NhanVien nv \n" +
                     "LEFT JOIN HoaDon hd ON hd.MaNhanVien = nv.MaNhanVien\n" +
-                    "WHERE (hd.ThoiGianTaoHoaDon BETWEEN ? AND ?)\n" +
+                    "WHERE CAST(hd.ThoiGianTaoHoaDon AS DATE) BETWEEN ? AND ?\n" +
                     "GROUP BY nv.MaNhanVien, nv.HoTen ";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setDate(1, Date.valueOf(from));
@@ -243,7 +241,6 @@ public class NhanVienDao implements IDao<NhanVien, Integer> {
         } catch (Exception e) {
             Logger.getLogger(NhanVienDao.class.getName()).log(Level.SEVERE, null, e);
         }
-
         return mapDataset;
     }
 }

@@ -4,15 +4,13 @@ import config.DatabaseUtil;
 import entity.*;
 import models.TraVeModel;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -139,8 +137,6 @@ public class LichSuTraVeDao implements IDao<LichSuTraVe, Integer> {
         return dsLichSuTheoSDT;
     }
 
-
-
     @Override
     public boolean them(LichSuTraVe entity) throws SQLException {
         return false;
@@ -206,5 +202,34 @@ public class LichSuTraVeDao implements IDao<LichSuTraVe, Integer> {
 
             return false;
         }
+    }
+
+    public Map<String, Long> thongKeSoLuongHuyVeTheoTuyen(LocalDate from, LocalDate to) {
+        Map<String, Long> mapDataset = new HashMap<>();
+
+        try {
+            String sql = "SELECT tuyen.MaTuyen, gaDi.TenGa as TenGaDi, gaDen.TenGa as TenGaDen, COUNT(*) SoLuongVeHuy FROM LichSuTraVe lstv\n" +
+                    "LEFT JOIN Ve ve ON ve.MaVe = lstv.MaVe\n" +
+                    "LEFT JOIN Tuyen tuyen ON ve.MaTuyen = tuyen.MaTuyen \n" +
+                    "LEFT JOIN Ga gaDi ON tuyen.MaGaDi = gaDi.MaGa \n" +
+                    "LEFT JOIN Ga gaDen ON tuyen.MaGaDen = gaDen.MaGa\n" +
+                    "WHERE  CAST(lstv.ThoiGianTraVe AS DATE) BETWEEN ? AND ?\n" +
+                    "GROUP BY tuyen.MaTuyen \n";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setDate(1, Date.valueOf(from));
+            pst.setDate(2, Date.valueOf(to));
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                String tenGaDi = rs.getString("TenGaDi");
+                String tenGaDen = rs.getString("TenGaDen");
+
+                Long soLuongVeHuy = rs.getLong("SoLuongVeHuy");
+                mapDataset.put(tenGaDi + " - " + tenGaDen, soLuongVeHuy);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(LichSuTraVeDao.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return mapDataset;
     }
 }
