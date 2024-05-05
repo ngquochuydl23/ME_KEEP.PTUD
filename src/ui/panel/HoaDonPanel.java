@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 
 import dao.HoaDonDao;
 import dao.KhachHangDao;
+import ui.dialog.chiTietHoaDonDialog.ChiTietHoaDonDialog;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -43,9 +44,7 @@ public final class HoaDonPanel extends JPanel {
         danhSachHoaDon = new ArrayList<HoaDon>();
         hoaDonDAO = new HoaDonDao();
         initComponent();
-        layDanhSachNhaGa();
         doDuLieuVaoBang();
-        layDanhSachLichSu();
     }
 
     public void initPadding() {
@@ -156,6 +155,8 @@ public final class HoaDonPanel extends JPanel {
                     public void actionPerformed(ActionEvent e) {
                         if (!kiemTraChonDong())
                             return;
+                        HoaDon hoaDon = layHoaDonDangChon();
+                        new ChiTietHoaDonDialog(hoaDon.getMaHoaDon()).setVisible(true);
                     }
                 });
 
@@ -214,7 +215,7 @@ public final class HoaDonPanel extends JPanel {
     private HoaDon layHoaDonDangChon() {
         int row = tableHoaDon.getSelectedRow();
         String maHoaDon = tblModel.getValueAt(row, 0).toString();
-
+        System.out.println(danhSachHoaDon);
         return danhSachHoaDon.stream()
                 .filter(item -> item.getMaHoaDon().equals(maHoaDon))
                 .findAny()
@@ -251,12 +252,6 @@ public final class HoaDonPanel extends JPanel {
         }
     }
 
-    private void layDanhSachNhaGa() {
-        String[] listNcc = {"Vui vẻ nha"};
-        listNcc = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listNcc)).toArray(String[]::new);
-        String[] listNv = {"Nhân viên thân thiện"};
-        listNv = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listNv)).toArray(String[]::new);
-    }
 
     private void xuatLichSuTraVeExcel() {
         try {
@@ -267,26 +262,18 @@ public final class HoaDonPanel extends JPanel {
         }
     }
 
-    private void layDanhSachLichSu() {
-        danhSachHoaDon = new ArrayList<>();
-    }
-
     public void doDuLieuVaoBang() {
         while (tblModel.getRowCount() > 0) {
             tblModel.removeRow(0);
-            ;
         }
-
-
         danhSachHoaDon = hoaDonDAO.layHet();
-        // Duyệt qua danh sách hóa đơn và thêm từng hóa đơn vào bảng
         for (HoaDon hoaDon : danhSachHoaDon) {
             tblModel.addRow(new Object[]{
                     hoaDon.getMaHoaDon(),
-                    hoaDon.getKhachHang().getHoTen(), // Thay thế bằng phương thức lấy tên khách hàng của bạn
-                    Formater.FormatVND(hoaDon.getTongTien()), // Thay thế bằng phương thức lấy tổng tiền của bạn
-                    Formater.FormatTime(hoaDon.getThoiGianTaoHoaDon()), // Thay thế bằng phương thức lấy thời gian tạo hóa đơn của bạn
-                    hoaDon.getGhiChu() //
+                    hoaDon.getKhachHang().getHoTen(),
+                    Formater.FormatVND(hoaDon.getTongTien()),
+                    Formater.FormatTime(hoaDon.getThoiGianTaoHoaDon()),
+                    hoaDon.getGhiChu()
             });
         }
     }

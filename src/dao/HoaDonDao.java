@@ -91,6 +91,11 @@ public class HoaDonDao implements IDao<HoaDon, String> {
         return null;
     }
 
+
+    public List<ChiTietHoaDon> layHetChiTietHoaDonTheoMaHoaDon() {
+        return new ArrayList<>();
+    }
+
     @Override
     public List<HoaDon> layHet() {
         List<HoaDon> dsHoaDon = new ArrayList<>();

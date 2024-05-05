@@ -3,7 +3,7 @@ package entity;
 import java.util.Objects;
 
 public class ChiTietHoaDon {
-    private double donGia; // đâsdsadsadsdada
+    private double donGia;
     private Ve ve;
     private HoaDon hoaDon;
 
