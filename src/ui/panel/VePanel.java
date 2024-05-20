@@ -80,7 +80,7 @@ public class VePanel extends JPanel {
         scrolltableVe = new JScrollPane();
         tblModel = new DefaultTableModel();
         tblModel.setColumnIdentifiers(
-                "Mã vé;Tên khách hàng;Tuyến;Tàu;Toa;Chỗ ngồi;Tình trạng;Tên hành khách;CCCD hành khách;".split(";"));
+                "Mã vé;Tuyến;Tàu;Toa;Chỗ ngồi;Tình trạng;Tên hành khách;CCCD hành khách;".split(";"));
         tableVe.setModel(tblModel);
         tableVe.setFocusable(false);
         scrolltableVe.setViewportView(tableVe);
@@ -209,16 +209,20 @@ public class VePanel extends JPanel {
         for (Map<String, Object> map : listMapVe) {
             ToaTau toaTau = (ToaTau) map.get("toa");
             Ve ve = (Ve) map.get("ve");
+            
+            String tinhTrang = ve.getTinhTrangVe() == 1 ? "<html><font color='green'>Đã bán</font></html>" : "<html><font color='red'>Đã hủy</font></html>";
+            
+            String cccd = "-1".equals(ve.getCccdNguoiDi()) ? "Không có CCCD" : ve.getCccdNguoiDi();
+            
             this.tblModel.addRow(new Object[] {
                     ve.getMaVe(),
-                    ve.getKhachHang().getHoTen(),
                     ve.getTuyen().getMaTuyen(),
                     ve.getTau().getTenTau(),
                     toaTau.getTenToa(),
                     ve.getSlot().getSoSlot(),
-                    ve.getTinhTrangVe(),
+                    tinhTrang,
                     ve.getHoTenNguoiDi(),
-                    ve.getCccdNguoiDi()
+                    cccd
             });
         }
     }
