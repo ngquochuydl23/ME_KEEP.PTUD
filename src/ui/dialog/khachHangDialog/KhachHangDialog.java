@@ -156,7 +156,19 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
                 return;
 
             if (khachHang == null) {
-                KhachHang result = khachHangDao.themVoiKieuTraVe(layThongTinKhachHangTuField());
+
+                KhachHang input = layThongTinKhachHangTuField();
+                if (khachHangDao.timTheoSDT(input.getSoDienThoai()) != null) {
+                    JOptionPane.showMessageDialog(this, "Số điện thoại này đã được sử dụng");
+                    return;
+                }
+
+                if (khachHangDao.timTheoCmnd(input.getCMND()) != null) {
+                    JOptionPane.showMessageDialog(this, "Số cmnd này đã được sử dụng");
+                    return;
+                }
+                KhachHang result = khachHangDao.themVoiKieuTraVe(input);
+
                 if (result != null) {
                     if (taoKhachHangListener != null) {
                         taoKhachHangListener.taoKhachHangThanhCong(result);
@@ -167,6 +179,18 @@ public class KhachHangDialog extends JDialog implements MouseListener, WindowLis
                     dispose();
                 }
             } else {
+                KhachHang input = layThongTinKhachHangTuField();
+
+                if (khachHangDao.timTheoSDT(input.getSoDienThoai()) != null) {
+                    JOptionPane.showMessageDialog(this, "Số điện thoại này đã được sử dụng");
+                    return;
+                }
+
+                if (khachHangDao.timTheoCmnd(input.getCMND()) != null) {
+                    JOptionPane.showMessageDialog(this, "Số cmnd này đã được sử dụng");
+                    return;
+                }
+
                 if (khachHangDao.sua(layThongTinKhachHangTuField())) {
                     if (suaKhachHangListener != null) {
                         suaKhachHangListener.suaKhachHangThanhCong(layThongTinKhachHangTuField());

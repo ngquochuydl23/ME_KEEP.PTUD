@@ -92,8 +92,57 @@ public class HoaDonDao implements IDao<HoaDon, String> {
     }
 
 
-    public List<ChiTietHoaDon> layHetChiTietHoaDonTheoMaHoaDon() {
-        return new ArrayList<>();
+    public List<ChiTietHoaDon> layHetChiTietHoaDonTheoMaHoaDon(String maHoaDonParam) {
+        List<ChiTietHoaDon> dsCthd = new ArrayList<>();
+
+        try {
+            String sql = "SELECT * FROM ChiTietHoaDon cthd \n" +
+                    "LEFT JOIN Ve ve ON ve.MaVe = cthd.MaVe\n" +
+                    "LEFT JOIN Slot slot ON ve.MaSlot  = slot.MaSlot \n" +
+                    "LEFT JOIN Khoang khoang ON khoang.MaKhoang = slot.MaKhoang\n" +
+                    "WHERE cthd.MaHoaDon = ?";
+
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, maHoaDonParam);
+            ResultSet rs = pst.executeQuery();
+
+
+            while (rs.next()) {
+
+
+                String maVe = rs.getString("MaVe");
+                int maKhachHang = rs.getInt("MaKhachHang");
+                String maTuyen = rs.getString("MaTuyen");
+                String maTau = rs.getString("MaTau");
+                String maSlot = rs.getString("MaSlot");
+                int tinhTrangVe = rs.getInt("TinhTrangVe");
+                String hoTenNguoiDi = rs.getString("HoTenNguoiDi");
+                String cccdNguoiDi = rs.getString("CCCDNguoiDi");
+                int namSinhNguoiDi = rs.getInt("NamSinhNguoiDi");
+
+
+                String maKhoang = rs.getString("MaKhoang");
+                String tenKhoang = rs.getString("TenKhoang");
+                String maToa = rs.getString("MaToa");
+                String maLoaiKhoang = rs.getString("MaLoaiKhoang");
+                Khoang khoang = new Khoang(maKhoang,  tenKhoang, new LoaiKhoang(maLoaiKhoang), new ToaTau(maToa));
+
+
+                int tinhTrangSlot = rs.getInt("TinhTrang");
+                int soSlot = rs.getInt("SoSlot");
+                Slot slot = new Slot(maSlot, soSlot, khoang, tinhTrangSlot);
+
+                Ve ve = new Ve(maVe, slot, new KhachHang(maKhachHang), new Tuyen(maTuyen), new Tau(maTau), hoTenNguoiDi, cccdNguoiDi, namSinhNguoiDi, tinhTrangVe);
+
+                String maHoaDon = rs.getString("MaHoaDon");
+                double donGia = rs.getDouble("DonGia");
+                dsCthd.add(new ChiTietHoaDon(new HoaDon(maHoaDon), ve,  donGia));
+            }
+        } catch (Exception e) {
+            Logger.getLogger(HoaDonDao.class.getName()).log(Level.SEVERE, null, e);
+        }
+
+        return dsCthd;
     }
 
     @Override

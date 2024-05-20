@@ -32,10 +32,11 @@ import java.util.List;
 import java.util.Locale;
 
 public class ChiTietHoaDonDialog extends JDialog {
+    private String maHoaDon;
     private HeaderTitle titlePage;
     private JPanel pnlMain;
     private JPanel pnlButtom;
-    private ButtonCustom tiepTucBtn, btnHuyBo;
+    private ButtonCustom  dongBtn;
     private InputForm tenKhachHangTextField;
     private InputForm cmndKhachHangTextField;
     private InputForm maKhachHangTextField;
@@ -46,31 +47,26 @@ public class ChiTietHoaDonDialog extends JDialog {
     private InputForm hoTenNhanVienField;
     private InputForm maNhanVienField;
     private InputForm vatTextField;
-    private InputForm soTienKhachDua;
     private HoaDonDao hoaDonDao;
     private JTable veTable;
     private DefaultTableModel veModel;
-    private HoaDon hoaDon;
-    private java.util.List<Slot> dsChoDaChon;
-    private KhachHang khachHang;
-    private double tongTien;
-    private double tongTienGiam;
 
-    private java.util.List<Ve> danhSachVe;
 
     public ChiTietHoaDonDialog(String maHoaDon) {
-        dsChoDaChon = new ArrayList<>();
-        danhSachVe = new ArrayList<>();
+        this.maHoaDon = maHoaDon;
+
         hoaDonDao = new HoaDonDao();
         initComponents();
+        getHoaDon(maHoaDon);
     }
 
     public void initComponents() {
-        setSize(new Dimension(900, 700));
+        setSize(new Dimension(900, 750));
         setLayout(new BorderLayout(0, 0));
 
-        titlePage = new HeaderTitle("Tạo hóa đơn");
-        pnlMain = new JPanel(new BorderLayout());
+        titlePage = new HeaderTitle("Hóa đơn: " + maHoaDon);
+        pnlMain = new JPanel();
+        pnlMain.setLayout(new BoxLayout(pnlMain, BoxLayout.Y_AXIS));
         pnlMain.setBackground(Color.white);
 
 
@@ -92,40 +88,33 @@ public class ChiTietHoaDonDialog extends JDialog {
                 .getTxtForm()
                 .setEnabled(false);
 
-        soTienKhachDua = new InputForm("Số tiền khách đưa", 400, 70);
-        soTienKhachDua.setBorder(new EmptyBorder(0, 5, 10, 5));
-        soTienKhachDua
-                .getTxtForm()
-                .setEnabled(true);
-
         Box tienBox = Box.createVerticalBox();
         tienBox.setBackground(Color.white);
         tienBox.setBorder(new TitledBorder("Thông tin thanh toán"));
         tienBox.add(soTienTamTinhTextField);
         tienBox.add(vatTextField);
         tienBox.add(tongTienTextField);
-        tienBox.add(soTienKhachDua);
 
         // -----------------KHACH HANG ----------------------
         maKhachHangTextField = new InputForm("Mã khách hàng", 100, 60);
         maKhachHangTextField
                 .getTxtForm()
-                .setEnabled(false);
+                .setEditable(false);
 
         tenKhachHangTextField = new InputForm("Tên khách hàng", 760, 60);
         tenKhachHangTextField
                 .getTxtForm()
-                .setEnabled(false);
+                .setEditable(false);
 
         soDienThoaiTextField = new InputForm("Số điện thoại", 400, 60);
         soDienThoaiTextField
                 .getTxtForm()
-                .setEnabled(false);
+                .setEditable(false);
 
         cmndKhachHangTextField = new InputForm("Chứng minh nhân dân", 400, 60);
         cmndKhachHangTextField
                 .getTxtForm()
-                .setEnabled(false);
+                .setEditable(false);
 
         JPanel maHoTenKHPanel = new JPanel(new FlowLayout());
         maHoTenKHPanel.setBackground(Color.white);
@@ -139,18 +128,15 @@ public class ChiTietHoaDonDialog extends JDialog {
         khachHangPanel.add(cmndKhachHangTextField);
 
 
-
-
-
         maNhanVienField = new InputForm("Mã nhân viên", 100, 60);
         maNhanVienField
                 .getTxtForm()
-                .setEnabled(false);
+                .setEditable(false);
 
         hoTenNhanVienField = new InputForm("Tên nhân viên", 760, 60);
         hoTenNhanVienField
                 .getTxtForm()
-                .setEnabled(false);
+                .setEditable(false);
 
         JPanel maHoTenNVPanel = new JPanel(new FlowLayout());
         maHoTenNVPanel.setBackground(Color.white);
@@ -162,62 +148,51 @@ public class ChiTietHoaDonDialog extends JDialog {
         nhanVienPanel.add(maHoTenNVPanel);
 
 
-
-
-        veModel = new DefaultTableModel("Mã vé;Tên người đi;CCCD người đi;Chỗ ngồi;Tên toa;Giá vé".split(";"), 0);
+        veModel = new DefaultTableModel("Mã vé;Tên người đi;CCCD người đi;Chỗ ngồi;Tên khoang;Giá vé".split(";"), 0);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
         veTable = new JTable(veModel);
-        veTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
-        veTable.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
-        veTable.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
 
-        JScrollPane veTablePanel = new JScrollPane(veTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        JPanel veTablePanel = new JPanel(new BorderLayout());
         veTablePanel.setBorder(new TitledBorder("Thông tin vé"));
+        veTablePanel.setBackground(Color.white);
+        veTablePanel.add(veTable);
 
         Box mainBox = Box.createVerticalBox();
         mainBox.add(khachHangPanel);
         mainBox.add(nhanVienPanel);
-        pnlMain.add(mainBox, BorderLayout.NORTH);
-        pnlMain.add(veTablePanel, BorderLayout.CENTER);
+        pnlMain.add(mainBox);
+        pnlMain.add(veTablePanel);
+        pnlMain.add(tienBox);
 
         pnlButtom = new JPanel(new FlowLayout());
         pnlButtom.setBorder(new EmptyBorder(10, 0, 10, 0));
         pnlButtom.setBackground(Color.white);
 
-        tiepTucBtn = new ButtonCustom("Tiếp tục", "success", 14, 100, 40);
-        btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14, 100, 40);
+        dongBtn = new ButtonCustom("Đóng", "danger", 14, 100, 40);
 
-        btnHuyBo.addActionListener(new ActionListener() {
+        dongBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn hủy thanh toán?") == 0) {
-                    xoaDuLieu();
-                    dispose();
-                }
+
+                xoaDuLieu();
+                dispose();
             }
         });
 
-        tiepTucBtn.setEnabled(true);
 
-        pnlButtom.add(tiepTucBtn);
-        pnlButtom.add(btnHuyBo);
+        pnlButtom.add(dongBtn);
 
         add(titlePage, BorderLayout.NORTH);
-        add(pnlMain, BorderLayout.CENTER);
+        add(new JScrollPane(pnlMain, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
         add(pnlButtom, BorderLayout.SOUTH);
         setLocationRelativeTo(null);
     }
 
 
-
-
     private void xoaDuLieu() {
-        danhSachVe.clear();
-        toaTau = null;
-        khachHang = null;
 
         maKhachHangTextField.setText("");
         tenKhachHangTextField.setText("");
@@ -241,8 +216,42 @@ public class ChiTietHoaDonDialog extends JDialog {
         }
     }
 
-
     private void getHoaDon(String maHoaDon) {
+        HoaDon hoaDon = hoaDonDao.layTheoMa(maHoaDon);
 
+        KhachHang khachHang = hoaDon.getKhachHang();
+        maKhachHangTextField.setText(String.valueOf(khachHang.getMaKhachHang()));
+        maKhachHangTextField.setEditable(false);
+        tenKhachHangTextField.setText(khachHang.getHoTen());
+        tenKhachHangTextField.setEditable(false);
+        soDienThoaiTextField.setText(khachHang.getSoDienThoai());
+        soDienThoaiTextField.setEditable(false);
+        cmndKhachHangTextField.setText(khachHang.getCMND());
+        cmndKhachHangTextField.setEditable(false);
+
+
+        NhanVien nhanVienBanHang = hoaDon.getNhanVien();
+        maNhanVienField.setText(String.valueOf(nhanVienBanHang.getMaNhanVien()));
+        maNhanVienField.setEditable(false);
+        hoTenNhanVienField.setText(nhanVienBanHang.getHoTen());
+        hoTenNhanVienField.setEditable(false);
+
+        for (ChiTietHoaDon cthd : hoaDonDao.layHetChiTietHoaDonTheoMaHoaDon(maHoaDon)) {
+            Ve ve = cthd.getVe();
+
+            veModel.addRow(new String[] {
+                ve.getMaVe(),
+                    ve.getHoTenNguoiDi(),
+                    ve.getCccdNguoiDi(),
+                    "Chỗ ngồi " + ve.getSlot().getSoSlot(),
+                    ve.getSlot().getKhoang().getTenKhoang(),
+                    Formater.FormatVND(cthd.getDonGia())
+            });
+        }
+
+
+        soTienTamTinhTextField.setText(Formater.FormatVND(hoaDon.getTamTinh()));
+        vatTextField.setText((hoaDon.getVat() * 100) + "%");
+        tongTienTextField.setText(Formater.FormatVND(hoaDon.getTongTien()));
     }
 }
