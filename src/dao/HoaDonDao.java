@@ -145,6 +145,54 @@ public class HoaDonDao implements IDao<HoaDon, String> {
         return dsCthd;
     }
 
+    public List<HoaDon> layTheoSoDienThoaiVaThoiGianTaoHoaDon(String soDienThoai, LocalDate thoiGianTaoVe) {
+        List<HoaDon> dsHoaDon = new ArrayList<>();
+        try {
+        	LocalDateTime startOfDay = thoiGianTaoVe.atStartOfDay();
+            LocalDateTime endOfDay = thoiGianTaoVe.atStartOfDay().plusDays(1).minusSeconds(1);
+            
+            String sql = "SELECT hd.*, kh.HoTen, kh.SoDienThoai, kh.ThoiGianDangKy, kh.LaKhachHangThanThiet " +
+                         "FROM HoaDon hd " +
+                         "JOIN KhachHang kh ON hd.MaKhachHang = kh.MaKhachHang " +
+                         "WHERE kh.SoDienThoai = ? AND hd.ThoiGianTaoHoaDon BETWEEN ? AND ?";
+
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, soDienThoai);
+            pst.setTimestamp(2, Timestamp.valueOf(startOfDay));
+            pst.setTimestamp(3, Timestamp.valueOf(endOfDay));
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                String maHoaDon = rs.getString("MaHoaDon");
+                LocalDateTime thoiGianTaoHoaDon = rs.getTimestamp("ThoiGianTaoHoaDon").toLocalDateTime();
+                String ghiChu = rs.getString("GhiChu");
+                double vat = rs.getDouble("VAT");
+
+                int maKhachHang = rs.getInt("MaKhachHang");
+                int maNhanVien = rs.getInt("MaNhanVien");
+                String maKhuyenMai = rs.getString("MaKhuyenMai");
+                double tongTien = rs.getDouble("TongTien");
+                double tamTinh = rs.getDouble("TamTinh");
+                double tongTienGiam = rs.getDouble("TongTienGiam");
+
+                // Lấy thông tin của khách hàng từ ResultSet
+                String hoTenKhachHang = rs.getString("HoTen");
+                String soDienThoaiKhachHang = rs.getString("SoDienThoai");
+                LocalDateTime thoiGianDangKy = rs.getTimestamp("ThoiGianDangKy").toLocalDateTime();
+                boolean laKhachHangThanThiet = rs.getBoolean("LaKhachHangThanThiet");
+
+                KhachHang khachHang = new KhachHang(maKhachHang, hoTenKhachHang, soDienThoaiKhachHang, thoiGianDangKy,
+                        laKhachHangThanThiet);
+                dsHoaDon.add(new HoaDon(maHoaDon, thoiGianTaoHoaDon, ghiChu, vat, tongTien, tamTinh, tongTienGiam,
+                        khachHang, new NhanVien(maNhanVien), new KhuyenMai(maKhuyenMai)));
+            }
+        } catch (Exception e) {
+            Logger.getLogger(HoaDonDao.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return dsHoaDon;
+    }
+
+    
     @Override
     public List<HoaDon> layHet() {
         List<HoaDon> dsHoaDon = new ArrayList<>();

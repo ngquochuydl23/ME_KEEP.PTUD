@@ -4,6 +4,7 @@ import helper.Formater;
 import ui.component.*;
 import entity.HoaDon;
 import entity.KhachHang;
+import entity.LichSuTraVe;
 import helper.JTableExporter;
 import helper.Validation;
 
@@ -22,6 +23,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.List;
@@ -116,7 +118,7 @@ public final class HoaDonPanel extends JPanel {
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        ChucNangChinh chucNangChinh = new ChucNangChinh(new String[]{"chi-tiet", "nhap-excel", "xuat-excel"});
+        ChucNangChinh chucNangChinh = new ChucNangChinh(new String[]{"tim","chi-tiet", "nhap-excel", "xuat-excel"});
         functionBar.add(chucNangChinh);
         contentCenter.add(functionBar, BorderLayout.NORTH);
 
@@ -148,6 +150,23 @@ public final class HoaDonPanel extends JPanel {
             }
         });
 
+        chucNangChinh
+		.getToolbar("tim")
+		.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (!validation() || !kiemTraNgayTaoHoaDon()) return;
+                
+                clearDanhSach();
+                try {
+					layHoaDonTheoYeuCau();
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
+            }
+		});
+        
         chucNangChinh
                 .getToolbar("chi-tiet")
                 .addActionListener(new ActionListener() {
@@ -189,6 +208,21 @@ public final class HoaDonPanel extends JPanel {
         main.add(scrollTableHoaDon);
     }
 
+    private void layHoaDonTheoYeuCau() throws ParseException {
+        danhSachHoaDon = hoaDonDAO.layTheoSoDienThoaiVaThoiGianTaoHoaDon(soDienThoaiInputForm.getText(), thoiGianTaoHoaDonInputDate.getDateAsLocalDate());
+		tblModel.setRowCount(0);
+
+        for (HoaDon hoaDon : danhSachHoaDon) {
+            tblModel.addRow(new Object[]{
+                    hoaDon.getMaHoaDon(),
+                    hoaDon.getKhachHang().getHoTen(),
+                    Formater.FormatVND(hoaDon.getTongTien()),
+                    Formater.FormatTime(hoaDon.getThoiGianTaoHoaDon()),
+                    hoaDon.getGhiChu()
+            });
+        }
+    }
+    
     public void layDanhSachHoaDonTheoTieuChi() {
         try {
             String soDienThoai = soDienThoaiInputForm.getText().trim();
@@ -252,7 +286,20 @@ public final class HoaDonPanel extends JPanel {
         }
     }
 
-
+    private boolean validation() {
+        String soDienThoai = soDienThoaiInputForm.getText();
+        if (soDienThoai.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập số điện thoại khách hàng");
+            return false;
+        }
+        return true;
+    }
+    
+    public void clearDanhSach() {
+        danhSachHoaDon.clear();
+        tblModel.setRowCount(0); 
+    }
+    
     private void xuatLichSuTraVeExcel() {
         try {
             JTableExporter.exportJTableToExcel(tableHoaDon);

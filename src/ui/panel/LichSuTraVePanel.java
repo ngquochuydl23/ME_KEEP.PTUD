@@ -153,7 +153,7 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
 		                
 		                clearDanhSachLichSu();
 		                try {
-							layLichSuTraVeTaiDong();
+		                	layLichSuTraVeTheoYeuCau();
 						} catch (ParseException e1) {
 							e1.printStackTrace();
 						}
@@ -204,15 +204,15 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
 
     }
 
-//    private LichSuTraVe layLichSuTraVeTaiDong() {
-//        int row = tableLichSuTraVe.getSelectedRow();
-//        int maLichSuTraVe = Integer.parseInt(tblModel.getValueAt(row, 0).toString());
-//
-//        return danhSachLichSuTraVe.stream()
-//                .filter(item -> item.getMaLichSuTraVe() == maLichSuTraVe)
-//                .findAny()
-//                .orElse(null);
-//    }
+    private LichSuTraVe layLichSuTraVeTaiDong() {
+        int row = tableLichSuTraVe.getSelectedRow();
+        int maLichSuTraVe = Integer.parseInt(tblModel.getValueAt(row, 0).toString());
+
+        return danhSachLichSuTraVe.stream()
+                .filter(item -> item.getMaLichSuTraVe() == maLichSuTraVe)
+                .findAny()
+                .orElse(null);
+    }
 
     private boolean kiemTraChonDong() {
         if (tableLichSuTraVe.getSelectedRow() < 0) {
@@ -274,8 +274,8 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
             });
         }
     }
-    private void layLichSuTraVeTaiDong() throws ParseException {
-        danhSachLichSuTraVe = lichSuTraVeDao.layTheoSoDienThoai(soDienThoaiInputForm.getText(), thoiGianTraVe.getDateAsLocalDate());
+    private void layLichSuTraVeTheoYeuCau() throws ParseException {
+        danhSachLichSuTraVe = lichSuTraVeDao.layTheoSoDienThoaiVaThoiGianTraVe(soDienThoaiInputForm.getText(), thoiGianTraVe.getDateAsLocalDate());
 		tblModel.setRowCount(0);
 
 		for (LichSuTraVe item : danhSachLichSuTraVe) {

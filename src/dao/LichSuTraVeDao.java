@@ -82,23 +82,22 @@ public class LichSuTraVeDao implements IDao<LichSuTraVe, Integer> {
         return dsLichSuTraVe;
     }
 
-    public List<LichSuTraVe> layTheoSoDienThoai(String soDienThoai, LocalDate thoiGianTV) {
-        List<LichSuTraVe> dsLichSuTheoSDT = new ArrayList<>();
+    public List<LichSuTraVe> layTheoSoDienThoaiVaThoiGianTraVe(String soDienThoai, LocalDate ThoiGianTV) {
+        List<LichSuTraVe> dsLichSuTraVe = new ArrayList<>();
         try {
-        	LocalDateTime startOfDay = thoiGianTV.atStartOfDay();
-            LocalDateTime endOfDay = thoiGianTV.atStartOfDay().plusDays(1).minusSeconds(1);
+        	LocalDateTime startOfDay = ThoiGianTV.atStartOfDay();
+            LocalDateTime endOfDay = ThoiGianTV.atStartOfDay().plusDays(1).minusSeconds(1);
+            String sql ="SELECT * FROM quanlibanve.LichSuTraVe ls\n" +
+                        "LEFT JOIN KhachHang kh ON kh.MaKhachHang = ls.MaKhachHang \n" +
+                        "LEFT JOIN Ve ve ON ve.MaVe = ls.MaVe \n" +
+                        "LEFT JOIN Slot slot ON slot.MaSlot = ve.MaSlot \n" +
+                        "WHERE kh.SoDienThoai = ? AND ls.ThoiGianTraVe BETWEEN ? AND ?\n" +
+                        "ORDER BY ls.ThoiGianTraVe DESC";
 
-            String sql = "SELECT * FROM quanlibanve.LichSuTraVe ls " +
-                         "LEFT JOIN KhachHang kh ON kh.MaKhachHang = ls.MaKhachHang " +
-                         "LEFT JOIN Ve ve ON ve.MaVe = ls.MaVe " +
-                         "LEFT JOIN Slot slot ON slot.MaSlot = ve.MaSlot " +
-                         "WHERE kh.SoDienThoai = ? OR ls.ThoiGianTraVe BETWEEN ? AND ? " +
-                         "ORDER BY ls.ThoiGianTraVe DESC";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, soDienThoai);
             pst.setTimestamp(2, Timestamp.valueOf(startOfDay));
             pst.setTimestamp(3, Timestamp.valueOf(endOfDay));
-
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
@@ -107,36 +106,40 @@ public class LichSuTraVeDao implements IDao<LichSuTraVe, Integer> {
                 String ghiChu = rs.getString("GhiChu");
                 int maNhanVien = rs.getInt("MaNhanVienThucHien");
 
+                // KhachHang
                 int maKhachHang = rs.getInt("kh.MaKhachHang");
                 String hoTen = rs.getString("kh.HoTen");
                 String soDienThoaiKH = rs.getString("kh.SoDienThoai");
                 String cmnd = rs.getString("kh.CMND");
                 KhachHang khachHang = new KhachHang(maKhachHang, hoTen, soDienThoaiKH, cmnd);
 
+                // Slot
                 String maSlot = rs.getString("slot.MaSlot");
                 int soSlot = rs.getInt("slot.SoSlot");
                 int tinhTrang = rs.getInt("slot.TinhTrang");
                 String maKhoang = rs.getString("slot.MaKhoang");
                 Slot slot = new Slot(maSlot, soSlot, new Khoang(maKhoang), tinhTrang);
 
+                // Ve
+                String maTuyen = rs.getString("ve.MaTuyen");
+                String maTau = rs.getString("ve.MaTau");
                 String maVe = rs.getString("ve.MaVe");
                 String hoTenNguoiDi = rs.getString("ve.HoTenNguoiDi");
                 String cccdNguoiDi = rs.getString("ve.CCCDNguoiDi");
                 int namSinhNguoiDi = rs.getInt("ve.NamSinhNguoiDi");
                 int tinhTrangVe = rs.getInt("ve.TinhTrangVe");
-                Ve ve = new Ve(maVe, slot, khachHang, null, null, hoTenNguoiDi, cccdNguoiDi, namSinhNguoiDi, tinhTrangVe);
+                Ve ve = new Ve(maVe, slot, khachHang, new Tuyen(maTuyen), new Tau(maTau), hoTenNguoiDi, cccdNguoiDi, namSinhNguoiDi, tinhTrangVe);
 
                 double phiTraVe = rs.getDouble("ls.PhiTraVe");
                 String loaiTraVe = rs.getString("ls.LoaiTraVe");
 
-                dsLichSuTheoSDT.add(new LichSuTraVe(maLichSuTraVe, thoiGianTraVe, ghiChu, phiTraVe, loaiTraVe, khachHang, new NhanVien(maNhanVien), ve));
+                dsLichSuTraVe.add(new LichSuTraVe(maLichSuTraVe, thoiGianTraVe, ghiChu, phiTraVe, loaiTraVe, khachHang, new NhanVien(maNhanVien), ve));
             }
         } catch (Exception e) {
             Logger.getLogger(LichSuTraVeDao.class.getName()).log(Level.SEVERE, null, e);
         }
-        return dsLichSuTheoSDT;
+        return dsLichSuTraVe;
     }
-
     @Override
     public boolean them(LichSuTraVe entity) throws SQLException {
         return false;
