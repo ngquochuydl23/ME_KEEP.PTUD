@@ -3,6 +3,7 @@ package ui.panel;
 import ui.component.*;
 import entity.LichSuTraVe;
 import helper.JTableExporter;
+import ui.dialog.taoYeuCauDoiVeDialog.TaoYeuCauDoiVeDialog;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -34,9 +35,11 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
     private InputDate thoiGianTraVe;
     private InputForm soDienThoaiInputForm;
     private List<LichSuTraVe> danhSachLichSuTraVe;
-
+    private TaoYeuCauDoiVeDialog taoYeuCauDoiVeDialog;
 
     public YeuCauDoiVePanel() {
+
+        taoYeuCauDoiVeDialog = new TaoYeuCauDoiVeDialog();
         initComponent();
         layDanhSachNhaGa();
         layDanhSachLichSu();
@@ -111,7 +114,7 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        ChucNangChinh chucNangChinh = new ChucNangChinh(new String[]{"chi-tiet", "nhap-excel", "xuat-excel"});
+        ChucNangChinh chucNangChinh = new ChucNangChinh(new String[]{"them", "chi-tiet", "nhap-excel", "xuat-excel"});
         functionBar.add(chucNangChinh);
         contentCenter.add(functionBar, BorderLayout.NORTH);
 
@@ -144,6 +147,15 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
 //                System.out.println("TextField được click");
 //            }
 //        });
+
+        chucNangChinh
+                .getToolbar("them")
+                .addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        taoYeuCauDoiVeDialog.setVisible(true);
+                    }
+                });
 
         chucNangChinh
                 .getToolbar("chi-tiet")
@@ -306,16 +318,16 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
 
     private void layDanhSachLichSu() {
         danhSachLichSuTraVe = new ArrayList<>();
-      //  Ve ve = new Ve( "tphcm-quynhon",  20,  1000000,  null,  1,  new LoaiKhoang("giuong-nam-khoang-4"), null);
+        //  Ve ve = new Ve( "tphcm-quynhon",  20,  1000000,  null,  1,  new LoaiKhoang("giuong-nam-khoang-4"), null);
         entity.KhachHang kh = new entity.KhachHang(1, "Owen Shaw", "0868684961", LocalDateTime.now(), false);
         //LichSuTraVe ls = new LichSuTraVe(1, LocalDateTime.of(2023, 03, 23, 12, 30, 50), "Khong co", kh, ve);
         //danhSachLichSuTraVe.add(ls);
 
         for (LichSuTraVe item : danhSachLichSuTraVe) {
-            tblModel.addRow(new String[] {
+            tblModel.addRow(new String[]{
                     item.getVe().getMaVe(),
                     item.getKhachHang().getHoTen(),
-                 //   String.valueOf(item.getVe().getChoNgoi()),
+                    //   String.valueOf(item.getVe().getChoNgoi()),
                     item.getThoiGianTraVe().toString(),
                     item.getGhiChu()
             });

@@ -1,32 +1,6 @@
 package ui.panel;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-
 import dao.VeDao;
-import entity.KhuyenMai;
 import entity.ToaTau;
 import entity.Ve;
 import ui.component.ChucNangChinh;
@@ -34,8 +8,16 @@ import ui.component.IntegratedSearch;
 import ui.component.PanelBorderRadius;
 import ui.component.TableSorter;
 import ui.dialog.chiTietVeDialog.CapNhatVeListener;
-import ui.dialog.khuyenMaiDialog.KhuyenMaiDialog;
 import ui.dialog.veDialog.VeDialog;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * VePanel
@@ -126,7 +108,7 @@ public class VePanel extends JPanel {
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         chucNangChinh = new ChucNangChinh(
-                new String[] { "sua", "chi-tiet", "xuat-excel" });
+                new String[]{"sua", "chi-tiet", "xuat-excel"});
 
         chucNangChinh
                 .getToolbar("sua")
@@ -153,7 +135,7 @@ public class VePanel extends JPanel {
         functionBar.add(chucNangChinh);
 
         search = new IntegratedSearch(
-                new String[] { "Tất cả", "Mã khuyến mãi", "Tỉ lệ giảm", "Khách hàng thân thiết", "Số điện thoại" });
+                new String[]{"Tất cả", "Mã khuyến mãi", "Tỉ lệ giảm", "Khách hàng thân thiết", "Số điện thoại"});
         search.btnReset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -209,20 +191,21 @@ public class VePanel extends JPanel {
         for (Map<String, Object> map : listMapVe) {
             ToaTau toaTau = (ToaTau) map.get("toa");
             Ve ve = (Ve) map.get("ve");
-            
+
+            Boolean daHuyVe = ve.getTinhTrangVe() == 0;
             String tinhTrang = ve.getTinhTrangVe() == 1 ? "<html><font color='green'>Đã bán</font></html>" : "<html><font color='red'>Đã hủy</font></html>";
-            
+
             String cccd = "-1".equals(ve.getCccdNguoiDi()) ? "Không có CCCD" : ve.getCccdNguoiDi();
-            
-            this.tblModel.addRow(new Object[] {
+
+            this.tblModel.addRow(new Object[]{
                     ve.getMaVe(),
                     ve.getTuyen().getMaTuyen(),
                     ve.getTau().getTenTau(),
                     toaTau.getTenToa(),
                     ve.getSlot().getSoSlot(),
                     tinhTrang,
-                    ve.getHoTenNguoiDi(),
-                    cccd
+                    daHuyVe ? "" : ve.getHoTenNguoiDi(),
+                    daHuyVe ? "" : cccd
             });
         }
     }

@@ -8,15 +8,13 @@ public class HoaDon {
     private LocalDateTime thoiGianTaoHoaDon;
     private String ghiChu;
     private double vat;
-
     private double tongTien;
     private double tamTinh;
     private double tongTienGiam;
-
     private KhachHang khachHang;
     private NhanVien nhanVien;
-
     private KhuyenMai khuyenMai;
+
     public HoaDon() {}
 
     public HoaDon(String maHoaDon, LocalDateTime thoiGianTaoHoaDon, String ghiChu, double vat, double tongTien, double tamTinh, double tongTienGiam, KhachHang khachHang, NhanVien nhanVien, KhuyenMai khuyenMai) {

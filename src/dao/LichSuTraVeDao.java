@@ -82,22 +82,22 @@ public class LichSuTraVeDao implements IDao<LichSuTraVe, Integer> {
         return dsLichSuTraVe;
     }
 
-    public List<LichSuTraVe> layTheoSoDienThoaiVaThoiGianTraVe(String soDienThoai, LocalDate ThoiGianTV) {
+    public List<LichSuTraVe> layTheoSoDienThoaiVaThoiGianTraVe(String soDienThoai, LocalDate thoiGianTV) {
         List<LichSuTraVe> dsLichSuTraVe = new ArrayList<>();
         try {
-        	LocalDateTime startOfDay = ThoiGianTV.atStartOfDay();
-            LocalDateTime endOfDay = ThoiGianTV.atStartOfDay().plusDays(1).minusSeconds(1);
+
             String sql ="SELECT * FROM quanlibanve.LichSuTraVe ls\n" +
                         "LEFT JOIN KhachHang kh ON kh.MaKhachHang = ls.MaKhachHang \n" +
                         "LEFT JOIN Ve ve ON ve.MaVe = ls.MaVe \n" +
                         "LEFT JOIN Slot slot ON slot.MaSlot = ve.MaSlot \n" +
-                        "WHERE kh.SoDienThoai = ? AND ls.ThoiGianTraVe BETWEEN ? AND ?\n" +
+                        "WHERE kh.SoDienThoai = ? AND YEAR(ls.ThoiGianTraVe) = ? AND MONTH(ls.ThoiGianTraVe) = ? AND DAY(ls.ThoiGianTraVe) = ?\n" +
                         "ORDER BY ls.ThoiGianTraVe DESC";
 
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, soDienThoai);
-            pst.setTimestamp(2, Timestamp.valueOf(startOfDay));
-            pst.setTimestamp(3, Timestamp.valueOf(endOfDay));
+            pst.setInt(2, thoiGianTV.getYear());
+            pst.setInt(3, thoiGianTV.getMonthValue());
+            pst.setInt(4, thoiGianTV.getDayOfMonth());
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {

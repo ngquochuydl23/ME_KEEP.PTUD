@@ -158,11 +158,14 @@ public class ChiTietHoaDonDialog extends JDialog {
         JPanel veTablePanel = new JPanel(new BorderLayout());
         veTablePanel.setBorder(new TitledBorder("Thông tin vé"));
         veTablePanel.setBackground(Color.white);
-        veTablePanel.add(veTable);
+        JScrollPane scrollPane = new JScrollPane(veTable);
+        scrollPane.setPreferredSize(scrollPane.getPreferredSize());
+        veTablePanel.add(scrollPane);
 
         Box mainBox = Box.createVerticalBox();
         mainBox.add(khachHangPanel);
         mainBox.add(nhanVienPanel);
+
         pnlMain.add(mainBox);
         pnlMain.add(veTablePanel);
         pnlMain.add(tienBox);
