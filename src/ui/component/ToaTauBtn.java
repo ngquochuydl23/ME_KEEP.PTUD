@@ -41,8 +41,9 @@ public class ToaTauBtn extends JButton implements MouseListener {
 
         // Tạo một panel để chứa biểu tượng và văn bản
         container = new JPanel();
-        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS)); // Đặt layout là FlowLayout với canh giữa và không có// khoảng cách
-        container.putClientProperty( FlatClientProperties.STYLE,
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS)); // Đặt layout là FlowLayout với canh giữa và
+                                                                         // không có// khoảng cách
+        container.putClientProperty(FlatClientProperties.STYLE,
                 "background: tint(@background,50%);" +
                         "border: 16,16,16,16,shade(@background,10%),,8;");
         container.add(iconLabel);
@@ -57,12 +58,12 @@ public class ToaTauBtn extends JButton implements MouseListener {
         // Đặt panel làm nội dung của JButton
         setLayout(new BorderLayout());
         add(container, BorderLayout.CENTER);
-//        addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                setSeleted(!isSeleted);
-//            }
-//        });
+        // addActionListener(new ActionListener() {
+        // @Override
+        // public void actionPerformed(ActionEvent e) {
+        // setSeleted(!isSeleted);
+        // }
+        // });
     }
 
     public static ToaTauBtn taoToa1Khoang50Slot(ToaTau toaTau, List<SlotBtn> dsBtnSlot) {
@@ -81,12 +82,13 @@ public class ToaTauBtn extends JButton implements MouseListener {
 
         List<SlotBtn> seatsOfEachCabin = new ArrayList<>();
 
-        for(SlotBtn slotBtn : dsBtnSlot) {
+        for (SlotBtn slotBtn : dsBtnSlot) {
             Slot slot = slotBtn.getSlot();
             seatsOfEachCabin.add(slotBtn);
 
-            if (slot.getSoSlot()  % 6 == 0) {
-                toaTauBtn.themKhoangTau(new KhoangBtn(slot.getKhoang().getMaKhoang(),toaTau, new ArrayList<>(seatsOfEachCabin)));
+            if (slot.getSoSlot() % 6 == 0) {
+                toaTauBtn.themKhoangTau(
+                        new KhoangBtn(slot.getKhoang().getMaKhoang(), toaTau, new ArrayList<>(seatsOfEachCabin)));
                 seatsOfEachCabin.clear();
             }
         }
@@ -98,12 +100,13 @@ public class ToaTauBtn extends JButton implements MouseListener {
 
         List<SlotBtn> seatsOfEachCabin = new ArrayList<>();
 
-        for(SlotBtn slotBtn : dsBtnSlot) {
+        for (SlotBtn slotBtn : dsBtnSlot) {
             Slot slot = slotBtn.getSlot();
             seatsOfEachCabin.add(slotBtn);
 
-            if (slot.getSoSlot()  % 4 == 0) {
-                toaTauBtn.themKhoangTau(new KhoangBtn(slot.getKhoang().getMaKhoang(),toaTau, new ArrayList<>(seatsOfEachCabin)));
+            if (slot.getSoSlot() % 4 == 0) {
+                toaTauBtn.themKhoangTau(
+                        new KhoangBtn(slot.getKhoang().getMaKhoang(), toaTau, new ArrayList<>(seatsOfEachCabin)));
                 seatsOfEachCabin.clear();
             }
         }
@@ -118,19 +121,19 @@ public class ToaTauBtn extends JButton implements MouseListener {
         return khoangBtns;
     }
 
-
-
     public void setSeleted(boolean isSeleted) {
         this.isSeleted = isSeleted;
 
         if (isSeleted) {
-            container.putClientProperty( FlatClientProperties.STYLE,
+            container.putClientProperty(FlatClientProperties.STYLE,
                     "background: rgb(199, 18, 190);" +
                             "border: 16,16,16,16,shade(rgb(199, 18, 190),10%),,8;");
+            container.setBackground(new Color(199, 18, 190));
         } else {
-            container.putClientProperty( FlatClientProperties.STYLE,
+            container.putClientProperty(FlatClientProperties.STYLE,
                     "background: tint(@background,50%);" +
                             "border: 16,16,16,16,shade(@background,10%),,8;");
+            container.setBackground(Color.WHITE);
         }
 
         container.repaint();
@@ -162,12 +165,12 @@ public class ToaTauBtn extends JButton implements MouseListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-       setSeleted(!isSeleted);
+        setSeleted(!isSeleted);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        //System.out.println(toaTau.getMaToa() +  " exit");
-        //setSeleted(!isSeleted);
+        // System.out.println(toaTau.getMaToa() + " exit");
+        // setSeleted(!isSeleted);
     }
 }

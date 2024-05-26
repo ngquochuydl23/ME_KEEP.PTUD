@@ -106,6 +106,7 @@ public class ChonChoDialog extends JDialog {
     }
 
     private void doToaTauLenUI() {
+        topPanel.removeAll();
         for (ToaTau toaTau : danhSachToaTau) {
             final ToaTau currentToa = toaTau;
             ToaTauBtn toaTauBtn = new ToaTauBtn(toaTau);
@@ -118,6 +119,7 @@ public class ChonChoDialog extends JDialog {
                     luuChoNgoiDangChon();
                     layTinhTrangSlotTheoToaTau();
                     updateSeatPanel();
+                    updateToaTauBtnColors();
                 }
             });
             this.btgToa.add(toaTauBtn);
@@ -127,6 +129,8 @@ public class ChonChoDialog extends JDialog {
         if (this.toaDangChon == null) {
             this.toaDangChon = this.danhSachToaTau.get(0);
         }
+
+        updateToaTauBtnColors();
     }
 
     // Phương thức để xóa lựa chọn trên các chỗ ngồi
@@ -185,6 +189,19 @@ public class ChonChoDialog extends JDialog {
         repaint();
     }
 
+    private void updateToaTauBtnColors() {
+        for (Component component : topPanel.getComponents()) {
+            if (component instanceof ToaTauBtn) {
+                ToaTauBtn btn = (ToaTauBtn) component;
+                if (btn.getToaTau().equals(toaDangChon)) {
+                    btn.setSeleted(true);
+                } else {
+                    btn.setSeleted(false);
+                }
+            }
+        }
+    }
+
     public void luuChoNgoiDangChon() {
         List<SlotBtn> dsChoNgoi = new ArrayList<>();
         for (KhoangBtn khoangBtn : toaTauBtn.getDsKhoang()) {
@@ -207,7 +224,6 @@ public class ChonChoDialog extends JDialog {
 
     @Override
     public void setVisible(boolean b) {
-
         super.setVisible(b);
         clearSeatSelection();
     }
@@ -236,9 +252,6 @@ public class ChonChoDialog extends JDialog {
 
                     })
                     .toList());
-
-
-
 
         }
     }
