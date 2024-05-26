@@ -16,6 +16,8 @@ nbproject/private/private.properties
 .ideal
 .metadata
 out
-
+.classpath
+.project
+.MyQRCODE.png
 out/*
 /bin/
