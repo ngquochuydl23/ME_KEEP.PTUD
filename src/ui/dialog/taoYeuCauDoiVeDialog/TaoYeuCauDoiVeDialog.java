@@ -2,10 +2,15 @@ package ui.dialog.taoYeuCauDoiVeDialog;
 
 import dao.GaDao;
 import dao.KhachHangDao;
+import dao.TiepNhanYeuCauDoiVeDao;
 import entity.KhachHang;
+import entity.NhanVien;
+import entity.TiepNhanYeuCauDoiVe;
 import helper.Validation;
+import singleton.NhanVienSuDungSingleton;
 import ui.component.ButtonCustom;
 import ui.component.HeaderTitle;
+import ui.component.InputDate;
 import ui.component.InputForm;
 import ui.component.SelectForm;
 import ui.dialog.khachHangDialog.SuaKhachHangListener;
@@ -15,7 +20,12 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,18 +39,20 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements MouseListener, Wind
 
     private SelectForm diemDiSelectForm;
     private SelectForm diemDenSelectForm;
+    private InputDate ngayDiDate;
     private KhachHangDao khachHangDao;
-    private KhachHang khachHang;
     private TaoKhachHangListener taoKhachHangListener;
     private SuaKhachHangListener suaKhachHangListener;
     private List<String> tenGaList;
     private GaDao gaDao;
+    private TiepNhanYeuCauDoiVeDao yeuCauDoiVeDao;
+
     public TaoYeuCauDoiVeDialog() {
         gaDao = new GaDao();
         tenGaList = new ArrayList<>();
         khachHangDao = new KhachHangDao();
+        yeuCauDoiVeDao = new TiepNhanYeuCauDoiVeDao();
         initComponents();
-
 
         tenGaList = gaDao.layHetTenGa();
 
@@ -90,10 +102,8 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements MouseListener, Wind
         setSize(new Dimension(600, 600));
         setLayout(new BorderLayout(0, 0));
 
-
-
         titlePage = new HeaderTitle("Ghi nhận yêu cầu đổi vé");
-        pnlMain = new JPanel(new GridLayout(4, 1, 20, 0));
+        pnlMain = new JPanel(new GridLayout(5, 1, 20, 0));
         pnlMain.setBackground(Color.white);
 
         tenKhachHangTextField = new InputForm("Tên khách hàng");
@@ -102,11 +112,13 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements MouseListener, Wind
         diemDiSelectForm = new SelectForm("Điểm đi");
         diemDenSelectForm = new SelectForm("Điểm đến");
 
+        ngayDiDate = new InputDate("Ngày đi");
+
         pnlMain.add(soDienThoaiTextField);
         pnlMain.add(tenKhachHangTextField);
+        pnlMain.add(ngayDiDate);
         pnlMain.add(diemDiSelectForm);
         pnlMain.add(diemDenSelectForm);
-
 
         diemDiSelectForm.cbb.setEditable(true);
         diemDiSelectForm.getCbb().getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
@@ -128,11 +140,10 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements MouseListener, Wind
 
         });
 
-
         pnlButtom = new JPanel(new FlowLayout());
         pnlButtom.setBorder(new EmptyBorder(10, 0, 10, 0));
         pnlButtom.setBackground(Color.white);
-        btnSubmit = new ButtonCustom("Thêm khách hàng", "success", 14);
+        btnSubmit = new ButtonCustom("Tạo yêu cầu", "success", 14);
         btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
         btnKhMoi = new ButtonCustom("Khách hàng mới", "success", 14);
         btnTim = new ButtonCustom("Tìm", "excel", 14);
@@ -159,7 +170,7 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements MouseListener, Wind
     boolean kiemTraField() {
         String soDienThoai = soDienThoaiTextField.getText().trim();
         String tenKhachHang = tenKhachHangTextField.getText().trim();
-        //String soCMND = soCMNDTextField.getText().trim();
+        // String soCMND = soCMNDTextField.getText().trim();
 
         if (Validation.isEmpty(soDienThoai)
                 || !Validation.kiemTraSoDienThoai(soDienThoai) && soDienThoai.length() != 10) {
@@ -181,15 +192,54 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements MouseListener, Wind
         return true;
     }
 
+    public static LocalDateTime convertToLocalDateTime(Date date) {
+        return date.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+    }
+
     @Override
-    public void mousePressed(MouseEvent e) {
+    public void mousePressed(MouseEvent e)  {
         Object eSource = e.getSource();
 
         if (eSource.equals(btnSubmit)) {
             if (!kiemTraField())
                 return;
 
+            String soDienThoai = soDienThoaiTextField.getText().trim();
+            String tenKhachHang = tenKhachHangTextField.getText().trim();
+            String diemDi = (String) diemDiSelectForm.getSelectedItem();
+            String diemDen = (String) diemDenSelectForm.getSelectedItem();
+            LocalDateTime ngayDi = null;
+            try {
+                ngayDi = convertToLocalDateTime(ngayDiDate.getDate());
+            } catch (ParseException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            KhachHang khachHang = khachHangDao.timTheoSDT(soDienThoai);
+            NhanVien nhanVien = NhanVienSuDungSingleton.layThongTinNhanVienHienTai();
 
+            // Tạo yêu cầu đổi vé
+            TiepNhanYeuCauDoiVe yeuCauDoiVe = new TiepNhanYeuCauDoiVe(
+                    0, // maYeuCau (auto-generated)
+                    LocalDateTime.now(),
+                    ngayDi,
+                    "Yêu cầu đổi vé từ điểm " + diemDi + " đến " + diemDen,
+                    nhanVien, // nhanVien (cần lấy từ session hoặc tương tự)
+                    khachHang
+            );
+
+            // Lưu yêu cầu đổi vé vào cơ sở dữ liệu
+            yeuCauDoiVeDao.them(yeuCauDoiVe);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Yêu cầu đổi vé đã được tạo thành công",
+                    "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            xoaDuLieu();
 
         }
         if (eSource.equals(btnHuyBo)) {
@@ -210,20 +260,6 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements MouseListener, Wind
     public void mouseExited(MouseEvent e) {
     }
 
-    public void setKhachHang(KhachHang khachHang) {
-        this.khachHang = khachHang;
-
-        titlePage.setLblTitle("Cập nhật thông tin");
-        btnSubmit.setText("Cập nhật thông tin");
-
-        soDienThoaiTextField.setText(khachHang.getSoDienThoai());
-        tenKhachHangTextField.setText(khachHang.getHoTen());
-
-
-        invalidate();
-        validate();
-        repaint();
-    }
 
     public void setTaoKhachHangListener(TaoKhachHangListener taoKhachHangListener) {
         this.taoKhachHangListener = taoKhachHangListener;
@@ -233,17 +269,17 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements MouseListener, Wind
         this.suaKhachHangListener = suaKhachHangListener;
     }
 
-//    private KhachHang layThongTinKhachHangTuField() {
-//        int maKhacHang = 0;
-//        if (!maKhachHangTextField.getText().trim().isEmpty())
-//            maKhacHang = Integer.valueOf(maKhachHangTextField.getText().trim());
-//
-//        String tenKhachHang = tenKhachHangTextField.getText().trim();
-//        String soDienThoai = soDienThoaiTextField.getText().trim();
-//        String soCMND = soCMNDTextField.getText().trim();
-//
-//        return new KhachHang(maKhacHang, tenKhachHang, soDienThoai, soCMND);
-//    }
+    // private KhachHang layThongTinKhachHangTuField() {
+    // int maKhacHang = 0;
+    // if (!maKhachHangTextField.getText().trim().isEmpty())
+    // maKhacHang = Integer.valueOf(maKhachHangTextField.getText().trim());
+    //
+    // String tenKhachHang = tenKhachHangTextField.getText().trim();
+    // String soDienThoai = soDienThoaiTextField.getText().trim();
+    // String soCMND = soCMNDTextField.getText().trim();
+    //
+    // return new KhachHang(maKhacHang, tenKhachHang, soDienThoai, soCMND);
+    // }
 
     public void xoaDuLieu() {
         btnSubmit.setVisible(true);
@@ -256,31 +292,9 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements MouseListener, Wind
         soDienThoaiTextField.setText("");
         soDienThoaiTextField.setEditable(true);
 
-
         btnSubmit.setVisible(true);
     }
 
-    public void xemKhachHang(KhachHang khachHang) {
-        this.khachHang = khachHang;
-        btnSubmit.setVisible(false); // Ẩn nút "Thêm khách hàng" khi xem chi tiết
-
-        titlePage.setLblTitle("Xem khách hàng");
-        soDienThoaiTextField.setText(khachHang.getSoDienThoai());
-        soDienThoaiTextField.setEditable(false); // Vô hiệu hóa chỉnh sửa
-
-        tenKhachHangTextField.setText(khachHang.getHoTen());
-        tenKhachHangTextField.setEditable(false); // Vô hiệu hóa chỉnh sửa
-
-//        soCMNDTextField.setText(khachHang.getCMND());
-//        soCMNDTextField.setEditable(false); // Vô hiệu hóa chỉnh sửa
-//
-//        maKhachHangTextField.setText(String.valueOf(khachHang.getMaKhachHang()));
-//        maKhachHangTextField.setEditable(false); // Vô hiệu hóa chỉnh sửa
-
-        invalidate();
-        validate();
-        repaint();
-    }
 
     public void taoTaiKhoanVoiSoDienThoai(String soDienThoai) {
         soDienThoaiTextField.setText(soDienThoai);

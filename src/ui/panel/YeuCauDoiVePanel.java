@@ -114,7 +114,8 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        ChucNangChinh chucNangChinh = new ChucNangChinh(new String[]{"them", "chi-tiet", "nhap-excel", "xuat-excel"});
+        ChucNangChinh chucNangChinh = new ChucNangChinh(
+                new String[] { "them", "chi-tiet", "nhap-excel", "xuat-excel" });
         functionBar.add(chucNangChinh);
         contentCenter.add(functionBar, BorderLayout.NORTH);
 
@@ -133,20 +134,18 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
         soDienThoaiInputForm.setEditable(true);
         soDienThoaiInputForm.requestFocus();
 
+        // PlainDocument doc_min = (PlainDocument) moneyMin.getTxtForm().getDocument();
+        // doc_min.setDocumentFilter(new NumericDocumentFilter());
 
-        //PlainDocument doc_min = (PlainDocument) moneyMin.getTxtForm().getDocument();
-        //doc_min.setDocumentFilter(new NumericDocumentFilter());
-
-
-//        dateStart.getDateChooser().addPropertyChangeListener(this);
-//        dateEnd.getDateChooser().addPropertyChangeListener(this);
-        //moneyMin.getTxtForm().addKeyListener(this);
-//        moneyMin.getTxtForm().addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(java.awt.event.MouseEvent e) {
-//                System.out.println("TextField được click");
-//            }
-//        });
+        // dateStart.getDateChooser().addPropertyChangeListener(this);
+        // dateEnd.getDateChooser().addPropertyChangeListener(this);
+        // moneyMin.getTxtForm().addKeyListener(this);
+        // moneyMin.getTxtForm().addMouseListener(new MouseAdapter() {
+        // @Override
+        // public void mouseClicked(java.awt.event.MouseEvent e) {
+        // System.out.println("TextField được click");
+        // }
+        // });
 
         chucNangChinh
                 .getToolbar("them")
@@ -164,7 +163,6 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
                     public void actionPerformed(ActionEvent e) {
                         if (!kiemTraChonDong())
                             return;
-
 
                     }
                 });
@@ -200,21 +198,24 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
     }
 
     public void Fillter() throws ParseException {
-//        if (validateSelectDate()) {
-//            int type = search.cbxChoose.getSelectedIndex();
-//            // int mancc = cbxNhaCungCap.getSelectedIndex() == 0 ? 0
-//            // : nccBUS.getByIndex(cbxNhaCungCap.getSelectedIndex() - 1).getMancc();
-//            // int manv = cbxNhanVien.getSelectedIndex() == 0 ? 0
-//            // : nvBUS.getByIndex(cbxNhanVien.getSelectedIndex() - 1).getManv();
-//            String input = search.txtSearchForm.getText() != null ? search.txtSearchForm.getText() : "";
-//            Date time_start = dateStart.getDate() != null ? dateStart.getDate() : new Date(0);
-//            Date time_end = dateEnd.getDate() != null ? dateEnd.getDate() : new Date(System.currentTimeMillis());
-//            String min_price = moneyMin.getText();
-//            // this.listPhieu = phieunhapBUS.fillerPhieuNhap(type, input, mancc, manv,
-//            // time_start, time_end, min_price,
-//            // max_price);
-//            loadDataTalbe(listPhieu);
-//        }
+        // if (validateSelectDate()) {
+        // int type = search.cbxChoose.getSelectedIndex();
+        // // int mancc = cbxNhaCungCap.getSelectedIndex() == 0 ? 0
+        // // : nccBUS.getByIndex(cbxNhaCungCap.getSelectedIndex() - 1).getMancc();
+        // // int manv = cbxNhanVien.getSelectedIndex() == 0 ? 0
+        // // : nvBUS.getByIndex(cbxNhanVien.getSelectedIndex() - 1).getManv();
+        // String input = search.txtSearchForm.getText() != null ?
+        // search.txtSearchForm.getText() : "";
+        // Date time_start = dateStart.getDate() != null ? dateStart.getDate() : new
+        // Date(0);
+        // Date time_end = dateEnd.getDate() != null ? dateEnd.getDate() : new
+        // Date(System.currentTimeMillis());
+        // String min_price = moneyMin.getText();
+        // // this.listPhieu = phieunhapBUS.fillerPhieuNhap(type, input, mancc, manv,
+        // // time_start, time_end, min_price,
+        // // max_price);
+        // loadDataTalbe(listPhieu);
+        // }
     }
 
     public void resetForm() {
@@ -240,28 +241,31 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
     }
 
     public boolean validateSelectDate() throws ParseException {
-//        Date time_start = dateStart.getDate();
-//        Date time_end = dateEnd.getDate();
-//
-//        Date current_date = new Date();
-//        if (time_start != null && time_start.after(current_date)) {
-//            JOptionPane.showMessageDialog(this, "Ngày bắt đầu không được lớn hơn ngày hiện tại", "Lỗi !",
-//                    JOptionPane.ERROR_MESSAGE);
-//            dateStart.getDateChooser().setCalendar(null);
-//            return false;
-//        }
-//        if (time_end != null && time_end.after(current_date)) {
-//            JOptionPane.showMessageDialog(this, "Ngày kết thúc không được lớn hơn ngày hiện tại", "Lỗi !",
-//                    JOptionPane.ERROR_MESSAGE);
-//            dateEnd.getDateChooser().setCalendar(null);
-//            return false;
-//        }
-//        if (time_start != null && time_end != null && time_start.after(time_end)) {
-//            JOptionPane.showMessageDialog(this, "Ngày kết thúc phải lớn hơn ngày bắt đầu", "Lỗi !",
-//                    JOptionPane.ERROR_MESSAGE);
-//            dateEnd.getDateChooser().setCalendar(null);
-//            return false;
-//        }
+        // Date time_start = dateStart.getDate();
+        // Date time_end = dateEnd.getDate();
+        //
+        // Date current_date = new Date();
+        // if (time_start != null && time_start.after(current_date)) {
+        // JOptionPane.showMessageDialog(this, "Ngày bắt đầu không được lớn hơn ngày
+        // hiện tại", "Lỗi !",
+        // JOptionPane.ERROR_MESSAGE);
+        // dateStart.getDateChooser().setCalendar(null);
+        // return false;
+        // }
+        // if (time_end != null && time_end.after(current_date)) {
+        // JOptionPane.showMessageDialog(this, "Ngày kết thúc không được lớn hơn ngày
+        // hiện tại", "Lỗi !",
+        // JOptionPane.ERROR_MESSAGE);
+        // dateEnd.getDateChooser().setCalendar(null);
+        // return false;
+        // }
+        // if (time_start != null && time_end != null && time_start.after(time_end)) {
+        // JOptionPane.showMessageDialog(this, "Ngày kết thúc phải lớn hơn ngày bắt
+        // đầu", "Lỗi !",
+        // JOptionPane.ERROR_MESSAGE);
+        // dateEnd.getDateChooser().setCalendar(null);
+        // return false;
+        // }
         return true;
     }
 
@@ -301,9 +305,9 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
     }
 
     private void layDanhSachNhaGa() {
-        String[] listNcc = {"Vui vẻ nha"};
+        String[] listNcc = { "Vui vẻ nha" };
         listNcc = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listNcc)).toArray(String[]::new);
-        String[] listNv = {"Nhân viên thân thiện"};
+        String[] listNv = { "Nhân viên thân thiện" };
         listNv = Stream.concat(Stream.of("Tất cả"), Arrays.stream(listNv)).toArray(String[]::new);
     }
 
@@ -318,16 +322,18 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
 
     private void layDanhSachLichSu() {
         danhSachLichSuTraVe = new ArrayList<>();
-        //  Ve ve = new Ve( "tphcm-quynhon",  20,  1000000,  null,  1,  new LoaiKhoang("giuong-nam-khoang-4"), null);
+        // Ve ve = new Ve( "tphcm-quynhon", 20, 1000000, null, 1, new
+        // LoaiKhoang("giuong-nam-khoang-4"), null);
         entity.KhachHang kh = new entity.KhachHang(1, "Owen Shaw", "0868684961", LocalDateTime.now(), false);
-        //LichSuTraVe ls = new LichSuTraVe(1, LocalDateTime.of(2023, 03, 23, 12, 30, 50), "Khong co", kh, ve);
-        //danhSachLichSuTraVe.add(ls);
+        // LichSuTraVe ls = new LichSuTraVe(1, LocalDateTime.of(2023, 03, 23, 12, 30,
+        // 50), "Khong co", kh, ve);
+        // danhSachLichSuTraVe.add(ls);
 
         for (LichSuTraVe item : danhSachLichSuTraVe) {
-            tblModel.addRow(new String[]{
+            tblModel.addRow(new String[] {
                     item.getVe().getMaVe(),
                     item.getKhachHang().getHoTen(),
-                    //   String.valueOf(item.getVe().getChoNgoi()),
+                    // String.valueOf(item.getVe().getChoNgoi()),
                     item.getThoiGianTraVe().toString(),
                     item.getGhiChu()
             });
