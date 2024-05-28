@@ -11,10 +11,7 @@ import java.awt.event.MouseListener;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -24,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
 
 import dao.*;
 import entity.*;
+import helper.Formater;
 import ui.component.ButtonCustom;
 import ui.component.HeaderTitle;
 import ui.component.InputForm;
@@ -305,6 +303,14 @@ public class ThanhToanDialog extends JDialog {
     }
 
 
+    public void setDoiVe() {
+        soTienTamTinhTextField.setText(Formater.FormatVND(0));
+        tongTienTextField.setText(Formater.FormatVND(0));
+
+        tongTienTamTinh = 0;
+
+    }
+
     private void xoaDuLieu() {
         danhSachVe.clear();
         toaTau = null;
@@ -374,9 +380,6 @@ public class ThanhToanDialog extends JDialog {
                 JOptionPane.showMessageDialog(this, "Thanh toán thành công!");
                 if (thanhToanListener != null){
                     thanhToanListener.thanhToanThanhCong(hoaDon);
-                    for (Ve ve: danhSachVe) {
-                        thanhToanDoiVeListener.thanhToanDoiVe(hoaDon, ve);
-                    }
                 }
 
                 if (thanhToanDoiVeListener != null){

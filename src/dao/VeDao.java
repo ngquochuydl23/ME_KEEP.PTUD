@@ -311,6 +311,36 @@ public class VeDao implements IDao<Ve, String> {
         return dsTraVeModel;
     }
 
+    public boolean doiVe(String maVeCu) {
+
+
+
+        try {
+            SlotDao slotdao = new SlotDao();;
+            Ve ve= layTheoMa(maVeCu);
+            List<Slot> dsCho = new ArrayList<>();
+            dsCho.add(ve.getSlot());
+            if (slotdao.capNhatConSlot(con, dsCho)) {
+                Logger.getLogger(VeDao.class.getName()).log(Level.INFO, " Chuyển trạng thái thành còn chỗ");
+            }
+
+
+
+            String sql = "UPDATE quanlibanve.Ve ve\n" +
+                    "SET ve.TinhTrangVe = 0\n" +
+                    "WHERE ve.MaVe = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, maVeCu);
+
+            Logger.getLogger(VeDao.class.getName()).log(Level.INFO, " Chuyển trạng thái thành đã hủy");
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean capNhatThanhVeDaHuy(Connection conn, List<Ve> dsVeCanHuy) throws SQLException {
         for (Ve ve : dsVeCanHuy) {
             String sql = "UPDATE quanlibanve.Ve ve\n" +

@@ -5,6 +5,7 @@ import ui.DangNhapForm;
 import ui.dialog.TaiKhoanCuaToiPanel;
 import ui.Main;
 // import ui.dialog.traVeDialog.TraVeDialog;
+import ui.dialog.taoYeuCauDoiVeDialog.TaoYeuCauDoiVeDialog;
 import ui.dialog.traVeDialog.TraVeDialog;
 import ui.panel.*;
 
@@ -163,7 +164,7 @@ public class MenuTaskbar extends JPanel {
         listitem[4].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                main.setPanel(new YeuCauDoiVePanel());
+                new TaoYeuCauDoiVeDialog().setVisible(true);
             }
         });
         listitem[5].addMouseListener(new MouseAdapter() {

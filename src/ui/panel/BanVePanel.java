@@ -163,6 +163,7 @@ public final class BanVePanel extends JPanel implements PropertyChangeListener, 
         });
 
         chonChoDialog = new ChonChoDialog();
+        chonChoDialog.setMaxChoNgoiCoTheChon(1000);
         chonChoDialog.setChonChoNgoiListener(new ChonChoNgoiListener() {
             @Override
             public void chonChoNgoiThanhCong(ToaTau toaTau, List<SlotBtn> dsCho) {
