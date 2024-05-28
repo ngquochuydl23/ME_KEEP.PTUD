@@ -60,6 +60,7 @@ public class ThanhToanDialog extends JDialog {
     Locale locale = new Locale("vi", "VN");
     NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
     private ThanhToanListener thanhToanListener;
+    private ThanhToanDoiVeListener thanhToanDoiVeListener;
     private ToaTau toaTau;
     private ChiTietVeDialog chiTietVeDialog;
     private int soVeDaCapNhat = 0;
@@ -373,6 +374,13 @@ public class ThanhToanDialog extends JDialog {
                 JOptionPane.showMessageDialog(this, "Thanh toán thành công!");
                 if (thanhToanListener != null){
                     thanhToanListener.thanhToanThanhCong(hoaDon);
+                    for (Ve ve: danhSachVe) {
+                        thanhToanDoiVeListener.thanhToanDoiVe(hoaDon, ve);
+                    }
+                }
+
+                if (thanhToanDoiVeListener != null){
+                    thanhToanDoiVeListener.thanhToanDoiVe(hoaDon, danhSachVe.get(0));
                 }
                 xoaDuLieu();
                 dispose();
@@ -385,5 +393,9 @@ public class ThanhToanDialog extends JDialog {
 
     public void setThanhToanListener(ThanhToanListener thanhToanListener) {
         this.thanhToanListener = thanhToanListener;
+    }
+
+    public void setThanhToanDoiVeListener(ThanhToanDoiVeListener thanhToanDoiVeListener) {
+        this.thanhToanDoiVeListener = thanhToanDoiVeListener;
     }
 }

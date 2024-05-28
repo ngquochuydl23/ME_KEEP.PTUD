@@ -24,8 +24,7 @@ import java.util.logging.Logger;
 
 import ui.dialog.chonChoDialog.ChonChoDialog;
 import ui.dialog.chonChoDialog.ChonChoNgoiListener;
-import ui.dialog.thanhToanDialog.ThanhToanDialog;
-import ui.dialog.thanhToanDialog.ThanhToanListener;
+import ui.dialog.thanhToanDialog.*;
 
 public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener, MouseListener {
     private HeaderTitle titlePage;
@@ -51,7 +50,9 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener, Mou
     private List<String> tenGaList;
     private GaDao gaDao;
     private VeDao veDao;
+    private HoaDonDao hoaDonDao;
     private ChuyenDao chuyenDao;
+    private ChiTietHoaDonDao chiTietHoaDonDao;
     private TiepNhanYeuCauDoiVeDao yeuCauDoiVeDao;
     private KhachHang khachHang;
     private DefaultTableModel tblModel;
@@ -62,6 +63,7 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener, Mou
     private List<SlotBtn> dsChoDaChon = new ArrayList<>();
 
     private TauDao tauDao;
+    private Ve ve;
 
     public TaoYeuCauDoiVeDialog() {
         thanhToanDialog = new ThanhToanDialog();
@@ -71,6 +73,8 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener, Mou
         tenGaList = new ArrayList<>();
         khachHangDao = new KhachHangDao();
         tauDao = new TauDao();
+        hoaDonDao = new HoaDonDao();
+        chiTietHoaDonDao = new ChiTietHoaDonDao();
         yeuCauDoiVeDao = new TiepNhanYeuCauDoiVeDao();
         initComponents();
 
@@ -125,6 +129,14 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener, Mou
 
         titlePage = new HeaderTitle("Ghi nhận yêu cầu đổi vé");
 
+        tenKhachHangTextField = new InputForm("Tên khách hàng");
+        tenKhachHangTextField.setEditable(false);
+        soDienThoaiTextField = new InputForm("Số điện thoại");
+        timMaVeTextField = new InputForm("Nhập mã vé");
+        diemDiSelectForm = new SelectForm("Điểm đi");
+        diemDenSelectForm = new SelectForm("Điểm đến");
+        ngayDiDate = new InputDate("Ngày đi");
+
         chonChoDialog = new ChonChoDialog();
         chonChoDialog.setMaxChoNgoiCoTheChon(1);
         chonChoDialog.setChonChoNgoiListener(new ChonChoNgoiListener() {
@@ -139,6 +151,10 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener, Mou
                 String tenGaDen = diemDenSelectForm.getSelectedItem().toString();
 
 
+                if (khachHang== null ) {
+                    // Vui lòng tìm kh truoc
+                }
+
                 thanhToanDialog.setData(
                         NhanVienSuDungSingleton.layThongTinNhanVienHienTai(),
                         tenGaDi,
@@ -152,20 +168,26 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener, Mou
             }
         });
 
-        thanhToanDialog.setThanhToanListener(new ThanhToanListener() {
+        thanhToanDialog.setThanhToanDoiVeListener(new ThanhToanDoiVeListener() {
             @Override
-            public void thanhToanThanhCong(HoaDon hoaDon) {
+            public void thanhToanDoiVe(HoaDon hoaDon, Ve ve) {
+                TaoYeuCauDoiVeDialog taoYeuCauDoiVeDialog = new TaoYeuCauDoiVeDialog();
+                taoYeuCauDoiVeDialog.soDienThoaiTextField.setText(ve.getKhachHang().getSoDienThoai());
+                taoYeuCauDoiVeDialog.tenKhachHangTextField.setText(ve.getKhachHang().getHoTen());
+                try {
+                    taoYeuCauDoiVeDialog.ngayDiDate.setDate(ngayDiDate.getDate());
+                } catch (ParseException ex) {
+                    ex.printStackTrace(); // Hoặc thực hiện xử lý phù hợp khác
+                }
+                taoYeuCauDoiVeDialog.diemDiSelectForm.setSelectedItem(diemDiSelectForm.getSelectedItem());
+                taoYeuCauDoiVeDialog.diemDenSelectForm.setSelectedItem(diemDenSelectForm.getSelectedItem());
 
+                taoYeuCauDoiVeDialog.setVisible(true);
+                taoYeuCauDoiVeDialog.setVe(ve);
             }
         });
 
-        tenKhachHangTextField = new InputForm("Tên khách hàng");
-        tenKhachHangTextField.setEditable(false);
-        soDienThoaiTextField = new InputForm("Số điện thoại");
-        timMaVeTextField = new InputForm("Nhập mã vé");
-        diemDiSelectForm = new SelectForm("Điểm đi");
-        diemDenSelectForm = new SelectForm("Điểm đến");
-        ngayDiDate = new InputDate("Ngày đi");
+        
 
 
         Box phieuYeuCauDoiVeBox = Box.createVerticalBox();
@@ -297,6 +319,19 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener, Mou
         add(new JScrollPane(pnlMain, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
         add(pnlButtom, BorderLayout.SOUTH);
         setLocationRelativeTo(null);
+    }
+
+    public void setVe(Ve ve){
+        this.ve = ve;
+
+        if(this.ve != null){
+            maVeTextField.setText(ve.getMaVe());
+            tuyenTextField.setText(ve.getTuyen().getGaDi().getTenGa() + ve.getTuyen().getGaDen().getTenGa());
+            tauTextField.setText(ve.getTau().getTenTau());
+            choNgoiTextField.setText(String.valueOf(ve.getSlot().getSoSlot()));
+            tenNguoiDiTextField.setText(ve.getHoTenNguoiDi());
+            cccdNguoiDiTextField.setText(ve.getCccdNguoiDi());
+        }
     }
 
     private void doiVe() {
@@ -538,6 +573,7 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener, Mou
             return;
         }
 
+        this.setVisible(false);
         chonChoDialog.setTau(tau);
         chonChoDialog.setVisible(true);
     }
