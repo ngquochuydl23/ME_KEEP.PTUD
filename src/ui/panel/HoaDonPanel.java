@@ -5,6 +5,7 @@ import ui.component.*;
 import entity.HoaDon;
 import entity.KhachHang;
 import entity.LichSuTraVe;
+import entity.NhanVien;
 import helper.JTableExporter;
 import helper.Validation;
 
@@ -12,6 +13,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 
 import dao.HoaDonDao;
 import dao.KhachHangDao;
@@ -40,6 +44,7 @@ public final class HoaDonPanel extends JPanel {
     private InputDate thoiGianTaoHoaDonInputDate;
     private InputForm soDienThoaiInputForm;
     private HoaDonDao hoaDonDAO;
+    private JButton btnLamMoi;
     private List<HoaDon> danhSachHoaDon;
 
     public HoaDonPanel() {
@@ -118,6 +123,15 @@ public final class HoaDonPanel extends JPanel {
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
+        
+        btnLamMoi = new JButton("Làm mới");
+        btnLamMoi.setFont(new java.awt.Font(FlatRobotoFont.FAMILY, 0, 14));
+        btnLamMoi.setIcon(new FlatSVGIcon("./icon/refresh.svg"));
+        
+        Box horizontalBox = Box.createHorizontalBox();
+        horizontalBox.add(Box.createRigidArea(new Dimension(300, 0))); 
+        horizontalBox.add(btnLamMoi); 
+
         ChucNangChinh chucNangChinh = new ChucNangChinh(new String[]{"tim","chi-tiet", "nhap-excel", "xuat-excel"});
         functionBar.add(chucNangChinh);
         contentCenter.add(functionBar, BorderLayout.NORTH);
@@ -175,7 +189,12 @@ public final class HoaDonPanel extends JPanel {
                         if (!kiemTraChonDong())
                             return;
                         HoaDon hoaDon = layHoaDonDangChon();
-                        new ChiTietHoaDonDialog(hoaDon.getMaHoaDon()).setVisible(true);
+                        if (hoaDon != null) {
+                            new ChiTietHoaDonDialog(hoaDon.getMaHoaDon()).setVisible(true);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Không thể lấy thông tin hóa đơn. Vui lòng thử lại.");
+                        }
+
                     }
                 });
 
@@ -196,18 +215,27 @@ public final class HoaDonPanel extends JPanel {
                         xuatLichSuTraVeExcel();
                     }
                 });
-
+        
+        btnLamMoi.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                doDuLieuVaoBang();
+            }
+        });
 
         box.add(soDienThoaiInputForm);
-        box.add(trangThaiDonHangComboBox);
+        //box.add(trangThaiDonHangComboBox);
         box.add(thoiGianTaoHoaDonInputDate);
-
+        
+        functionBar.add(horizontalBox);
+        contentCenter.add(functionBar, BorderLayout.NORTH);
         main = new PanelBorderRadius();
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
         contentCenter.add(main, BorderLayout.CENTER);
         main.add(scrollTableHoaDon);
     }
 
+    
     private void layHoaDonTheoYeuCau() throws ParseException {
         danhSachHoaDon = hoaDonDAO.layTheoSoDienThoaiVaThoiGianTaoHoaDon(soDienThoaiInputForm.getText(), thoiGianTaoHoaDonInputDate.getDateAsLocalDate());
 		tblModel.setRowCount(0);
@@ -245,7 +273,7 @@ public final class HoaDonPanel extends JPanel {
     public void resetForm() {
 
     }
-
+    
     private HoaDon layHoaDonDangChon() {
         int row = tableHoaDon.getSelectedRow();
         String maHoaDon = tblModel.getValueAt(row, 0).toString();
@@ -255,6 +283,8 @@ public final class HoaDonPanel extends JPanel {
                 .findAny()
                 .orElse(null);
     }
+    
+    
 
     private boolean kiemTraChonDong() {
         if (tableHoaDon.getSelectedRow() < 0) {

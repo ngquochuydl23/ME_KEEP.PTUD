@@ -11,6 +11,7 @@ import ui.dialog.nhanVienDialog.NhanVienDialog;
 import ui.dialog.nhanVienDialog.SuaNhanVienListener;
 import ui.dialog.nhanVienDialog.TaoNhanVienListener;
 import dao.NhanVienDao;
+import entity.KhachHang;
 import entity.NhanVien;
 import helper.JTableExporter;
 import helper.Validation;
@@ -20,6 +21,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -34,7 +37,7 @@ public final class NhanVienPanel extends JPanel {
     private JTable tableNhanVien;
     private DefaultTableModel tblModel;
     private NhanVienDialog nhanVienDialog;
-
+    private IntegratedSearch search;
 
     public NhanVienPanel() {
         initComponent();
@@ -43,7 +46,7 @@ public final class NhanVienPanel extends JPanel {
     }
 
     private void initComponent() {
-        IntegratedSearch search;
+        
         Color BackgroundColor = new Color(240, 247, 250);
 
         this.setBackground(BackgroundColor);
@@ -94,7 +97,7 @@ public final class NhanVienPanel extends JPanel {
 
         chucNangChinh = new ChucNangChinh(new String[]{"them", "xoa", "sua", "chi-tiet", "nhap-excel", "xuat-excel"});
         functionBar.add(chucNangChinh);
-        search = new IntegratedSearch(new String[]{ "Họ tên", "Số điện thoại"});
+        search = new IntegratedSearch(new String[]{"Tất cả","Họ tên", "Số điện thoại"});
         functionBar.add(search);
 
         nhanVienDialog.setTaoNhanVienListener(new TaoNhanVienListener() {
@@ -190,21 +193,15 @@ public final class NhanVienPanel extends JPanel {
             }
         });
 
-        search.txtSearchForm.addActionListener(new ActionListener() {
+        search.txtSearchForm.addKeyListener(new KeyAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                String searchText = search.txtSearchForm.getText().trim();
-                String luaChon = search.cbxChoose.getSelectedItem().toString();
-                System.out.println(searchText);
-                if (!searchText.isEmpty()) {
-                    switch (luaChon) {
-                        case "Họ tên":
-                            layDsNhanVienTheoTen(searchText);
-                        case "Số điện thoại":
-                            layDsNhanVienTheoSdt(searchText);
+            public void keyReleased(KeyEvent e) {
+                String keyWord = search.txtSearchForm.getText();
+                String type = (String) search.cbxChoose.getSelectedItem();
+                if (keyWord.isEmpty())
+                	layDsNhanVien();
+                else timNhanVien(keyWord, type);
 
-                    }
-                }
             }
         });
         // main là phần ở dưới để thống kê bảng biểu
@@ -250,30 +247,45 @@ public final class NhanVienPanel extends JPanel {
         }
     }
 
-    public void layDsNhanVienTheoTen(String ten) {
-        while (tblModel.getRowCount() > 0) {
-            tblModel.removeRow(0);
-        }
-        dsNhanVien = new ArrayList<>();
-        NhanVien nhanVien = nhanVienDao.layDsNhanVienTheoTen(ten);
-        if (nhanVien != null) {
-            dsNhanVien.add(nhanVien);
-            tblModel.addRow(new Object[]{
-                    nhanVien.getMaNhanVien(), nhanVien.getHoTen(), nhanVien.getSoDienThoai(), nhanVien.getGioitinh() == 1 ? "Nam" : "Nữ", nhanVien.getNgaysinh(), nhanVien.getEmail()
-            });
-        }
-    }
+    public void timNhanVien(String text, String type) {
+        List<NhanVien> result = new ArrayList<>();
+        text = text.toLowerCase();
 
-    public void layDsNhanVienTheoSdt(String sdt) {
+        switch (type) {
+            case "Tất cả":
+                for (entity.NhanVien nhanVien : dsNhanVien) {
+                    if (nhanVien.getHoTen().toLowerCase().contains(text)
+                            || nhanVien.getSoDienThoai().toLowerCase().contains(text)) {
+                        result.add(nhanVien);
+                    }
+                }
+                break;
+
+            case "Họ tên":
+                for (entity.NhanVien nhanVien : dsNhanVien) {
+                    if (nhanVien.getHoTen().toLowerCase().contains(text)) {
+                        result.add(nhanVien);
+                    }
+                }
+                break;
+
+            
+            case "Số điện thoại":
+                for (entity.NhanVien nhanVien : dsNhanVien) {
+                    if (nhanVien.getSoDienThoai().toLowerCase().contains(text)) {
+                        result.add(nhanVien);
+                    }
+                }
+                break;
+        }
         while (tblModel.getRowCount() > 0) {
             tblModel.removeRow(0);
         }
-        dsNhanVien = new ArrayList<>();
-        NhanVien nhanVien = nhanVienDao.timNhanVienTheoSdt(sdt);
-        if (nhanVien != null) {
-            dsNhanVien.add(nhanVien);
+        dsNhanVien = result;
+        for (entity.NhanVien nhanVien : dsNhanVien) {
             tblModel.addRow(new Object[]{
-                    nhanVien.getMaNhanVien(), nhanVien.getHoTen(), nhanVien.getSoDienThoai(), nhanVien.getGioitinh() == 1 ? "Nam" : "Nữ", nhanVien.getNgaysinh(), nhanVien.getEmail()
+                    nhanVien.getMaNhanVien(), nhanVien.getHoTen(), nhanVien.getSoDienThoai(), nhanVien.getGioitinh() == 1 ? "Nam" : "Nữ", nhanVien.getNgaysinh(), nhanVien.getEmail(),
+                    nhanVien.getVaiTro()
             });
         }
     }
