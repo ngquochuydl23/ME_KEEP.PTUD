@@ -73,15 +73,15 @@ public class HoaDonDao implements IDao<HoaDon, String> {
 
                 // KhuyenMai
                 String maKhuyenMai = rs.getString("maKhuyenMai");
-                double phanTramGiamGia = rs.getDouble("phanTramGiamGia");
-                String ghiChuKM = rs.getString("GhiChuKhuyenMai");
-                LocalDateTime thoiGianBatDau = LocalDateTime.ofInstant(
-                        new Date(rs.getDate("ThoiGianBatDau").getTime()).toInstant(), ZoneId.systemDefault());
-                LocalDateTime thoiGianKetThuc = LocalDateTime.ofInstant(
-                        new Date(rs.getDate("ThoiGianKetThuc").getTime()).toInstant(), ZoneId.systemDefault());
-                KhuyenMai khuyenMai = new KhuyenMai(maKhuyenMai, phanTramGiamGia, ghiChuKM, thoiGianBatDau,
-                        thoiGianKetThuc);
-
+//                double phanTramGiamGia = rs.getDouble("phanTramGiamGia");
+//                String ghiChuKM = rs.getString("GhiChuKhuyenMai");
+//                LocalDateTime thoiGianBatDau = LocalDateTime.ofInstant(
+//                        new Date(rs.getDate("ThoiGianBatDau").getTime()).toInstant(), ZoneId.systemDefault());
+//                LocalDateTime thoiGianKetThuc = LocalDateTime.ofInstant(
+//                        new Date(rs.getDate("ThoiGianKetThuc").getTime()).toInstant(), ZoneId.systemDefault());
+//                KhuyenMai khuyenMai = new KhuyenMai(maKhuyenMai, phanTramGiamGia, ghiChuKM, thoiGianBatDau,
+//                        thoiGianKetThuc);
+                KhuyenMai khuyenMai = new KhuyenMai(maKhuyenMai);
                 return new HoaDon(maHoaDon, thoiGianTaoHoaDon, ghiChu, vat, tongTien, tamTinh, tongTienGiam, khachHang,
                         nhanVien, khuyenMai);
             }

@@ -47,6 +47,31 @@ public class ChuyenDao implements IDao<Chuyen, String> {
         return null;
     }
 
+    public Chuyen layTheoMaTauVaMaTuyen(String maTauP, String maTuyenP) {
+        try {
+            String sql = "SELECT * FROM Chuyen WHERE maTau=? AND maTuyen = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, maTauP);
+            pst.setString(2, maTuyenP);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                String maChuyen = rs.getString("maChuyen");
+
+                LocalDateTime thoiGianKhoiHanh = rs.getTimestamp("thoiGianKhoiHanh").toLocalDateTime();
+                LocalDateTime thoiGianDen = rs.getTimestamp("thoiGianDen").toLocalDateTime();
+
+                String maTuyen = rs.getString("maTuyen");
+                String maTau = rs.getString("maTau");
+
+                return new Chuyen(maChuyen, thoiGianKhoiHanh, thoiGianDen, new Tuyen(maTuyen), new Tau(maTau));
+            }
+        } catch (Exception e) {
+            Logger.getLogger(ChuyenDao.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return null;
+    }
+
     @Override
     public List<Chuyen> layHet() {
         List<Chuyen> dsChuyen = new ArrayList<>();
@@ -157,7 +182,7 @@ public class ChuyenDao implements IDao<Chuyen, String> {
                             "LEFT JOIN Tuyen t ON t.MaTuyen = Chuyen.MaTuyen\n" +
                             "LEFT JOIN Ga gaDi ON gaDi.MaGa = t.MaGaDi \n" +
                             "LEFT JOIN Ga gaDen ON gaDen.MaGa = t.MaGaDen\n" +
-                            "LEFT JOIN Tau tau ON tau.MaTau  = Chuyen.MaTau\n" +
+                            "LEFT JOIN Tau tau ON tau.MaTau = Chuyen.MaTau\n" +
                             "WHERE gaDi.TenGa =? AND gaDen.TenGa =? AND Chuyen.ThoiGianKhoiHanh = ?";
 
             PreparedStatement pst = con.prepareStatement(sql);

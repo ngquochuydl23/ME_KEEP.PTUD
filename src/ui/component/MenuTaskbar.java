@@ -5,6 +5,7 @@ import ui.DangNhapForm;
 import ui.dialog.TaiKhoanCuaToiPanel;
 import ui.Main;
 // import ui.dialog.traVeDialog.TraVeDialog;
+import ui.dialog.traVeDialog.TraVeDialog;
 import ui.panel.*;
 
 import java.awt.*;
@@ -177,17 +178,11 @@ public class MenuTaskbar extends JPanel {
                 main.setPanel(new KhuyenMaiPanel());
             }
         });
-//        listitem[7].addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mousePressed(MouseEvent evt) {
-//                //main.setPanel(new ThongKe());
-//            }
-//        });
         listitem[7].addMouseListener(new MouseAdapter() {
 
             @Override
             public void mousePressed(MouseEvent evt) {
-                // new TraVeDialog().setVisible(true);
+                new TraVeDialog().setVisible(true);
             }
         });
         listitem[8].addMouseListener(new MouseAdapter() {

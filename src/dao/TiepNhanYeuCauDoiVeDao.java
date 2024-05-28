@@ -4,8 +4,10 @@ import config.DatabaseUtil;
 import entity.KhachHang;
 import entity.NhanVien;
 import entity.TiepNhanYeuCauDoiVe;
+import entity.Ve;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +34,12 @@ public class TiepNhanYeuCauDoiVeDao implements IDao<TiepNhanYeuCauDoiVe, Integer
             while (rs.next()) {
                 int maYeuCau = rs.getInt("maYeuCau");
                 LocalDateTime thoiGianTiepNhan = rs.getTimestamp("thoiGianTiepNhan").toLocalDateTime();
-                LocalDateTime thoiGianYeuCauDoi = rs.getTimestamp("thoiGianYeuCauDoi").toLocalDateTime();
+                LocalDate thoiGianYeuCauDoi = rs.getDate("thoiGianYeuCauDoi").toLocalDate();
                 String ghiChu = rs.getString("ghiChu");
                 int maNhanVien = rs.getInt("maNhanVien");
                 int maKhachHang = rs.getInt("maKhachHang");
-
-                return new TiepNhanYeuCauDoiVe(maYeuCau, thoiGianTiepNhan, thoiGianYeuCauDoi, ghiChu, new NhanVien(maNhanVien), new KhachHang(maKhachHang));
+                String maVe = rs.getString("maVe");
+                return new TiepNhanYeuCauDoiVe(maYeuCau, thoiGianTiepNhan, thoiGianYeuCauDoi, ghiChu, new NhanVien(maNhanVien), new KhachHang(maKhachHang), new Ve(maVe));
             }
         } catch (Exception e) {
             Logger.getLogger(TiepNhanYeuCauDoiVeDao.class.getName()).log(Level.SEVERE, null, e);
@@ -56,12 +58,12 @@ public class TiepNhanYeuCauDoiVeDao implements IDao<TiepNhanYeuCauDoiVe, Integer
             while (rs.next()) {
                 int maYeuCau = rs.getInt("maYeuCau");
                 LocalDateTime thoiGianTiepNhan = rs.getTimestamp("thoiGianTiepNhan").toLocalDateTime();
-                LocalDateTime thoiGianYeuCauDoi = rs.getTimestamp("thoiGianYeuCauDoi").toLocalDateTime();
+                LocalDate thoiGianYeuCauDoi = rs.getDate("thoiGianYeuCauDoi").toLocalDate();
                 String ghiChu = rs.getString("ghiChu");
                 int maNhanVien = rs.getInt("maNhanVien");
                 int maKhachHang = rs.getInt("maKhachHang");
-
-                dsYeuCau.add(new TiepNhanYeuCauDoiVe(maYeuCau, thoiGianTiepNhan, thoiGianYeuCauDoi, ghiChu, new NhanVien(maNhanVien), new KhachHang(maKhachHang)));
+                String maVe = rs.getString("maVe");
+                dsYeuCau.add(new TiepNhanYeuCauDoiVe(maYeuCau, thoiGianTiepNhan, thoiGianYeuCauDoi, ghiChu, new NhanVien(maNhanVien), new KhachHang(maKhachHang), new Ve(maVe)));
 
             }
             return dsYeuCau;
@@ -74,15 +76,14 @@ public class TiepNhanYeuCauDoiVeDao implements IDao<TiepNhanYeuCauDoiVe, Integer
     @Override
     public boolean them(TiepNhanYeuCauDoiVe entity) {
         try {
-            String sql = "INSERT INTO `TiepNhanYeuCauDoiVe`(`maYeuCau`, `thoiGianTiepNhan`, `thoiGianYeuCauDoi`, `ghiChu`, `maNhanVien`, `maKhachHang`) VALUES (?,?,?,?,?,?)";
+            String sql = "INSERT INTO `TiepNhanYeuCauDoiVe`(`thoiGianYeuCauDoi`, `ghiChu`, `maNhanVien`, `maKhachHang`, `maVe`) VALUES (?,?,?,?,?,?)";
             PreparedStatement statement = con.prepareStatement(sql);
 
-            statement.setInt(1, entity.getMaYeuCau());
-            statement.setTimestamp(2,Timestamp.valueOf( entity.getThoiGianTiepNhan()));
-            statement.setTimestamp(3, Timestamp.valueOf( entity.getThoiGianYeuCauDoi()));
-            statement.setString(4, entity.getGhiChu());
-            statement.setInt(5, entity.getNhanVien().getMaNhanVien());
-            statement.setInt(6, entity.getKhachHang().getMaKhachHang());
+            statement.setDate(1, Date.valueOf(entity.getThoiGianYeuCauDoi()));
+            statement.setString(2, entity.getGhiChu());
+            statement.setInt(3, entity.getNhanVien().getMaNhanVien());
+            statement.setInt(4, entity.getKhachHang().getMaKhachHang());
+            statement.setString(5, entity.getVe().getMaVe());
 
             return statement.executeUpdate() > 0;
         } catch (SQLException ex) {
@@ -110,7 +111,7 @@ public class TiepNhanYeuCauDoiVeDao implements IDao<TiepNhanYeuCauDoiVe, Integer
             String sql = "UPDATE `TiepNhanYeuCauDoiVe` SET `thoiGianTiepNhan`=?,`thoiGianYeuCauDoi`=?,`ghiChu`=?, `maNhanVien`=?,`maKhachHang`=?  WHERE maYeuCau=?";
             PreparedStatement pst =  con.prepareStatement(sql);
             pst.setTimestamp(1,Timestamp.valueOf( entity.getThoiGianTiepNhan()));
-            pst.setTimestamp(2, Timestamp.valueOf( entity.getThoiGianYeuCauDoi()));
+            pst.setDate(2, Date.valueOf(entity.getThoiGianYeuCauDoi()));
             pst.setString(3, entity.getGhiChu());
             pst.setInt(4, entity.getNhanVien().getMaNhanVien());
             pst.setInt(5, entity.getKhachHang().getMaKhachHang());

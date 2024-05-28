@@ -1,5 +1,6 @@
 package entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
@@ -7,11 +8,13 @@ import java.util.Objects;
 public class TiepNhanYeuCauDoiVe {
     private int maYeuCau;
     private LocalDateTime thoiGianTiepNhan;
-    private LocalDateTime thoiGianYeuCauDoi;
+    private LocalDate thoiGianYeuCauDoi;
 
     private String ghiChu;
     private NhanVien nhanVien;
     private KhachHang khachHang;
+
+    private Ve ve;
 
     public TiepNhanYeuCauDoiVe() {
 
@@ -21,13 +24,30 @@ public class TiepNhanYeuCauDoiVe {
         this.maYeuCau = maYeuCau;
     }
 
-    public TiepNhanYeuCauDoiVe(int maYeuCau, LocalDateTime thoiGianTiepNhan, LocalDateTime thoiGianYeuCauDoi, String ghiChu, NhanVien nhanVien, KhachHang khachHang) {
+    public TiepNhanYeuCauDoiVe(int maYeuCau, LocalDateTime thoiGianTiepNhan, LocalDate thoiGianYeuCauDoi, String ghiChu, NhanVien nhanVien, KhachHang khachHang, Ve ve) {
         this.maYeuCau = maYeuCau;
         this.thoiGianTiepNhan = thoiGianTiepNhan;
         this.thoiGianYeuCauDoi = thoiGianYeuCauDoi;
         this.ghiChu = ghiChu;
         this.nhanVien = nhanVien;
         this.khachHang = khachHang;
+        this.ve = ve;
+    }
+
+    public TiepNhanYeuCauDoiVe(LocalDate thoiGianYeuCauDoi, String ghiChu, NhanVien nhanVien, KhachHang khachHang, Ve ve) {
+        this.thoiGianYeuCauDoi = thoiGianYeuCauDoi;
+        this.ghiChu = ghiChu;
+        this.nhanVien = nhanVien;
+        this.khachHang = khachHang;
+        this.ve = ve;
+    }
+
+    public Ve getVe() {
+        return ve;
+    }
+
+    public void setVe(Ve ve) {
+        this.ve = ve;
     }
 
     public int getMaYeuCau() {
@@ -46,11 +66,11 @@ public class TiepNhanYeuCauDoiVe {
         this.thoiGianTiepNhan = thoiGianTiepNhan;
     }
 
-    public LocalDateTime getThoiGianYeuCauDoi() {
+    public LocalDate getThoiGianYeuCauDoi() {
         return thoiGianYeuCauDoi;
     }
 
-    public void setThoiGianYeuCauDoi(LocalDateTime thoiGianYeuCauDoi) {
+    public void setThoiGianYeuCauDoi(LocalDate thoiGianYeuCauDoi) {
         this.thoiGianYeuCauDoi = thoiGianYeuCauDoi;
     }
 

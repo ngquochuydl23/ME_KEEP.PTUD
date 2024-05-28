@@ -33,7 +33,9 @@ public class VeDao implements IDao<Ve, String> {
                     "LEFT JOIN Tuyen t ON t.MaTuyen = v.MaTuyen " +
                     "LEFT JOIN Slot s ON s.MaSlot = v.MaSlot " +
                     "LEFT JOIN Tau t2 ON t2.MaTau = v.MaTau " +
-                    "WHERE v.maVe=?";
+                    "LEFT JOIN Ga gaDi ON gaDi.MaGa = t.MaGaDi " +
+                    "LEFT JOIN Ga gaDen ON gaDen.MaGa = t.MaGaDen " +
+                    "WHERE v.maVe= ?";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, id);
             ResultSet rs = pst.executeQuery();
@@ -65,7 +67,75 @@ public class VeDao implements IDao<Ve, String> {
 
                 // Tuyen
                 String maTuyen = rs.getString("maTuyen");
-                Tuyen tuyen = new Tuyen(maTuyen);
+                String maGaDi = rs.getString("MaGaDi");
+                String tenGaDi = rs.getString("gaDi.TenGa");
+
+                String maGaDen = rs.getString("MaGaDen");
+                String tenGaDen = rs.getString("gaDen.TenGa");
+                Tuyen tuyen = new Tuyen(maTuyen, new Ga(maGaDi, tenGaDi, ""), new Ga(maGaDen, tenGaDen, ""), 0);
+
+                // Tau
+                String maTau = rs.getString("maTau");
+                String tenTau = rs.getString("tenTau");
+                Tau tau = new Tau(maTau, tenTau);
+
+                return new Ve(maVe, slot, khachHang, tuyen, tau, hoTenNguoiDi, cccdNguoiDi, namSinhNguoiDi,
+                        tinhTrangVe);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(VeDao.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return null;
+    }
+
+    public Ve layVeTheoMaVaSdt(String id, String sdt) {
+        try {
+            String sql = "SELECT * FROM Ve v " +
+                    "LEFT JOIN KhachHang kh ON v.MaKhachHang = kh.MaKhachHang " +
+                    "LEFT JOIN Tuyen t ON t.MaTuyen = v.MaTuyen " +
+                    "LEFT JOIN Slot s ON s.MaSlot = v.MaSlot " +
+                    "LEFT JOIN Tau t2 ON t2.MaTau = v.MaTau " +
+                    "LEFT JOIN Ga gaDi ON gaDi.MaGa = t.MaGaDi " +
+                    "LEFT JOIN Ga gaDen ON gaDen.MaGa = t.MaGaDen " +
+                    "WHERE v.maVe = ? AND kh.SoDienThoai = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, id);
+            pst.setString(2, sdt);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                String maVe = rs.getString("maVe");
+                int tinhTrangVe = rs.getInt("tinhTrangVe");
+                String hoTenNguoiDi = rs.getString("hoTenNguoiDi");
+                String cccdNguoiDi = rs.getString("cccdNguoiDi");
+                int nguoiLon = rs.getInt("nguoiLon");
+                int namSinhNguoiDi = rs.getInt("namSinhNguoiDi");
+
+                // Khach Hang
+                int maKhachHang = rs.getInt("maKhachHang");
+                String hoTen = rs.getString("HoTen");
+                String soDienThoai = rs.getString("soDienThoai");
+                String CMND = rs.getString("CMND");
+                LocalDateTime thoiGianDangKy = LocalDateTime.ofInstant(
+                        new java.util.Date(rs.getDate("thoiGianDangKy").getTime()).toInstant(), ZoneId.systemDefault());
+                boolean laKhachHangThanThiet = rs.getBoolean("LaKhachHangThanThiet");
+                KhachHang khachHang = new KhachHang(maKhachHang, hoTen, soDienThoai, thoiGianDangKy,
+                        laKhachHangThanThiet,
+                        CMND);
+
+                // Slot
+                String maSlot = rs.getString("maSlot");
+                int soSlot = rs.getInt("soSlot");
+                Slot slot = new Slot(maSlot, soSlot);
+
+                // Tuyen
+                String maTuyen = rs.getString("maTuyen");
+                String maGaDi = rs.getString("MaGaDi");
+                String tenGaDi = rs.getString("gaDi.TenGa");
+
+                String maGaDen = rs.getString("MaGaDen");
+                String tenGaDen = rs.getString("gaDen.TenGa");
+                Tuyen tuyen = new Tuyen(maTuyen, new Ga(maGaDi, tenGaDi, ""), new Ga(maGaDen, tenGaDen, ""), 0);
 
                 // Tau
                 String maTau = rs.getString("maTau");

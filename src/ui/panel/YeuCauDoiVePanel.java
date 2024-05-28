@@ -115,7 +115,7 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         ChucNangChinh chucNangChinh = new ChucNangChinh(
-                new String[] { "them", "chi-tiet", "nhap-excel", "xuat-excel" });
+                new String[] { "them", "chi-tiet" });
         functionBar.add(chucNangChinh);
         contentCenter.add(functionBar, BorderLayout.NORTH);
 
@@ -134,19 +134,6 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
         soDienThoaiInputForm.setEditable(true);
         soDienThoaiInputForm.requestFocus();
 
-        // PlainDocument doc_min = (PlainDocument) moneyMin.getTxtForm().getDocument();
-        // doc_min.setDocumentFilter(new NumericDocumentFilter());
-
-        // dateStart.getDateChooser().addPropertyChangeListener(this);
-        // dateEnd.getDateChooser().addPropertyChangeListener(this);
-        // moneyMin.getTxtForm().addKeyListener(this);
-        // moneyMin.getTxtForm().addMouseListener(new MouseAdapter() {
-        // @Override
-        // public void mouseClicked(java.awt.event.MouseEvent e) {
-        // System.out.println("TextField được click");
-        // }
-        // });
-
         chucNangChinh
                 .getToolbar("them")
                 .addActionListener(new ActionListener() {
@@ -163,25 +150,6 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
                     public void actionPerformed(ActionEvent e) {
                         if (!kiemTraChonDong())
                             return;
-
-                    }
-                });
-
-        chucNangChinh
-                .getToolbar("nhap-excel")
-                .addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-
-                    }
-                });
-
-        chucNangChinh
-                .getToolbar("xuat-excel")
-                .addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        xuatLichSuTraVeExcel();
                     }
                 });
 
