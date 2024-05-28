@@ -40,10 +40,6 @@ public class SlotBtn extends JPanel {
         this.slot = slot;
         this.isSelected = isSelected;
 
-        if (isSelected) {
-            currentSelectionCount++;
-        }
-
         this.setPreferredSize(new Dimension(50, 50));
         ml = new MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -59,7 +55,7 @@ public class SlotBtn extends JPanel {
 
             @Override
             public void mouseExited(MouseEvent evt) {
-                setCursor(Cursor.getDefaultCursor());
+                setCursor(Cursor.getDefaultCursor()); // Trả lại con trỏ chuột mặc định
             }
         });
     }
@@ -69,16 +65,16 @@ public class SlotBtn extends JPanel {
     }
 
     private void changeSelectSeat() {
-        if (!isSelected && currentSelectionCount >= maxSelection) {
-            JOptionPane.showMessageDialog(this, "Bạn chỉ có thể chọn tối đa " + maxSelection + " chỗ.", "Thông báo", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        isSelected = !isSelected;
         if (isSelected) {
-            currentSelectionCount++;
-        } else {
+            isSelected = false;
             currentSelectionCount--;
+        } else {
+            if (currentSelectionCount < maxSelection) {
+                isSelected = true;
+                currentSelectionCount++;
+            } else {
+                JOptionPane.showMessageDialog(this, "Bạn chỉ có thể chọn tối đa " + maxSelection + " chỗ.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            }
         }
         repaint();
     }
@@ -96,9 +92,9 @@ public class SlotBtn extends JPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g.create();
         if (isSelected) {
-            g2d.setColor(new Color(199, 18, 190)); // Change background color when selected
+            g2d.setColor(new Color(199, 18, 190)); // Đổi màu nền khi được chọn
         } else {
-            g2d.setColor(Color.WHITE); // Clear background color when not selected
+            g2d.setColor(Color.WHITE); // Xóa màu nền khi không được chọn
         }
 
         if (this.getSlot().getTinhTrang() == 0) {
@@ -107,20 +103,28 @@ public class SlotBtn extends JPanel {
             this.removeMouseListener(ml);
         }
 
-        g2d.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 30, 30); // Draw button background
+        g2d.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 30, 30); // Vẽ nền của nút
 
-        g2d.setColor(Color.BLACK); // Set text color
+        g2d.setColor(Color.BLACK); // Đặt màu chữ
         FontMetrics fm = g2d.getFontMetrics();
         String text = String.valueOf(slot.getSoSlot());
         int textWidth = fm.stringWidth(text);
         int textHeight = fm.getHeight();
         int x = (getWidth() - textWidth) / 2;
         int y = (getHeight() + textHeight) / 2 - fm.getDescent();
-        g2d.drawString(text, x, y); // Draw seat number in the center of the button
+        g2d.drawString(text, x, y); // Vẽ số lên trung tâm của nút
 
-        g2d.setColor(Color.GRAY); // Change border color
-        g2d.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 30, 30); // Draw button border
+        g2d.setColor(Color.GRAY); // Đổi màu viền
+        g2d.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 30, 30); // Vẽ viền của nút
         g2d.dispose();
+    }
+
+    public static void setMaxSelection(int max) {
+        maxSelection = max;
+    }
+
+    public static void resetSelectionCount() {
+        currentSelectionCount = 0;
     }
 
     public static List<SlotBtn> createSeats(String maToaTau, List<Slot> dsChoNgoi) {
@@ -132,18 +136,7 @@ public class SlotBtn extends JPanel {
     }
 
     public void clearSelection() {
-        if (isSelected) {
-            currentSelectionCount--;
-        }
         isSelected = false;
         repaint();
-    }
-
-    public static void setMaxSelection(int maxSelection) {
-        SlotBtn.maxSelection = maxSelection;
-    }
-
-    public static void resetSelectionCount() {
-        currentSelectionCount = 0;
     }
 }
