@@ -12,6 +12,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,6 +29,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import dao.KhuyenMaiDao;
+import entity.KhachHang;
 import entity.KhuyenMai;
 import helper.Formater;
 import ui.component.ChucNangChinh;
@@ -59,7 +61,7 @@ public class KhuyenMaiPanel extends JPanel {
     public KhuyenMaiPanel() {
         this.khuyenMaiDao = new KhuyenMaiDao();
         initComponent();
-
+        
         loadDataTable();
     }
 
@@ -194,7 +196,7 @@ public class KhuyenMaiPanel extends JPanel {
         functionBar.add(chucNangChinh);
 
         search = new IntegratedSearch(
-                new String[] { "Tất cả", "Mã khuyến mãi", "Tỉ lệ giảm", "Khách hàng thân thiết", "Số điện thoại" });
+                new String[] { "Tất cả", "Mã khuyến mãi", "Tỉ lệ giảm"});
         search.btnReset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -207,26 +209,10 @@ public class KhuyenMaiPanel extends JPanel {
             public void keyReleased(KeyEvent e) {
                 String keyWord = search.txtSearchForm.getText();
                 String type = (String) search.cbxChoose.getSelectedItem();
-                // if (keyWord.isEmpty())
-                // loadDataTable();
-                // else
-                // timKhachHang(keyWord, type);
+                 if (keyWord.isEmpty())
+                 loadDataTable();
+                 else timKhuyenMai(keyWord, type);
 
-            }
-        });
-        search.cbxChoose.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    String selectedOption = (String) search.cbxChoose.getSelectedItem();
-                    if (selectedOption.equals("Khách hàng thân thiết")) {
-
-                        // timKhachHang("", selectedOption);
-                        loadDataTable();
-                    } else {
-                        loadDataTable();
-                    }
-                }
             }
         });
 
@@ -250,62 +236,52 @@ public class KhuyenMaiPanel extends JPanel {
         return khuyenMais.get(index);
     }
 
-    // public void timKhachHang(String text, String type) {
-    // List<KhachHang> result = new ArrayList<>();
-    // text = text.toLowerCase();
+    public void timKhuyenMai(String text, String type) {
+        List<KhuyenMai> result = new ArrayList<>();
+        text = text.toLowerCase();
 
-    // switch (type) {
-    // case "Tất cả":
-    // for (entity.KhachHang i : danhSachKhachHang) {
-    // if (Integer.toString(i.getMaKhachHang()).toLowerCase().contains(text)
-    // || i.getHoTen().toLowerCase().contains(text) || i.laKhachHangThanThiet()
-    // || i.getSoDienThoai().toLowerCase().contains(text)) {
-    // result.add(i);
-    // }
-    // }
+        switch (type) {
+            case "Tất cả":
+                for (entity.KhuyenMai khuyenMai : khuyenMais) {
+                    if (khuyenMai.getMaKhuyenMai().toLowerCase().contains(text)
+                            || Double.toString(khuyenMai.getPhanTramGiamGia()).toLowerCase().contains(text))
+                            {
+                        result.add(khuyenMai);
+                    }
+                }
+                break;
 
-    // case "Mã khách hàng":
-    // for (entity.KhachHang i : danhSachKhachHang) {
-    // if (Integer.toString(i.getMaKhachHang()).toLowerCase().contains(text)) {
-    // result.add(i);
-    // }
-    // }
+            case "Mã khuyến mãi":
+                for (entity.KhuyenMai khuyenMai : khuyenMais) {
+                    if (khuyenMai.getMaKhuyenMai().toLowerCase().contains(text)) {
+                        result.add(khuyenMai);
+                    }
+                }
+                break;
 
-    // case "Tên khách hàng":
-    // for (entity.KhachHang i : danhSachKhachHang) {
-    // if (i.getHoTen().toLowerCase().contains(text)) {
-    // result.add(i);
-    // }
-    // }
+            case "Tên khách hàng":
+                for (entity.KhuyenMai khuyenMai : khuyenMais) {
+                    if (Double.toString(khuyenMai.getPhanTramGiamGia()).toLowerCase().contains(text)) {
+                        result.add(khuyenMai);
+                    }
+                }
+                break;
+        }
+        while (tblModel.getRowCount() > 0) {
+            tblModel.removeRow(0);
+        }
+        khuyenMais = result;
+        for (KhuyenMai khuyenMai : this.khuyenMais) {
+            tblModel.addRow(new Object[] {
+                    khuyenMai.getMaKhuyenMai(),
+                    khuyenMai.getPhanTramGiamGia(),
+                    khuyenMai.getGhiChu(),
+                    Formater.FormatTime(Timestamp.valueOf(khuyenMai.getThoiGianBatDau())),
+                    Formater.FormatTime(Timestamp.valueOf(khuyenMai.getThoiGianKetThuc()))
+            });
+        }
+    }
 
-    // case "Khách hàng thân thiết":
-    // for (entity.KhachHang i : danhSachKhachHang) {
-    // if (i.laKhachHangThanThiet()) {
-    // result.add(i);
-    // }
-    // }
-
-    // case "Số điện thoại":
-    // for (entity.KhachHang i : danhSachKhachHang) {
-    // if (i.getSoDienThoai().toLowerCase().contains(text)) {
-    // result.add(i);
-    // }
-    // }
-    // }
-    // while (tblModel.getRowCount() > 0) {
-    // tblModel.removeRow(0);
-    // }
-    // danhSachKhachHang = result;
-    // for (KhachHang khachHang : danhSachKhachHang) {
-    // tblModel.addRow(new Object[] {
-    // "KH" + khachHang.getMaKhachHang(),
-    // khachHang.getHoTen(),
-    // khachHang.getSoDienThoai(),
-    // khachHang.laKhachHangThanThiet() ? "Có" : "Không",
-    // khachHang.getThoiGianDangKy()
-    // });
-    // }
-    // }
 
     public void loadDataTable() {
         while (tblModel.getRowCount() > 0) {
@@ -322,66 +298,4 @@ public class KhuyenMaiPanel extends JPanel {
             });
         }
     }
-
-    // public KhachHang layKhachHangDangChon() {
-    // int index = tableKhuyenMai.getSelectedRow();
-    // if (index == -1) {
-    // JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng");
-    // }
-    // return danhSachKhachHang.get(index);
-    // }
-
-    // public void importExcel() {
-    // File excelFile;
-    // FileInputStream excelFIS = null;
-    // BufferedInputStream excelBIS = null;
-    // XSSFWorkbook excelJTableImport = null;
-    // JFileChooser jf = new JFileChooser();
-    // int result = jf.showOpenDialog(null);
-    // jf.setDialogTitle("Open file");
-    // Workbook workbook = null;
-    // int k = 0;
-    // if (result == JFileChooser.APPROVE_OPTION) {
-    // try {
-    // excelFile = jf.getSelectedFile();
-    // excelFIS = new FileInputStream(excelFile);
-    // excelBIS = new BufferedInputStream(excelFIS);
-    // excelJTableImport = new XSSFWorkbook(excelBIS);
-    // XSSFSheet excelSheet = excelJTableImport.getSheetAt(0);
-    // for (int row = 1; row <= excelSheet.getLastRowNum(); row++) {
-    // int check = 1;
-    // XSSFRow excelRow = excelSheet.getRow(row);
-
-    // String tenkh = excelRow.getCell(0).getStringCellValue();
-    // String sdt = excelRow.getCell(1).getStringCellValue();
-    // String diachi = excelRow.getCell(2).getStringCellValue();
-    // if (Validation.isEmpty(tenkh) || Validation.isEmpty(sdt)
-    // || !Validation.kiemTraSoDienThoai(sdt) || sdt.length() != 10
-    // || Validation.isEmpty(diachi)) {
-    // check = 0;
-    // }
-    // if (check == 1) {
-    // // khachhangBUS.add(new KhachHangDTO(id, tenkh, sdt, diachi));
-    // } else {
-    // k += 1;
-    // }
-    // }
-    // JOptionPane.showMessageDialog(this, "Nhập thành công");
-    // } catch (FileNotFoundException ex) {
-    // System.out.println("Lỗi đọc file");
-    // } catch (IOException ex) {
-    // System.out.println("Lỗi đọc file");
-    // }
-    // }
-    // if (k != 0) {
-    // JOptionPane.showMessageDialog(this, "Những dữ liệu không hợp lệ không được
-    // thêm vào");
-    // }
-    // loadDataTable();
-    // }
-
-    // @Override
-    // public void itemStateChanged(ItemEvent e) {
-    // loadDataTable();
-    // }
 }

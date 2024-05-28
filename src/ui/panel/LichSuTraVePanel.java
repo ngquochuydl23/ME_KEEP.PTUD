@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
@@ -24,6 +25,10 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
+
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -42,12 +47,12 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
     JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
     private JTable tableLichSuTraVe;
     JScrollPane scrollTableLichSuTraVe;
-
     private DefaultTableModel tblModel;
     private InputDate thoiGianTraVe;
     private InputForm soDienThoaiInputForm;
     private List<LichSuTraVe> danhSachLichSuTraVe;
     private LichSuTraVeDao lichSuTraVeDao;
+    private JButton btnLamMoi;
 
     public LichSuTraVePanel() {
         lichSuTraVeDao = new LichSuTraVeDao();
@@ -120,6 +125,14 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
         contentCenter.setBackground(BackgroundColor);
         contentCenter.setLayout(new BorderLayout(10, 10));
         add(contentCenter, BorderLayout.CENTER);
+        
+        btnLamMoi = new JButton("Làm mới");
+        btnLamMoi.setFont(new java.awt.Font(FlatRobotoFont.FAMILY, 0, 14));
+        btnLamMoi.setIcon(new FlatSVGIcon("./icon/refresh.svg"));
+        
+        Box horizontalBox = Box.createHorizontalBox();
+        horizontalBox.add(Box.createRigidArea(new Dimension(300, 0))); 
+        horizontalBox.add(btnLamMoi); 
 
         functionBar = new PanelBorderRadius();
         functionBar.setPreferredSize(new Dimension(0, 100));
@@ -187,18 +200,22 @@ public final class LichSuTraVePanel extends JPanel implements KeyListener, Prope
                         xuatLichSuTraVeExcel();
                     }
                 });
-
+        btnLamMoi.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	layDanhSachLichSu();
+            }
+        });
+        
         box.add(soDienThoaiInputForm);
         box.add(thoiGianTraVe);
-
+        functionBar.add(horizontalBox);
         main = new PanelBorderRadius();
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
         main.setBorder(new EmptyBorder(0, 0, 0, 0));
         contentCenter.add(main, BorderLayout.CENTER);
         main.add(scrollTableLichSuTraVe);
     }
-
-
 
     public void resetForm() {
 
