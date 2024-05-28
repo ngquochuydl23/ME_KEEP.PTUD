@@ -5,10 +5,8 @@ import entity.*;
 import ui.component.*;
 
 import javax.swing.*;
-
 import dao.LoaiKhoangDao;
 import dao.ToaTauDao;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,6 +29,7 @@ public class ChonChoDialog extends JDialog {
     private List<SlotBtn> danhSachSlot;
     private ToaTau toaDangChon;
     private SlotDao slotDao;
+    private int maxChoNgoiCoTheChon;
 
     public ChonChoDialog() {
         setTitle("Chọn chỗ");
@@ -46,6 +45,8 @@ public class ChonChoDialog extends JDialog {
         toaTauDao = new ToaTauDao();
         loaiKhoangDao = new LoaiKhoangDao();
         slotDao = new SlotDao();
+
+        this.setMaxChoNgoiCoTheChon(this.maxChoNgoiCoTheChon);
     }
 
     public void setTau(Tau tau) {
@@ -68,7 +69,6 @@ public class ChonChoDialog extends JDialog {
         btgToa = new ButtonGroup();
         topPanel = new JPanel();
         mainPanel.add(topPanel, BorderLayout.NORTH);
-
 
         seatPanel = new JPanel();
         seatPanel.setLayout(new GridLayout(0, 4));
@@ -133,16 +133,22 @@ public class ChonChoDialog extends JDialog {
         updateToaTauBtnColors();
     }
 
-    // Phương thức để xóa lựa chọn trên các chỗ ngồi
+    // Method to clear the seat selection
     private void clearSeatSelection() {
         danhSachSlot.clear();
         danhSachToaTau.clear();
+        SlotBtn.resetSelectionCount(); // Reset the selection count
         Component[] components = seatPanel.getComponents();
         for (Component component : components) {
             if (component instanceof SlotBtn) {
                 ((SlotBtn) component).clearSelection();
             }
         }
+    }
+
+    public void setMaxChoNgoiCoTheChon(int max){
+        this.maxChoNgoiCoTheChon = max;
+        SlotBtn.setMaxSelection(this.maxChoNgoiCoTheChon);
     }
 
     private void updateSeatPanel() {
@@ -184,7 +190,6 @@ public class ChonChoDialog extends JDialog {
             seatPanel.add(new JPanel());
         }
 
-
         revalidate();
         repaint();
     }
@@ -216,7 +221,6 @@ public class ChonChoDialog extends JDialog {
             }
         }
     }
-
 
     public void setChonChoNgoiListener(ChonChoNgoiListener chonChoNgoiListener) {
         this.chonChoNgoiListener = chonChoNgoiListener;
@@ -252,7 +256,6 @@ public class ChonChoDialog extends JDialog {
 
                     })
                     .toList());
-
         }
     }
 }

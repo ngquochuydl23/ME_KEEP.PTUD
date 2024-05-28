@@ -4,16 +4,11 @@ import dao.*;
 import entity.*;
 import helper.Validation;
 import singleton.NhanVienSuDungSingleton;
-import ui.component.ButtonCustom;
-import ui.component.HeaderTitle;
-import ui.component.InputDate;
-import ui.component.InputForm;
-import ui.component.SelectForm;
+import ui.component.*;
 import ui.dialog.khachHangDialog.SuaKhachHangListener;
 import ui.dialog.khachHangDialog.TaoKhachHangListener;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
@@ -26,8 +21,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import ui.dialog.chonChoDialog.ChonChoDialog;
+import ui.dialog.chonChoDialog.ChonChoNgoiListener;
 
-public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener {
+public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener, MouseListener {
     private HeaderTitle titlePage;
     private JPanel pnlButtom;
     private ButtonCustom btnSubmit, btnHuyBo, btnTimVe, btnTim;
@@ -56,6 +53,11 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener {
     private KhachHang khachHang;
     private DefaultTableModel tblModel;
     private JTable chuyenTable;
+    private ChonChoDialog chonChoDialog;
+    private ToaTau toaTauChon;
+    private List<SlotBtn> dsChoDaChon = new ArrayList<>();
+
+    private TauDao tauDao;
 
     public TaoYeuCauDoiVeDialog() {
         veDao = new VeDao();
@@ -63,6 +65,7 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener {
         chuyenDao = new ChuyenDao();
         tenGaList = new ArrayList<>();
         khachHangDao = new KhachHangDao();
+        tauDao = new TauDao();
         yeuCauDoiVeDao = new TiepNhanYeuCauDoiVeDao();
         initComponents();
 
@@ -73,6 +76,7 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener {
 
         diemDenSelectForm.setCbItems(tenGaList);
         diemDenSelectForm.setSelectedItem(null);
+        chuyenTable.addMouseListener(this);
     }
 
     @Override
@@ -116,6 +120,17 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener {
 
         titlePage = new HeaderTitle("Ghi nhận yêu cầu đổi vé");
 
+        chonChoDialog = new ChonChoDialog();
+        chonChoDialog.setMaxChoNgoiCoTheChon(1);
+        chonChoDialog.setChonChoNgoiListener(new ChonChoNgoiListener() {
+            @Override
+            public void chonChoNgoiThanhCong(ToaTau toaTau, List<SlotBtn> dsCho) {
+                toaTauChon = toaTau;
+                dsChoDaChon.clear();
+                dsChoDaChon.addAll(dsCho);
+                chonChoDialog.setVisible(false);
+            }
+        });
 
         tenKhachHangTextField = new InputForm("Tên khách hàng");
         tenKhachHangTextField.setEditable(false);
@@ -470,5 +485,49 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener {
 
         selectForm.setCbItems(ketQua);
         editorComponent.setText(previousText);
+    }
+
+    private Tau layTauDuocChon() {
+        int row = chuyenTable.getSelectedRow();
+        if (row != -1) {
+            String tenTau = chuyenTable.getValueAt(row, 2).toString();
+            Tau tau = tauDao.layTheoTenTau(tenTau);
+
+            if (tau == null) {
+                JOptionPane.showMessageDialog(null, "Không thể tìm thấy thông tin về tàu.");
+                return null;
+            }
+            return tau;
+        }
+        JOptionPane.showMessageDialog(null, "Vui lòng chọn một chuyến tàu.");
+        return null;
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        System.out.println("Mouse clicked on table");
+        Tau tau = layTauDuocChon();
+        if (tau == null) {
+            return;
+        }
+
+        chonChoDialog.setTau(tau);
+        chonChoDialog.setVisible(true);
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
     }
 }

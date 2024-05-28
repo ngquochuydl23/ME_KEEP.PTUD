@@ -24,11 +24,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import ui.dialog.chonChoDialog.ChonChoDialog;
-import ui.dialog.chonChoDialog.ChonChoNgoiListener;
 
 
-public final class YeuCauDoiVePanel extends JPanel implements KeyListener, PropertyChangeListener, ItemListener, MouseListener {
+
+public final class YeuCauDoiVePanel extends JPanel implements KeyListener, PropertyChangeListener, ItemListener {
 
     PanelBorderRadius main, functionBar, box;
     JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
@@ -41,9 +40,7 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
     private InputForm soDienThoaiInputForm;
     private List<LichSuTraVe> danhSachLichSuTraVe;
     private TaoYeuCauDoiVeDialog taoYeuCauDoiVeDialog;
-    private ChonChoDialog chonChoDialog;
 
-    private TauDao tauDao;
 
     public YeuCauDoiVePanel() {
 
@@ -51,7 +48,6 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
         initComponent();
         layDanhSachNhaGa();
         layDanhSachLichSu();
-        tableLichSuTraVe.addMouseListener(this);
     }
 
     public void initPadding() {
@@ -249,22 +245,6 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
         return true;
     }
 
-    private Tau layTauDuocChon() {
-        int row = tableLichSuTraVe.getSelectedRow();
-        if (row != -1) {
-            String tenTau = tableLichSuTraVe.getValueAt(row, 2).toString();
-            Tau tau = tauDao.layTheoTenTau(tenTau);
-
-            if (tau == null) {
-                JOptionPane.showMessageDialog(null, "Không thể tìm thấy thông tin về tàu.");
-                return null;
-            }
-            return tau;
-        }
-        JOptionPane.showMessageDialog(null, "Vui lòng chọn một chuyến tàu.");
-        return null;
-    }
-
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -336,31 +316,5 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
         }
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        System.out.println("Mouse clicked on table");
-        Tau tau = layTauDuocChon();
-        if (tau == null) {
-            return;
-        }
-
-        chonChoDialog.setTau(tau);
-        chonChoDialog.setVisible(true);
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
+    
 }
