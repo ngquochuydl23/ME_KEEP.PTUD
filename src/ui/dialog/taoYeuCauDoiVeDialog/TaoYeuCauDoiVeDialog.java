@@ -21,8 +21,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import ui.dialog.chonChoDialog.ChonChoDialog;
 import ui.dialog.chonChoDialog.ChonChoNgoiListener;
+import ui.dialog.thanhToanDialog.ThanhToanDialog;
+import ui.dialog.thanhToanDialog.ThanhToanListener;
 
 public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener, MouseListener {
     private HeaderTitle titlePage;
@@ -54,12 +57,14 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener, Mou
     private DefaultTableModel tblModel;
     private JTable chuyenTable;
     private ChonChoDialog chonChoDialog;
+    private ThanhToanDialog thanhToanDialog;
     private ToaTau toaTauChon;
     private List<SlotBtn> dsChoDaChon = new ArrayList<>();
 
     private TauDao tauDao;
 
     public TaoYeuCauDoiVeDialog() {
+        thanhToanDialog = new ThanhToanDialog();
         veDao = new VeDao();
         gaDao = new GaDao();
         chuyenDao = new ChuyenDao();
@@ -129,6 +134,28 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener, Mou
                 dsChoDaChon.clear();
                 dsChoDaChon.addAll(dsCho);
                 chonChoDialog.setVisible(false);
+
+                String tenGaDi = diemDiSelectForm.getSelectedItem().toString();
+                String tenGaDen = diemDenSelectForm.getSelectedItem().toString();
+
+
+                thanhToanDialog.setData(
+                        NhanVienSuDungSingleton.layThongTinNhanVienHienTai(),
+                        tenGaDi,
+                        tenGaDen,
+                        new Tau(toaTau.getTau().getMaTau()),
+                        toaTau,
+                        khachHang,
+                        dsChoDaChon
+                );
+                thanhToanDialog.setVisible(true);
+            }
+        });
+
+        thanhToanDialog.setThanhToanListener(new ThanhToanListener() {
+            @Override
+            public void thanhToanThanhCong(HoaDon hoaDon) {
+
             }
         });
 
@@ -275,7 +302,7 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener, Mou
     private void doiVe() {
         tblModel.setRowCount(0);
         try {
-            String tenGaDi =    diemDiSelectForm.getSelectedItem().toString();
+            String tenGaDi = diemDiSelectForm.getSelectedItem().toString();
             String tenGaDen = diemDenSelectForm.getSelectedItem().toString();
             LocalDate ngayDi = ngayDiDate.getDateAsLocalDate();
 
@@ -287,7 +314,7 @@ public class TaoYeuCauDoiVeDialog extends JDialog implements WindowListener, Mou
             }
 
 
-            for (Chuyen chuyen: dsChuyen) {
+            for (Chuyen chuyen : dsChuyen) {
                 Ga gaDi = chuyen.getTuyen().getGaDi();
                 Ga gaDen = chuyen.getTuyen().getGaDen();
                 Tau tau = chuyen.getTau();
