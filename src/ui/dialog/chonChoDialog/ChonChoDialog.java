@@ -63,6 +63,11 @@ public class ChonChoDialog extends JDialog {
         pack();
     }
 
+    public void setMaxChoNgoiCoTheChon(int max){
+        this.maxChoNgoiCoTheChon = max;
+        SlotBtn.setMaxSelection(this.maxChoNgoiCoTheChon);
+    }
+
     private void initializeComponents() {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -88,6 +93,7 @@ public class ChonChoDialog extends JDialog {
                 if (chonChoNgoiListener != null) {
                     chonChoNgoiListener.chonChoNgoiThanhCong(toaDangChon, dsChoNgoiDaChon);
                 }
+                dispose(); // Dispose the dialog after confirming the selection
             }
         });
 
@@ -133,22 +139,17 @@ public class ChonChoDialog extends JDialog {
         updateToaTauBtnColors();
     }
 
-    // Method to clear the seat selection
+    // Phương thức để xóa lựa chọn trên các chỗ ngồi
     private void clearSeatSelection() {
         danhSachSlot.clear();
         danhSachToaTau.clear();
-        SlotBtn.resetSelectionCount(); // Reset the selection count
         Component[] components = seatPanel.getComponents();
         for (Component component : components) {
             if (component instanceof SlotBtn) {
                 ((SlotBtn) component).clearSelection();
             }
         }
-    }
-
-    public void setMaxChoNgoiCoTheChon(int max){
-        this.maxChoNgoiCoTheChon = max;
-        SlotBtn.setMaxSelection(this.maxChoNgoiCoTheChon);
+        SlotBtn.resetSelectionCount(); // Reset the selection count when clearing selection
     }
 
     private void updateSeatPanel() {
@@ -229,7 +230,9 @@ public class ChonChoDialog extends JDialog {
     @Override
     public void setVisible(boolean b) {
         super.setVisible(b);
-        clearSeatSelection();
+        if (b) {
+            clearSeatSelection();
+        }
     }
 
     private void layTinhTrangSlotTheoToaTau() {
@@ -253,7 +256,6 @@ public class ChonChoDialog extends JDialog {
                                 .ifPresent(dangChon -> selected.set(true));
 
                         return new SlotBtn(toaDangChon.getMaToa(), item, selected.get());
-
                     })
                     .toList());
         }
