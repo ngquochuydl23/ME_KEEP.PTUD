@@ -2,8 +2,10 @@ package ui.panel;
 
 import ui.component.*;
 import entity.LichSuTraVe;
+import entity.Tau;
 import helper.JTableExporter;
 import ui.dialog.taoYeuCauDoiVeDialog.TaoYeuCauDoiVeDialog;
+import dao.TauDao;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -22,8 +24,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
+import ui.dialog.chonChoDialog.ChonChoDialog;
+import ui.dialog.chonChoDialog.ChonChoNgoiListener;
 
-public final class YeuCauDoiVePanel extends JPanel implements KeyListener, PropertyChangeListener, ItemListener {
+
+public final class YeuCauDoiVePanel extends JPanel implements KeyListener, PropertyChangeListener, ItemListener, MouseListener {
 
     PanelBorderRadius main, functionBar, box;
     JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter;
@@ -36,6 +41,9 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
     private InputForm soDienThoaiInputForm;
     private List<LichSuTraVe> danhSachLichSuTraVe;
     private TaoYeuCauDoiVeDialog taoYeuCauDoiVeDialog;
+    private ChonChoDialog chonChoDialog;
+
+    private TauDao tauDao;
 
     public YeuCauDoiVePanel() {
 
@@ -43,6 +51,7 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
         initComponent();
         layDanhSachNhaGa();
         layDanhSachLichSu();
+        tableLichSuTraVe.addMouseListener(this);
     }
 
     public void initPadding() {
@@ -67,6 +76,7 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
         pnlBorder4.setPreferredSize(new Dimension(10, 0));
         pnlBorder4.setBackground(BackgroundColor);
         add(pnlBorder4, BorderLayout.WEST);
+
     }
 
     private void initComponent() {
@@ -190,6 +200,8 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
 
     }
 
+    
+
     private LichSuTraVe layLichSuTraVeTaiDong() {
         int row = tableLichSuTraVe.getSelectedRow();
         int maLichSuTraVe = Integer.parseInt(tblModel.getValueAt(row, 0).toString());
@@ -235,6 +247,22 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
         // return false;
         // }
         return true;
+    }
+
+    private Tau layTauDuocChon() {
+        int row = tableLichSuTraVe.getSelectedRow();
+        if (row != -1) {
+            String tenTau = tableLichSuTraVe.getValueAt(row, 2).toString();
+            Tau tau = tauDao.layTheoTenTau(tenTau);
+
+            if (tau == null) {
+                JOptionPane.showMessageDialog(null, "Không thể tìm thấy thông tin về tàu.");
+                return null;
+            }
+            return tau;
+        }
+        JOptionPane.showMessageDialog(null, "Vui lòng chọn một chuyến tàu.");
+        return null;
     }
 
     @Override
@@ -306,5 +334,33 @@ public final class YeuCauDoiVePanel extends JPanel implements KeyListener, Prope
                     item.getGhiChu()
             });
         }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        System.out.println("Mouse clicked on table");
+        Tau tau = layTauDuocChon();
+        if (tau == null) {
+            return;
+        }
+
+        chonChoDialog.setTau(tau);
+        chonChoDialog.setVisible(true);
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
     }
 }
